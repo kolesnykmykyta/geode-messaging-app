@@ -1,0 +1,33 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.8.34330.188
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "Geode.Db", "Geode.Db\Geode.Db.sqlproj", "{3B0177D0-B4D0-4CDB-82AC-638061ED5BAD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Geode.API", "Geode.API\Geode.API.csproj", "{533C1A09-E811-4210-B5B8-6394DD3432E7}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{3B0177D0-B4D0-4CDB-82AC-638061ED5BAD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3B0177D0-B4D0-4CDB-82AC-638061ED5BAD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3B0177D0-B4D0-4CDB-82AC-638061ED5BAD}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{3B0177D0-B4D0-4CDB-82AC-638061ED5BAD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3B0177D0-B4D0-4CDB-82AC-638061ED5BAD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3B0177D0-B4D0-4CDB-82AC-638061ED5BAD}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{533C1A09-E811-4210-B5B8-6394DD3432E7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{533C1A09-E811-4210-B5B8-6394DD3432E7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{533C1A09-E811-4210-B5B8-6394DD3432E7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{533C1A09-E811-4210-B5B8-6394DD3432E7}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {4DB096B1-6D64-48C7-B54D-63F02624636C}
+	EndGlobalSection
+EndGlobal
