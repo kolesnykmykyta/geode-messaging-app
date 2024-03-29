@@ -8,7 +8,6 @@ namespace DataAccess.DbContext
     {
         public DatabaseContext(DbContextOptions<DatabaseContext> options) : base(options)
         {
-
         }
 
         DbSet<Chat> Chats { get; set; }
