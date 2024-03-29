@@ -69,6 +69,5 @@
     <Build Include="Tables\AspIdentity\AspNetUserTokens.sql" />
     <Build Include="Tables\Chats.sql" />
     <Build Include="Tables\ChatMembers.sql" />
-    <Build Include="Tables\Messages.sql" />
   </ItemGroup>
 </Project>
