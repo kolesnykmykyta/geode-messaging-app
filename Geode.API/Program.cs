@@ -1,4 +1,8 @@
 
+using DataAccess.DbContext;
+using DataAccess.Entities;
+using Microsoft.EntityFrameworkCore;
+
 namespace Geode.API
 {
     public class Program
@@ -13,6 +17,11 @@ namespace Geode.API
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
+            builder.Services.AddDbContext<DatabaseContext>(options =>
+                options.UseSqlServer(builder.Configuration.GetConnectionString("Default")));
+            builder.Services.AddAuthorization();
+            builder.Services.AddIdentityApiEndpoints<User>()
+                .AddEntityFrameworkStores<DatabaseContext>();
 
             var app = builder.Build();
 
@@ -27,6 +36,7 @@ namespace Geode.API
 
             app.UseAuthorization();
 
+            app.MapIdentityApi<User>();
 
             app.MapControllers();
 
