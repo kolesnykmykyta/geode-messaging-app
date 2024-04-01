@@ -1,6 +1,7 @@
 
 using DataAccess.DbContext;
 using DataAccess.Entities;
+using Geode.API.Extensions;
 using Microsoft.EntityFrameworkCore;
 
 namespace Geode.API
@@ -24,6 +25,8 @@ namespace Geode.API
 
             builder.Services.AddIdentityApiEndpoints<User>()
                 .AddEntityFrameworkStores<DatabaseContext>();
+
+            builder.Services.AddCqrsServices();
 
             var app = builder.Build();
 
