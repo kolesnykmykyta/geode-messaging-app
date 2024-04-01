@@ -2,4 +2,6 @@
 (
 	[Id] INT NOT NULL PRIMARY KEY,
 	[Name] NVARCHAR(30) NOT NULL,
+	[ChatOwnerId] NVARCHAR(450) NOT NULL,
+	CONSTRAINT [FK_Chats_OwnerId] FOREIGN KEY (ChatOwnerId) REFERENCES AspNetUsers (Id)
 )
