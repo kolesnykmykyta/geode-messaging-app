@@ -11,5 +11,10 @@ namespace DataAccess.Entities
         public int Id { get; set; }
 
         public string Name { get; set; } = string.Empty;
+
+        // Navigation properties
+        public string ChatOwnerId { get; set; } = string.Empty;
+
+        public User? ChatOwner { get; set; }
     }
 }
