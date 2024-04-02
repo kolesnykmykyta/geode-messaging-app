@@ -41,6 +41,12 @@ namespace DataAccess.UnitOfWork
             _dbContext.SaveChanges();
         }
 
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
         protected virtual void Dispose(bool disposing)
         {
             if (!_disposed)
@@ -51,12 +57,6 @@ namespace DataAccess.UnitOfWork
                 }
             }
             _disposed = true;
-        }
-
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
         }
     }
 }
