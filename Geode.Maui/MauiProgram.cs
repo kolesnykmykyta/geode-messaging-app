@@ -1,4 +1,5 @@
-﻿using Geode.Maui.Auth;
+﻿using Blazored.LocalStorage;
+using Geode.Maui.Auth;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.Extensions.Logging;
 
@@ -21,6 +22,8 @@ namespace Geode.Maui
             builder.Services.AddAuthorizationCore();
 
             builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthStateProvider>();
+
+            builder.Services.AddBlazoredLocalStorage();
 
 #if DEBUG
     		builder.Services.AddBlazorWebViewDeveloperTools();

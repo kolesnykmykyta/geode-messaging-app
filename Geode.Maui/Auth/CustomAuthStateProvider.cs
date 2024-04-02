@@ -1,6 +1,7 @@
 ﻿using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.AspNetCore.Identity;
 
 namespace Geode.Maui.Auth
 {
@@ -11,7 +12,7 @@ namespace Geode.Maui.Auth
         public override Task<AuthenticationState> GetAuthenticationStateAsync() =>
             Task.FromResult(new AuthenticationState(currentUser));
 
-        public Task LogInAsync()
+        public Task LogInAsync(string email, string password)
         {
             var loginTask = LogInAsyncCore();
             NotifyAuthenticationStateChanged(loginTask);
@@ -29,12 +30,6 @@ namespace Geode.Maui.Auth
 
         private Task<ClaimsPrincipal> LoginWithExternalProviderAsync()
         {
-            /*
-                Provide OpenID/MSAL code to authenticate the user. See your identity 
-                provider's documentation for details.
-
-                Return a new ClaimsPrincipal based on a new ClaimsIdentity.
-            */
             ClaimsIdentity identity = new ClaimsIdentity("Custom");
 
             var authenticatedUser = new ClaimsPrincipal(identity);

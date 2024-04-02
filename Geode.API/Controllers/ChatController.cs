@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace Geode.API.Controllers
 {
@@ -13,10 +15,12 @@ namespace Geode.API.Controllers
 
         }
 
+        [Authorize]
         [HttpGet("all")]
         public IActionResult GetUserChat()
         {
-            throw new NotImplementedException();
+            string userId = User.FindFirst(ClaimTypes.Email)!.Value;
+            return Ok(userId);
         }
 
         [HttpPost("join/{id}")]
