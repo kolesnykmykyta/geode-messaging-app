@@ -5,7 +5,6 @@ using System.Security.Claims;
 
 namespace Geode.API.Controllers
 {
-    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class ChatController : ControllerBase

@@ -5,15 +5,17 @@ VisualStudioVersion = 17.8.34330.188
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "Geode.Db", "Geode.Db\Geode.Db.sqlproj", "{3B0177D0-B4D0-4CDB-82AC-638061ED5BAD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Geode.API", "Geode.API\Geode.API.csproj", "{533C1A09-E811-4210-B5B8-6394DD3432E7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Geode.API", "Geode.API\Geode.API.csproj", "{533C1A09-E811-4210-B5B8-6394DD3432E7}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Geode.Infrastructure", "Geode.Infrastructure", "{3B377458-E67C-424D-A721-2934B8C4C69C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataAccess", "DataAccess\DataAccess.csproj", "{FF83BECB-BA8D-44D8-A6B2-951236185950}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataAccess", "DataAccess\DataAccess.csproj", "{FF83BECB-BA8D-44D8-A6B2-951236185950}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Application", "Application\Application.csproj", "{D5B55CCF-7F44-418C-B231-68E35813ACE3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Application", "Application\Application.csproj", "{D5B55CCF-7F44-418C-B231-68E35813ACE3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Geode.Maui", "Geode.Maui\Geode.Maui.csproj", "{E199061C-1AF8-4BB0-AE43-C27947250919}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Geode.Maui", "Geode.Maui\Geode.Maui.csproj", "{E199061C-1AF8-4BB0-AE43-C27947250919}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Auth", "Auth\Auth.csproj", "{0390D776-004A-44EB-B76F-4FD7C7BB7781}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -45,6 +47,10 @@ Global
 		{E199061C-1AF8-4BB0-AE43-C27947250919}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E199061C-1AF8-4BB0-AE43-C27947250919}.Release|Any CPU.Build.0 = Release|Any CPU
 		{E199061C-1AF8-4BB0-AE43-C27947250919}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{0390D776-004A-44EB-B76F-4FD7C7BB7781}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0390D776-004A-44EB-B76F-4FD7C7BB7781}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0390D776-004A-44EB-B76F-4FD7C7BB7781}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0390D776-004A-44EB-B76F-4FD7C7BB7781}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -52,6 +58,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{FF83BECB-BA8D-44D8-A6B2-951236185950} = {3B377458-E67C-424D-A721-2934B8C4C69C}
 		{D5B55CCF-7F44-418C-B231-68E35813ACE3} = {3B377458-E67C-424D-A721-2934B8C4C69C}
+		{0390D776-004A-44EB-B76F-4FD7C7BB7781} = {3B377458-E67C-424D-A721-2934B8C4C69C}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {4DB096B1-6D64-48C7-B54D-63F02624636C}
