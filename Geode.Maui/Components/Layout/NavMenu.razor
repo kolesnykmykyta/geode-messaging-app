@@ -36,8 +36,11 @@
             </Authorized>
             <NotAuthorized>
                 <div class="nav-item px-3">
-                    <NavLink class="nav-link" @onclick="Login" style="cursor:pointer">
+                    <NavLink class="nav-link" href="login" style="cursor:pointer">
                         <span class="bi bi-box-arrow-in-right" aria-hidden="true"></span> Login
+                    </NavLink>
+                    <NavLink class="nav-link" href="register" style="cursor:pointer">
+                        <span class="bi bi-box-arrow-in-right" aria-hidden="true"></span> Register
                     </NavLink>
                 </div>
             </NotAuthorized>
@@ -46,15 +49,10 @@
 </div>
 
 @code {
-    private async Task Login()
+    private async Task Logout()
     {
         CustomAuthStateProvider authStateProvider = (CustomAuthStateProvider)AuthStateProvider;
-    }
-
-    private void Logout()
-    {
-        CustomAuthStateProvider authStateProvider = (CustomAuthStateProvider)AuthStateProvider;
-        authStateProvider.Logout();
+        await authStateProvider.LogoutAsync();
         NavigationManager.NavigateTo(string.Empty);
     }
 }

@@ -1,5 +1,21 @@
 ﻿@page "/"
+@inject ILocalStorageService _localstorage;
 
 <h1>Hello, world!</h1>
 
-Welcome to your new app.
+<AuthorizeView>
+    <Authorized>
+        @token
+    </Authorized>
+    <NotAuthorized>
+        Not authorized
+    </NotAuthorized>
+</AuthorizeView>
+
+@code{
+    private string? token;
+    protected override async Task OnInitializedAsync()
+    {
+        token = await _localstorage.GetItemAsStringAsync("BearerToken");
+    }
+}

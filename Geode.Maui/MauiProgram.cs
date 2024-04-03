@@ -1,5 +1,5 @@
 ﻿using Blazored.LocalStorage;
-using Geode.Maui.Auth;
+using Geode.Maui.Authentication;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.Extensions.Logging;
 

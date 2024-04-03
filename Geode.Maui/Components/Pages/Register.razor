@@ -1,0 +1,31 @@
+﻿@page "/register"
+@inject AuthenticationStateProvider AuthStateProvider
+
+<h3>Register</h3>
+<div class="justify-content-center">
+    <EditForm Model="@dto" OnSubmit="RegisterAsync" FormName="register" class="form-group w-50" style="margin:auto">
+        <div class="mt-2">
+            <label for="email">Email</label>
+            <InputText id="email" type="email" @bind-Value="@dto.Email" class="form-control" required></InputText>
+        </div>
+        <div class="mt-2">
+            <label for="file">Password</label>
+            <InputText id="password" type="password" @bind-Value="@dto.Password" class="form-control" required></InputText>
+        </div>
+        <div class="d-flex flex-row-reverse">
+            <button type="submit" class="btn btn-primary mt-4">Submit</button>
+        </div>
+        @message
+    </EditForm>
+</div>
+@code {
+    private RegisterDto dto = new RegisterDto();
+    private string message = string.Empty;
+    private async Task RegisterAsync(EditContext context)
+    {
+        CustomAuthStateProvider authStateProvider = (CustomAuthStateProvider)AuthStateProvider;
+        RegisterDto contextDto = (RegisterDto)context.Model;
+        await authStateProvider.RegisterAsync(contextDto);
+        message = "Registration finished";
+    }
+}
