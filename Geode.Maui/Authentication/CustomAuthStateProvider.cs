@@ -3,6 +3,7 @@ using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
+using Application.Utils.HttpClientWrapper;
 using Auth.Dtos;
 using Blazored.LocalStorage;
 using Microsoft.AspNetCore.Components.Authorization;
@@ -15,12 +16,14 @@ namespace Geode.Maui.Authentication
     {
         private ClaimsPrincipal currentUser = new ClaimsPrincipal(new ClaimsIdentity());
         private readonly ILocalStorageService _localStorage;
+        private readonly IHttpClientWrapper _httpClient;
 
         const string BearerTokenName = "BearerToken";
 
-        public CustomAuthStateProvider(ILocalStorageService localStorage)
+        public CustomAuthStateProvider(ILocalStorageService localStorage, IHttpClientWrapper httpClient)
         {
             _localStorage = localStorage;
+            _httpClient = httpClient;
         }
 
         public override Task<AuthenticationState> GetAuthenticationStateAsync() =>
@@ -45,25 +48,13 @@ namespace Geode.Maui.Authentication
         private async Task<ClaimsPrincipal> LoginWithExternalProviderAsync(LoginDto dto)
         {
             ClaimsIdentity identity = new ClaimsIdentity();
-            try
-            {
-                using HttpClient _httpClient = new HttpClient();
-                var postBody = JsonSerializer.Serialize(dto);
-                StringContent content = new StringContent(postBody, Encoding.UTF8, "application/json");
+            HttpResponseMessage response = await _httpClient.PostAsync("https://localhost:7077/api/User/login", dto);
 
-                HttpResponseMessage response = await _httpClient.PostAsync("https://localhost:7077/api/User/login", content);
-
-                if (response.IsSuccessStatusCode)
-                {
-                    string responseBody = await response.Content.ReadAsStringAsync(); // Store token here
-                    await _localStorage.SetItemAsStringAsync(BearerTokenName, responseBody);
-                    Console.Write(responseBody);
-                    identity = new ClaimsIdentity("Custom");
-                }
-            }
-            catch
+            if (response.IsSuccessStatusCode)
             {
-                Console.WriteLine("Failed authorization");
+                string responseBody = await response.Content.ReadAsStringAsync();
+                await _localStorage.SetItemAsStringAsync(BearerTokenName, responseBody);
+                identity = new ClaimsIdentity("Custom");
             }
 
             var authenticatedUser = new ClaimsPrincipal(identity);
@@ -73,10 +64,7 @@ namespace Geode.Maui.Authentication
 
         public async Task RegisterAsync(RegisterDto dto)
         {
-            using HttpClient _httpClient = new HttpClient();
-            var postBody = JsonSerializer.Serialize(dto);
-            StringContent content = new StringContent(postBody, Encoding.UTF8, "application/json");
-            HttpResponseMessage response = await _httpClient.PostAsync("https://localhost:7077/api/User/register", content);
+            HttpResponseMessage response = await _httpClient.PostAsync("https://localhost:7077/api/User/register", dto);
         }
 
         public async Task LogoutAsync()
