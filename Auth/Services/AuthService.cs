@@ -48,7 +48,7 @@ namespace Auth.Services
         {
             User newUser = new User
             {
-                UserName = dto.Email,
+                UserName = dto.Username,
                 Email = dto.Email,
             };
 
