@@ -1,4 +1,5 @@
-﻿using DataAccess.Entities;
+﻿using DataAccess.Configurations;
+using DataAccess.Entities;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
@@ -15,5 +16,12 @@ namespace DataAccess.DbContext
         DbSet<ChatMember> ChatMembers { get; set; }
 
         DbSet<Message> Messages { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            builder.ApplyConfiguration(new ChatEntityConfiguration());
+            builder.ApplyConfiguration(new ChatMemberEntityConfiguration());
+            builder.ApplyConfiguration(new MessageEntityConfiguration());
+        }
     }
 }

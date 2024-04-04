@@ -6,10 +6,8 @@ using System.Threading.Tasks;
 
 namespace DataAccess.Entities
 {
-    public class Chat
+    public class Chat : BaseEntity
     {
-        public int Id { get; set; }
-
         public string Name { get; set; } = string.Empty;
 
         // Navigation properties

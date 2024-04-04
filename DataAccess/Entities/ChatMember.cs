@@ -7,10 +7,8 @@ using System.Threading.Tasks;
 
 namespace DataAccess.Entities
 {
-    public class ChatMember
+    public class ChatMember : BaseEntity
     {
-        public int Id { get; set; }
-
         [ForeignKey("User")]
         public string UserId { get; set; } = string.Empty;
 
