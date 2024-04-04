@@ -1,6 +1,8 @@
 ﻿using Application.Handlers;
 using Application.Services;
 using Application.Utils;
+using Auth.Dtos;
+using MediatR;
 
 namespace Geode.API.Extensions
 {
@@ -15,6 +17,8 @@ namespace Geode.API.Extensions
             services.AddScoped<JoinChatCommandHandler>();
             services.AddScoped<SendMessageCommandHandler>();
             services.AddScoped<UpdateUsernameCommand>();
+            services.AddScoped<IRequestHandler<RegisterNewUserCommand, RegisterResultDto>, RegisterNewUserCommandHandler>();
+            services.AddScoped<IRequestHandler<LoginQuery, string?>, LoginQueryHandler>();
 
             services.AddSingleton<CommonMessageHandler>();
         }
