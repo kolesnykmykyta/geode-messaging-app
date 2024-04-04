@@ -19,9 +19,16 @@ namespace DataAccess.DbContext
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
+            base.OnModelCreating(builder);
+
             builder.ApplyConfiguration(new ChatEntityConfiguration());
             builder.ApplyConfiguration(new ChatMemberEntityConfiguration());
             builder.ApplyConfiguration(new MessageEntityConfiguration());
+
+            builder.Entity<User>(e =>
+            {
+                e.HasIndex(u => u.Email).IsUnique();
+            });
         }
     }
 }

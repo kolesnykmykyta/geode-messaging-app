@@ -29,7 +29,10 @@ namespace Geode.API
                 options.UseSqlServer(builder.Configuration.GetConnectionString("Default")));
             builder.Services.AddAuthorization();
 
-            builder.Services.AddIdentity<User, IdentityRole>()
+            builder.Services.AddIdentity<User, IdentityRole>(options =>
+            {
+                options.User.RequireUniqueEmail = true;
+            })
                 .AddEntityFrameworkStores<DatabaseContext>()
                 .AddDefaultTokenProviders();
 
