@@ -1,16 +1,11 @@
-﻿using Application.Handlers.Interfaces;
-using Application.Services;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Application.Services;
+using MediatR;
 
 namespace Application.Handlers
 {
-    public class SendMessageCommandHandler : ICommandHandler<JoinChatCommand>
+    public class SendMessageCommandHandler : IRequestHandler<SendMessageCommand, bool>
     {
-        public bool Process(JoinChatCommand command)
+        public Task<bool> Handle(SendMessageCommand request, CancellationToken cancellationToken)
         {
             throw new NotImplementedException();
         }

@@ -1,16 +1,11 @@
-﻿using Application.Handlers.Interfaces;
-using Application.Services;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Application.Services;
+using MediatR;
 
 namespace Application.Handlers
 {
-    public class LeaveChatCommandHandler : ICommandHandler<LeaveChatCommand>
+    public class LeaveChatCommandHandler : IRequestHandler<LeaveChatCommand>
     {
-        public bool Process(LeaveChatCommand command)
+        public Task Handle(LeaveChatCommand request, CancellationToken cancellationToken)
         {
             throw new NotImplementedException();
         }

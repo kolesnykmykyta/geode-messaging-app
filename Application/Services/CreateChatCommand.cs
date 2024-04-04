@@ -1,13 +1,8 @@
-﻿using Application.Services.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using MediatR;
 
 namespace Application.Services
 {
-    public class CreateChatCommand : ICommand
+    public class CreateChatCommand : IRequest<bool>
     {
     }
 }

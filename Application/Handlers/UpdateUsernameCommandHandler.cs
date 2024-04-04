@@ -1,16 +1,11 @@
-﻿using Application.Handlers.Interfaces;
-using Application.Services;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Application.Services;
+using MediatR;
 
 namespace Application.Handlers
 {
-    internal class UpdateUsernameCommandHandler : ICommandHandler<UpdateUsernameCommand>
+    public class UpdateUsernameCommandHandler : IRequestHandler<UpdateUsernameCommand, bool>
     {
-        public bool Process(UpdateUsernameCommand command)
+        public Task<bool> Handle(UpdateUsernameCommand request, CancellationToken cancellationToken)
         {
             throw new NotImplementedException();
         }

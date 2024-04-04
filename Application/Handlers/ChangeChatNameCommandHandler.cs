@@ -1,16 +1,11 @@
-﻿using Application.Handlers.Interfaces;
-using Application.Services;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Application.Services;
+using MediatR;
 
 namespace Application.Handlers
 {
-    public class ChangeChatNameCommandHandler : ICommandHandler<ChangeChatNameCommand>
+    public class ChangeChatNameCommandHandler : IRequestHandler<ChangeChatNameCommand, bool>
     {
-        public bool Process(ChangeChatNameCommand command)
+        public Task<bool> Handle(ChangeChatNameCommand request, CancellationToken cancellationToken)
         {
             throw new NotImplementedException();
         }

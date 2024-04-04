@@ -1,17 +1,12 @@
-﻿using Application.Handlers.Interfaces;
-using Application.Services;
+﻿using Application.Services;
 using DataAccess.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using MediatR;
 
 namespace Application.Handlers
 {
-    public class GetChatMessageQueryHandler : IQueryHandler<GetChatMessagesQuery, IEnumerable<Message>>
+    public class GetChatMessageQueryHandler : IRequestHandler<GetChatMessagesQuery, IEnumerable<Message>>
     {
-        public IEnumerable<Message> Process(GetChatMessagesQuery query)
+        public Task<IEnumerable<Message>> Handle(GetChatMessagesQuery request, CancellationToken cancellationToken)
         {
             throw new NotImplementedException();
         }

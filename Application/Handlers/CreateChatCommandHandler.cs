@@ -1,16 +1,11 @@
-﻿using Application.Handlers.Interfaces;
-using Application.Services;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Application.Services;
+using MediatR;
 
 namespace Application.Handlers
 {
-    public class CreateChatCommandHandler : ICommandHandler<CreateChatCommand>
+    public class CreateChatCommandHandler : IRequestHandler<CreateChatCommand, bool>
     {
-        public bool Process(CreateChatCommand command)
+        public Task<bool> Handle(CreateChatCommand request, CancellationToken cancellationToken)
         {
             throw new NotImplementedException();
         }
