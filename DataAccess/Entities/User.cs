@@ -9,5 +9,8 @@ namespace DataAccess.Entities
 {
     public class User : IdentityUser
     {
+        public string? RefreshToken { get; set; }
+
+        public DateTime? RefreshTokenExpirationDate { get; set; }
     }
 }

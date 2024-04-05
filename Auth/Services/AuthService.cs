@@ -9,12 +9,13 @@ using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Auth.Services
 {
-    public class AuthService : IAuthService 
+    public class AuthService : IAuthService
     {
         private readonly UserManager<User> _userManager;
         private readonly IConfiguration _config;
@@ -25,7 +26,7 @@ namespace Auth.Services
             _config = config;
         }
 
-        public async Task<string?> LoginAsync(LoginDto dto)
+        public async Task<TokenDto?> LoginAsync(LoginDto dto)
         {
             User? existingUser = await _userManager.FindByEmailAsync(dto.Email);
             if (existingUser == null)
@@ -36,12 +37,26 @@ namespace Auth.Services
             bool isCorrectPassword = await _userManager.CheckPasswordAsync(existingUser, dto.Password);
             if (isCorrectPassword)
             {
-                return this.GenerateBearerToken(existingUser);
+                return await GenerateBearerTokenAsync(existingUser, true);
             }
             else
             {
                 return null;
             }
+        }
+
+        public async Task<TokenDto?> RefreshAsync(TokenDto dto)
+        {
+            ClaimsPrincipal principal = GetPrincipalFromExistingToken(dto.AccessToken);
+
+            User? userFromToken = await _userManager.FindByNameAsync(principal.Identity!.Name!);
+
+            if (userFromToken == null || userFromToken.RefreshToken != dto.RefreshToken || userFromToken.RefreshTokenExpirationDate <= DateTime.Now)
+            {
+                return null;
+            }
+
+            return await GenerateBearerTokenAsync(userFromToken, false);
         }
 
         public async Task<RegisterResultDto> RegisterAsync(RegisterDto dto)
@@ -70,11 +85,12 @@ namespace Auth.Services
             }
         }
 
-        private string GenerateBearerToken(User user)
+        private async Task<TokenDto> GenerateBearerTokenAsync(User user, bool populateExp)
         {
             IEnumerable<Claim> userClaims = new List<Claim>
             {
-                new Claim(ClaimTypes.Email, user.Email!)
+                new Claim(ClaimTypes.Email, user.Email!),
+                new Claim(ClaimTypes.Name, user.UserName!)
             };
 
 
@@ -91,8 +107,67 @@ namespace Auth.Services
                 signingCredentials: credentials
                 );
 
-            string token = new JwtSecurityTokenHandler().WriteToken(securityToken);
-            return token;
+            string refreshToken = GenerateRefreshToken();
+
+            user.RefreshToken = refreshToken;
+
+            if (populateExp)
+            {
+                user.RefreshTokenExpirationDate = DateTime.Now.AddDays(7);
+            }
+
+            await _userManager.UpdateAsync(user);
+
+            string accessToken = new JwtSecurityTokenHandler().WriteToken(securityToken);
+
+            TokenDto dto = new TokenDto()
+            {
+                AccessToken = accessToken,
+                RefreshToken = refreshToken
+            };
+
+            return dto;
+        }
+
+        private string GenerateRefreshToken()
+        {
+            byte[] randomNumber = new byte[32];
+            using (RandomNumberGenerator rng = RandomNumberGenerator.Create())
+            {
+                rng.GetBytes(randomNumber);
+            }
+
+            return Convert.ToBase64String(randomNumber);
+        }
+
+        private ClaimsPrincipal GetPrincipalFromExistingToken(string token)
+        {
+            TokenValidationParameters validationParameters = new TokenValidationParameters()
+            {
+                ValidateActor = true,
+                ValidateIssuer = true,
+                ValidateAudience = true,
+                // ValidateLifetime = true, // Expired access tokens can (false) or can't (true) use refresh tokens
+                RequireExpirationTime = true,
+                ValidateIssuerSigningKey = true,
+                ValidIssuer = _config.GetSection("Jwt:Issuer").Value,
+                ValidAudience = _config.GetSection("Jwt:Audience").Value,
+                IssuerSigningKey = new SymmetricSecurityKey(
+                            Encoding.UTF8.GetBytes(_config.GetSection("Jwt:Key").Value!))
+            };
+
+            JwtSecurityTokenHandler tokenHanler = new JwtSecurityTokenHandler();
+            SecurityToken securityToken;
+            ClaimsPrincipal principal = tokenHanler.ValidateToken(token, validationParameters, out securityToken);
+            JwtSecurityToken? jwtSecurityToken = securityToken as JwtSecurityToken;
+
+            if (jwtSecurityToken == null ||
+                jwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256, StringComparison.InvariantCultureIgnoreCase))
+            {
+                return null;
+            }
+
+            return principal;
         }
     }
 }

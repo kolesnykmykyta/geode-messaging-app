@@ -11,6 +11,8 @@ namespace Auth.Services.Interfaces
     {
         Task<RegisterResultDto> RegisterAsync(RegisterDto dto);
 
-        Task<string?> LoginAsync(LoginDto dto);
+        Task<TokenDto?> LoginAsync(LoginDto dto);
+
+        Task<TokenDto?> RefreshAsync(TokenDto dto);
     }
 }

@@ -36,11 +36,26 @@ namespace Geode.API.Controllers
         [HttpPost("login")]
         public async Task<IActionResult> Login(LoginDto dto)
         {
-            string? token = await _mediator.Send(new LoginQuery { Dto = dto });
+            TokenDto? tokens = await _mediator.Send(new LoginQuery { Dto = dto });
 
-            if (token != null)
+            if (tokens != null)
             {
-                return Ok(token);
+                return Ok(tokens);
+            }
+            else
+            {
+                return BadRequest();
+            }
+        }
+
+        [HttpPost("refresh")]
+        public async Task<IActionResult> Refresh(TokenDto dto)
+        {
+            TokenDto? tokens = await _mediator.Send(new RefreshTokenQuery { Dto = dto });
+
+            if (tokens != null)
+            {
+                return Ok(tokens);
             }
             else
             {

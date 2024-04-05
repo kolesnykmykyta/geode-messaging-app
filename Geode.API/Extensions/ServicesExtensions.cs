@@ -23,7 +23,8 @@ namespace Geode.API.Extensions
             services.AddScoped<IRequestHandler<RegisterNewUserCommand, RegisterResultDto>, RegisterNewUserCommandHandler>();
 
             // CQRS Queries
-            services.AddScoped<IRequestHandler<LoginQuery, string?>, LoginQueryHandler>();
+            services.AddScoped<IRequestHandler<LoginQuery, TokenDto?>, LoginQueryHandler>();
+            services.AddScoped<IRequestHandler<RefreshTokenQuery, TokenDto?>, RefreshTokenQueryHandler>();
             services.AddScoped<IRequestHandler<GetChatMessagesQuery, IEnumerable<Message>>, GetChatMessageQueryHandler>();
             services.AddScoped<IRequestHandler<GetUserChatsQuery, IEnumerable<Chat>>, GetUserChatsQueryHandler>();
         }
