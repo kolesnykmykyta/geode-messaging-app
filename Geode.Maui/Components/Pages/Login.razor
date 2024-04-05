@@ -1,5 +1,5 @@
 ﻿@page "/login"
-@inject AuthenticationStateProvider AuthStateProvider
+@inject IAuthenticationService authService
 
 <h3>Login</h3>
 <div class="justify-content-center">
@@ -22,8 +22,7 @@
 
     private async Task LoginAsync(EditContext context)
     {
-        CustomAuthStateProvider authStateProvider = (CustomAuthStateProvider)AuthStateProvider;
         LoginDto contextDto = (LoginDto)context.Model;
-        await authStateProvider.LogInAsync(contextDto);
+        await authService.LogInAsync(contextDto);
     }
 }

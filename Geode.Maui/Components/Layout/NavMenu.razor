@@ -1,4 +1,4 @@
-﻿@inject AuthenticationStateProvider AuthStateProvider;
+﻿@inject IAuthenticationService authService;
 @inject NavigationManager NavigationManager
 
 <div class="top-row ps-3 navbar navbar-dark">
@@ -51,8 +51,7 @@
 @code {
     private async Task Logout()
     {
-        CustomAuthStateProvider authStateProvider = (CustomAuthStateProvider)AuthStateProvider;
-        await authStateProvider.LogoutAsync();
+        await authService.LogoutAsync();
         NavigationManager.NavigateTo(string.Empty);
     }
 }

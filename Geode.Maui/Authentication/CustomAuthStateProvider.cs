@@ -15,64 +15,30 @@ namespace Geode.Maui.Authentication
 {
     internal class CustomAuthStateProvider : AuthenticationStateProvider
     {
-        const string BearerTokenName = "BearerToken";
-        const string AuthApiBase = "https://localhost:7077/api/User";
-
         private ClaimsPrincipal currentUser = new ClaimsPrincipal(new ClaimsIdentity());
-        private readonly ILocalStorageService _localStorage;
-        private readonly IHttpClientWrapper _httpClient;
-
-        public CustomAuthStateProvider(ILocalStorageService localStorage, IHttpClientWrapper httpClient)
-        {
-            _localStorage = localStorage;
-            _httpClient = httpClient;
-        }
 
         public override Task<AuthenticationState> GetAuthenticationStateAsync() =>
             Task.FromResult(new AuthenticationState(currentUser));
 
-        public Task LogInAsync(LoginDto dto)
+        public Task LogInAsync(ClaimsPrincipal userPrincipal)
         {
             var loginTask = LogInAsyncCore();
             NotifyAuthenticationStateChanged(loginTask);
 
             return loginTask;
 
-            async Task<AuthenticationState> LogInAsyncCore()
+            Task<AuthenticationState> LogInAsyncCore()
             {
-                var user = await LoginWithExternalProviderAsync(dto);
-                currentUser = user;
+                currentUser = userPrincipal;
 
-                return new AuthenticationState(currentUser);
+                return Task.FromResult(new AuthenticationState(currentUser));
             }
         }
 
-        private async Task<ClaimsPrincipal> LoginWithExternalProviderAsync(LoginDto dto)
-        {
-            ClaimsIdentity identity = new ClaimsIdentity();
-            HttpResponseMessage response = await _httpClient.PostAsync($"{AuthApiBase}/login", dto);
-
-            if (response.IsSuccessStatusCode)
-            {
-                string responseBody = await response.Content.ReadAsStringAsync();
-                await _localStorage.SetItemAsStringAsync(BearerTokenName, responseBody);
-                identity = new ClaimsIdentity("Custom");
-            }
-
-            var authenticatedUser = new ClaimsPrincipal(identity);
-
-            return await Task.FromResult(authenticatedUser);
-        }
-
-        public async Task RegisterAsync(RegisterDto dto)
-        {
-            HttpResponseMessage response = await _httpClient.PostAsync($"{AuthApiBase}/register", dto);
-        }
-
-        public async Task LogoutAsync()
+        public void Logout()
         {
             currentUser = new ClaimsPrincipal(new ClaimsIdentity());
-            await _localStorage.RemoveItemAsync(BearerTokenName);
+
             NotifyAuthenticationStateChanged(
                 Task.FromResult(new AuthenticationState(currentUser)));
         }

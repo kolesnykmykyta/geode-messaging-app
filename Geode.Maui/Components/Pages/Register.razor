@@ -1,5 +1,5 @@
 ﻿@page "/register"
-@inject AuthenticationStateProvider AuthStateProvider
+@inject IAuthenticationService authService
 
 <h3>Register</h3>
 <div class="justify-content-center">
@@ -25,11 +25,11 @@
 @code {
     private RegisterDto dto = new RegisterDto();
     private string message = string.Empty;
+
     private async Task RegisterAsync(EditContext context)
     {
-        CustomAuthStateProvider authStateProvider = (CustomAuthStateProvider)AuthStateProvider;
         RegisterDto contextDto = (RegisterDto)context.Model;
-        await authStateProvider.RegisterAsync(contextDto);
+        await authService.RegisterAsync(contextDto);
         message = "Registration finished";
     }
 }
