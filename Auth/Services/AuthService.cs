@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
@@ -37,7 +38,7 @@ namespace Auth.Services
             bool isCorrectPassword = await _userManager.CheckPasswordAsync(existingUser, dto.Password);
             if (isCorrectPassword)
             {
-                return await GenerateBearerTokenAsync(existingUser, true);
+                return await GenerateTokenPairAsync(existingUser, true);
             }
             else
             {
@@ -56,7 +57,7 @@ namespace Auth.Services
                 return null;
             }
 
-            return await GenerateBearerTokenAsync(userFromToken, false);
+            return await GenerateTokenPairAsync(userFromToken, false);
         }
 
         public async Task<RegisterResultDto> RegisterAsync(RegisterDto dto)
@@ -85,7 +86,29 @@ namespace Auth.Services
             }
         }
 
-        private async Task<TokenDto> GenerateBearerTokenAsync(User user, bool populateExp)
+        private async Task<TokenDto> GenerateTokenPairAsync(User user, bool changeRefreshTokenExpDate)
+        {
+            string refreshToken = GenerateRefreshToken();
+            user.RefreshToken = refreshToken;
+            if (changeRefreshTokenExpDate)
+            {
+                user.RefreshTokenExpirationDate = DateTime.Now.AddDays(7);
+            }
+
+            await _userManager.UpdateAsync(user);
+
+            string bearerToken = GenerateBearerToken(user);
+
+            TokenDto tokenPair = new TokenDto
+            {
+                AccessToken = bearerToken,
+                RefreshToken = refreshToken,
+            };
+
+            return tokenPair;
+        }
+
+        private string GenerateBearerToken(User user)
         {
             IEnumerable<Claim> userClaims = new List<Claim>
             {
@@ -107,26 +130,9 @@ namespace Auth.Services
                 signingCredentials: credentials
                 );
 
-            string refreshToken = GenerateRefreshToken();
-
-            user.RefreshToken = refreshToken;
-
-            if (populateExp)
-            {
-                user.RefreshTokenExpirationDate = DateTime.Now.AddDays(7);
-            }
-
-            await _userManager.UpdateAsync(user);
-
             string accessToken = new JwtSecurityTokenHandler().WriteToken(securityToken);
 
-            TokenDto dto = new TokenDto()
-            {
-                AccessToken = accessToken,
-                RefreshToken = refreshToken
-            };
-
-            return dto;
+            return accessToken;
         }
 
         private string GenerateRefreshToken()
@@ -147,7 +153,7 @@ namespace Auth.Services
                 ValidateActor = true,
                 ValidateIssuer = true,
                 ValidateAudience = true,
-                // ValidateLifetime = true, // Expired access tokens can (false) or can't (true) use refresh tokens
+                ValidateLifetime = true, // Expired access tokens can (false) or can't (true) use refresh tokens
                 RequireExpirationTime = true,
                 ValidateIssuerSigningKey = true,
                 ValidIssuer = _config.GetSection("Jwt:Issuer").Value,
