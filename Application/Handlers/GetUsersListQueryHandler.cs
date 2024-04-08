@@ -28,18 +28,7 @@ namespace Application.Handlers
 
         public async Task<IEnumerable<UserInfoDto>> Handle(GetUsersListQuery request, CancellationToken cancellationToken)
         {
-            List<Expression<Func<User, bool>>>? conditions = new();
-
-            if (request.EmailContains != null)
-            {
-                conditions.Add(x => x.Email!.Contains(request.EmailContains));
-            }
-            if (request.UsernameContains != null)
-            {
-                conditions.Add(x => x.UserName!.Contains(request.UsernameContains));
-            }
-
-            IEnumerable<User> returnList = _unitOfWork.GenericRepository<User>().GetList(conditions, request.PageSize, request.PageNumber);
+            IEnumerable<User> returnList = _unitOfWork.GenericRepository<User>().GetList(request.SearchParam, request.PageSize, request.PageNumber);
             return _mapper.Map<IEnumerable<UserInfoDto>>(returnList);
         }
     }

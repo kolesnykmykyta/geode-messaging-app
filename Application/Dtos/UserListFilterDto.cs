@@ -12,8 +12,10 @@ namespace Application.Dtos
 
         public int PageSize { get; set; } = 10;
 
-        public string? UsernameContains { get; set; }
+        public string? SearchParam { get; set; }
 
-        public string? EmailContains { get; set; }
+        public string? SortProp { get; set; }
+
+        public bool SortByDescending { get; set; }
     }
 }

@@ -4,7 +4,9 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Dynamic.Core;
 using System.Linq.Expressions;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -13,10 +15,12 @@ namespace DataAccess.Repositories
     public class GenericRepository<TEntity> : IGenericRepository<TEntity> where TEntity : class
     {
         private readonly DatabaseContext _context;
+        private readonly PropertyInfo[] _entityProperties;
 
         public GenericRepository(DatabaseContext context)
         {
             _context = context;
+            _entityProperties = typeof(TEntity).GetProperties(BindingFlags.Public | BindingFlags.Instance);
         }
 
         public void Delete(int id)
@@ -27,16 +31,13 @@ namespace DataAccess.Repositories
             }
         }
 
-        public IEnumerable<TEntity> GetList(IEnumerable<Expression<Func<TEntity, bool>>>? conditions = null, int? pageSize = null, int? pageNumber = null)
+        public IEnumerable<TEntity> GetList(string? searchParam = null, int? pageSize = null, int? pageNumber = null)
         {
             var query = _context.Set<TEntity>().AsQueryable();
 
-            if (conditions != null)
+            if (searchParam != null)
             {
-                foreach(var condition in conditions)
-                {
-                    query = query.Where(condition);
-                }
+                query = query.Where(ObjectContainsString(searchParam));
             }
 
             if (pageNumber != null && pageSize != null)
@@ -45,7 +46,7 @@ namespace DataAccess.Repositories
                     .Take((int)pageSize);
             }
 
-            return query;
+            return query.ToList();
         }
 
         public TEntity? GetById(int id)
@@ -62,6 +63,27 @@ namespace DataAccess.Repositories
         {
             _context.Set<TEntity>().Attach(entity);
             _context.Entry(entity).State = EntityState.Modified;
+        }
+
+        private Expression<Func<TEntity, bool>> ObjectContainsString(string searchParam)
+        {
+            var parameter = Expression.Parameter(typeof(TEntity), "entity");
+            var containsMethod = typeof(string).GetMethod("Contains", new[] { typeof(string) });
+
+            Expression body = Expression.Constant(false);
+
+            foreach (var property in _entityProperties)
+            {
+                if (property.PropertyType == typeof(string))
+                {
+                    var propValue = Expression.Property(parameter, property);
+                    var searchValue = Expression.Constant(searchParam);
+                    var containsCall = Expression.Call(propValue, containsMethod, searchValue);
+                    body = Expression.Or(body, containsCall);
+                }
+            }
+
+            return Expression.Lambda<Func<TEntity, bool>>(body, parameter);
         }
     }
 }

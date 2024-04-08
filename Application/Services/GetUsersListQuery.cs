@@ -10,8 +10,10 @@ namespace Application.Services
 
         public int PageSize { get; set; }
 
-        public string? UsernameContains { get; set; }
+        public string? SearchParam { get; set; }
 
-        public string? EmailContains { get; set; }
+        public string? SortProp { get; set; }
+
+        public bool SortByDescending { get; set; }
     }
 }
