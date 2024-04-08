@@ -97,7 +97,7 @@ namespace Auth.Services
 
             await _userManager.UpdateAsync(user);
 
-            string bearerToken = GenerateBearerToken(user);
+            string bearerToken = await GenerateBearerToken(user);
 
             TokenDto tokenPair = new TokenDto
             {
@@ -108,14 +108,18 @@ namespace Auth.Services
             return tokenPair;
         }
 
-        private string GenerateBearerToken(User user)
+        private async Task<string> GenerateBearerToken(User user)
         {
-            IEnumerable<Claim> userClaims = new List<Claim>
+            List<Claim> userClaims = new List<Claim>
             {
                 new Claim(ClaimTypes.Email, user.Email!),
                 new Claim(ClaimTypes.Name, user.UserName!)
             };
 
+            foreach(string role in await _userManager.GetRolesAsync(user))
+            {
+                userClaims.Add(new Claim(ClaimTypes.Role, role));
+            }
 
             SecurityKey securityKey = new SymmetricSecurityKey(
                 Encoding.UTF8.GetBytes(_config.GetSection("Jwt:Key").Value!));
