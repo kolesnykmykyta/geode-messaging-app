@@ -124,7 +124,7 @@ namespace Auth.Services
 
             JwtSecurityToken securityToken = new JwtSecurityToken(
                 claims: userClaims,
-                expires: DateTime.Now.AddHours(12),
+                expires: DateTime.Now.AddHours(1),
                 issuer: _config.GetSection("Jwt:Issuer").Value,
                 audience: _config.GetSection("Jwt:Issuer").Value,
                 signingCredentials: credentials
@@ -153,7 +153,7 @@ namespace Auth.Services
                 ValidateActor = true,
                 ValidateIssuer = true,
                 ValidateAudience = true,
-                ValidateLifetime = true, // Expired access tokens can (false) or can't (true) use refresh tokens
+                ValidateLifetime = false, // Expired access tokens can (false) or can't (true) use refresh tokens
                 RequireExpirationTime = true,
                 ValidateIssuerSigningKey = true,
                 ValidIssuer = _config.GetSection("Jwt:Issuer").Value,
