@@ -1,4 +1,5 @@
-﻿using Application.Handlers;
+﻿using Application.Dtos;
+using Application.Handlers;
 using Application.Services;
 using Application.Utils;
 using Auth.Dtos;
@@ -27,6 +28,7 @@ namespace Geode.API.Extensions
             services.AddScoped<IRequestHandler<RefreshTokenQuery, TokenDto?>, RefreshTokenQueryHandler>();
             services.AddScoped<IRequestHandler<GetChatMessagesQuery, IEnumerable<Message>>, GetChatMessageQueryHandler>();
             services.AddScoped<IRequestHandler<GetUserChatsQuery, IEnumerable<Chat>>, GetUserChatsQueryHandler>();
+            services.AddScoped<IRequestHandler<GetUsersListQuery, IEnumerable<UserInfoDto>>, GetUsersListQueryHandler>();
         }
     }
 }

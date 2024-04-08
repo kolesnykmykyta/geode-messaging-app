@@ -1,3 +1,4 @@
+using Application.Utils.Automapper;
 using Auth.Services;
 using Auth.Services.Interfaces;
 using DataAccess.DbContext;
@@ -64,6 +65,8 @@ namespace Geode.API
             builder.Services.AddCqrsServices();
 
             builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(Program).Assembly));
+
+            builder.Services.AddAutoMapper(typeof(AutomapperProfile));
 
             var app = builder.Build();
 
