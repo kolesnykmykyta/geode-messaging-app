@@ -1,6 +1,7 @@
 ﻿using DataAccess.DbContext;
 using DataAccess.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -31,9 +32,19 @@ namespace DataAccess.Repositories
             }
         }
 
-        public IEnumerable<TEntity> GetList(string? searchParam = null, int? pageSize = null, int? pageNumber = null)
+        public IEnumerable<TEntity> GetList(string? searchParam = null, string? sortingProp = null, bool sortDescending = false, int? pageSize = null, int? pageNumber = null)
         {
             var query = _context.Set<TEntity>().AsQueryable();
+
+            if (sortingProp != null)
+            {
+                PropertyInfo? entityProp = typeof(TEntity).GetProperty(sortingProp);
+                if (entityProp != null)
+                {
+                    query = sortDescending ?
+                        query.OrderByDescending(SortingExpression(sortingProp)!) : query.OrderBy(SortingExpression(sortingProp)!);
+                }
+            }
 
             if (searchParam != null)
             {
@@ -45,6 +56,8 @@ namespace DataAccess.Repositories
                 query = query.Skip((int)((pageNumber - 1) * pageSize))
                     .Take((int)pageSize);
             }
+
+
 
             return query.ToList();
         }
@@ -84,6 +97,24 @@ namespace DataAccess.Repositories
             }
 
             return Expression.Lambda<Func<TEntity, bool>>(body, parameter);
+        }
+
+        private Expression<Func<TEntity, object>>? SortingExpression(string sortParam)
+        {
+            var parameter = Expression.Parameter(typeof(TEntity), "entity");
+
+            var property = typeof(TEntity).GetProperty(sortParam);
+            if (property != null)
+            {
+                var propertyAccess = Expression.Property(parameter, property);
+                var convert = Expression.Convert(propertyAccess, typeof(object));
+
+                return Expression.Lambda<Func<TEntity, object>>(convert, parameter);
+            }
+            else
+            {
+                return null;
+            }
         }
     }
 }
