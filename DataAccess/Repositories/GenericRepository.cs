@@ -27,7 +27,8 @@ namespace DataAccess.Repositories
         public void Delete(int id)
         {
             TEntity? entityToDelete = _context.Set<TEntity>().Find(id);
-            if (entityToDelete != null) {
+            if (entityToDelete != null)
+            {
                 _context.Set<TEntity>().Remove(entityToDelete);
             }
         }
@@ -42,7 +43,7 @@ namespace DataAccess.Repositories
                 if (entityProp != null)
                 {
                     query = sortDescending ?
-                        query.OrderByDescending(SortingExpression(sortingProp)!) : query.OrderBy(SortingExpression(sortingProp)!);
+                        query.OrderByDescending(SortingExpression(entityProp)!) : query.OrderBy(SortingExpression(entityProp)!);
                 }
             }
 
@@ -99,22 +100,14 @@ namespace DataAccess.Repositories
             return Expression.Lambda<Func<TEntity, bool>>(body, parameter);
         }
 
-        private Expression<Func<TEntity, object>>? SortingExpression(string sortParam)
+        private Expression<Func<TEntity, object>>? SortingExpression(PropertyInfo sortProperty)
         {
             var parameter = Expression.Parameter(typeof(TEntity), "entity");
 
-            var property = typeof(TEntity).GetProperty(sortParam);
-            if (property != null)
-            {
-                var propertyAccess = Expression.Property(parameter, property);
-                var convert = Expression.Convert(propertyAccess, typeof(object));
+            var propertyAccess = Expression.Property(parameter, sortProperty);
+            var convert = Expression.Convert(propertyAccess, typeof(object));
 
-                return Expression.Lambda<Func<TEntity, object>>(convert, parameter);
-            }
-            else
-            {
-                return null;
-            }
+            return Expression.Lambda<Func<TEntity, object>>(convert, parameter);
         }
     }
 }
