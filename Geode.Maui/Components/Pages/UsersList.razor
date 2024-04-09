@@ -17,6 +17,12 @@
             <MudCheckBox @bind-Value="@filter.SortByDescending">Descending</MudCheckBox>
         </div>
     </div>
+    <div>
+        <MudSelect Class="w-25" @bind-Value="@filter.SelectProps" MultiSelection="true" Delimiter="," Label="Select properties">
+            <MudSelectItem Value="@("UserName")">Username</MudSelectItem>
+            <MudSelectItem Value="@("Email")">Email</MudSelectItem>
+        </MudSelect>
+    </div>
     <div class="mb-3 mt-lg-0">
         <MudButton Variant="Variant.Filled" Color="Color.Primary" @onclick="UpdateUserList">Apply parameters</MudButton>
     </div>
