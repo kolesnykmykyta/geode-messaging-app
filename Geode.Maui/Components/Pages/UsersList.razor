@@ -29,6 +29,20 @@
     </Columns>
 </MudDataGrid>
 
+<div>
+    <p>Page @filter.PageNumber</p>
+    <div>
+        @if (filter.PageNumber != 1)
+        {
+            <a @onclick="PreviousPage">Previous page</a>
+        }
+
+        @if (usersList.Count() == filter.PageSize)
+        {
+            <a @onclick="NextPage">Next page</a>
+        }
+    </div>
+</div>
 @code {
     private IEnumerable<UserInfoDto> usersList = new List<UserInfoDto>();
     private UserListFilterDto filter = new();
@@ -42,5 +56,17 @@
     private async Task UpdateUserList()
     {
         usersList = await usersService.GetUserListAsync(filter);
+    }
+
+    private async Task NextPage()
+    {
+        filter.PageNumber += 1;
+        await UpdateUserList();
+    }
+
+    private async Task PreviousPage()
+    {
+        filter.PageNumber -= 1;
+        await UpdateUserList();
     }
 }
