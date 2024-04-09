@@ -15,5 +15,7 @@ namespace Application.Services
         public string? SortProp { get; set; }
 
         public bool SortByDescending { get; set; }
+
+        public string? SelectProps { get; set; }
     }
 }

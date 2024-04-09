@@ -28,8 +28,9 @@ namespace Application.Handlers
 
         public async Task<IEnumerable<UserInfoDto>> Handle(GetUsersListQuery request, CancellationToken cancellationToken)
         {
+            List<string>? selectPropsList = request.SelectProps?.Split(",").ToList();
             IEnumerable<User> returnList = _unitOfWork.GenericRepository<User>()
-                .GetList(request.SearchParam, request.SortProp, request.SortByDescending, request.PageSize, request.PageNumber);
+                .GetList(request.SearchParam, request.SortProp, request.SortByDescending, request.PageSize, request.PageNumber, selectPropsList);
             return _mapper.Map<IEnumerable<UserInfoDto>>(returnList);
         }
     }

@@ -33,7 +33,7 @@ namespace DataAccess.Repositories
             }
         }
 
-        public IEnumerable<TEntity> GetList(string? searchParam = null, string? sortingProp = null, bool sortDescending = false, int? pageSize = null, int? pageNumber = null)
+        public IEnumerable<TEntity> GetList(string? searchParam = null, string? sortingProp = null, bool sortDescending = false, int? pageSize = null, int? pageNumber = null, IEnumerable<string>? selectProps = null)
         {
             var query = _context.Set<TEntity>().AsQueryable();
 
@@ -49,7 +49,7 @@ namespace DataAccess.Repositories
 
             if (searchParam != null)
             {
-                query = query.Where(ObjectContainsString(searchParam));
+                query = query.Where(ContainsExpression(searchParam));
             }
 
             if (pageNumber != null && pageSize != null)
@@ -58,7 +58,10 @@ namespace DataAccess.Repositories
                     .Take((int)pageSize);
             }
 
-
+            if (selectProps != null && selectProps.Count() != 0)
+            {
+                query = query.Select(x => SelectEntityWithDefinedProperties(x, selectProps));
+            }
 
             return query.ToList();
         }
@@ -79,10 +82,11 @@ namespace DataAccess.Repositories
             _context.Entry(entity).State = EntityState.Modified;
         }
 
-        private Expression<Func<TEntity, bool>> ObjectContainsString(string searchParam)
+        private Expression<Func<TEntity, bool>> ContainsExpression(string searchParam)
         {
             var parameter = Expression.Parameter(typeof(TEntity), "entity");
             var containsMethod = typeof(string).GetMethod("Contains", new[] { typeof(string) });
+            var _entityProperties = typeof(TEntity).GetProperties(BindingFlags.Public | BindingFlags.Instance);
 
             Expression body = Expression.Constant(false);
 
@@ -108,6 +112,23 @@ namespace DataAccess.Repositories
             var convert = Expression.Convert(propertyAccess, typeof(object));
 
             return Expression.Lambda<Func<TEntity, object>>(convert, parameter);
+        }
+
+        private static TEntity SelectEntityWithDefinedProperties(TEntity original, IEnumerable<string> properties)
+        {
+            TEntity resultEntity = Activator.CreateInstance<TEntity>();
+
+            foreach (string property in properties)
+            {
+                PropertyInfo? entityProperty = typeof(TEntity).GetProperty(property);
+
+                if (entityProperty != null)
+                {
+                    entityProperty.SetValue(resultEntity, entityProperty.GetValue(original));
+                }
+            }
+
+            return resultEntity;
         }
     }
 }

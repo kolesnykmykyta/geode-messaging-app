@@ -11,9 +11,9 @@ namespace Application.Dtos
     public class UserInfoDto
     {
         [JsonPropertyName("userName")]
-        public string UserName { get; set; } = string.Empty;
+        public string? UserName { get; set; }
 
         [JsonPropertyName("email")]
-        public string Email { get; set; } = string.Empty;
+        public string? Email { get; set; }
     }
 }
