@@ -5,17 +5,12 @@
 
 <AuthorizeView>
     <Authorized>
-        @token
+       Authorized
     </Authorized>
     <NotAuthorized>
         Not authorized
     </NotAuthorized>
 </AuthorizeView>
 
-@code{
-    private string? token;
-    protected override async Task OnInitializedAsync()
-    {
-        token = await _localstorage.GetItemAsStringAsync("BearerToken");
-    }
+@code {
 }

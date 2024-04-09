@@ -13,7 +13,6 @@ namespace Geode.Maui.Authentication
 
         const string BearerTokenName = "BearerToken";
         const string RefreshTokenName = "RefreshToken";
-        const string AuthApiBase = "https://localhost:7077/api/User";
 
         private readonly ILocalStorageService _localStorage;
         private readonly IHttpClientWrapper _httpClient;
@@ -29,7 +28,7 @@ namespace Geode.Maui.Authentication
         public async Task LogInAsync(LoginDto dto)
         {
             ClaimsIdentity identity = new ClaimsIdentity();
-            HttpResponseMessage response = await _httpClient.PostAsync($"{AuthApiBase}/login", dto);
+            HttpResponseMessage response = await _httpClient.PostAsync("user/login", dto);
 
             if (response.IsSuccessStatusCode)
             {
@@ -53,7 +52,7 @@ namespace Geode.Maui.Authentication
 
         public async Task RegisterAsync(RegisterDto dto)
         {
-            await _httpClient.PostAsync($"{AuthApiBase}/register", dto);
+            await _httpClient.PostAsync("user/register", dto);
         }
     }
 }

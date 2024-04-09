@@ -58,6 +58,10 @@
     </ItemGroup>
 
     <ItemGroup>
+      <Content Remove="Components\Pages\UsersList.razor" />
+    </ItemGroup>
+
+    <ItemGroup>
         <PackageReference Include="Blazored.LocalStorage" Version="4.5.0" />
         <PackageReference Include="Microsoft.AspNetCore.Components.Authorization" Version="8.0.3" />
         <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.3" />
@@ -65,6 +69,7 @@
         <PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="8.0.14" />
         <PackageReference Include="Microsoft.AspNetCore.Components.WebView.Maui" Version="8.0.14" />
         <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="8.0.0" />
+        <PackageReference Include="MudBlazor" Version="6.19.1" />
     </ItemGroup>
 
     <ItemGroup>
@@ -78,10 +83,16 @@
 
     <ItemGroup>
       <_ContentIncludedByDefault Remove="Components\Pages\Login.razor" />
+      <_ContentIncludedByDefault Remove="Components\Pages\UsersList.razor" />
     </ItemGroup>
 
     <ItemGroup>
       <None Include="Components\Pages\Login.razor" />
+      <None Include="Components\Pages\UsersList.razor" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <UpToDateCheckInput Remove="Components\Pages\UsersList.razor" />
     </ItemGroup>
 
 </Project>

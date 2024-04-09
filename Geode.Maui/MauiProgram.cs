@@ -1,8 +1,11 @@
 ﻿using Application.Utils.HttpClientWrapper;
 using Blazored.LocalStorage;
 using Geode.Maui.Authentication;
+using Geode.Maui.Services;
+using Geode.Maui.Services.Interfaces;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.Extensions.Logging;
+using MudBlazor.Services;
 
 namespace Geode.Maui
 {
@@ -28,7 +31,11 @@ namespace Geode.Maui
 
             builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
 
+            builder.Services.AddScoped<IUsersService, UserService>();
+
             builder.Services.AddBlazoredLocalStorage();
+
+            builder.Services.AddMudServices();
 
 #if DEBUG
     		builder.Services.AddBlazorWebViewDeveloperTools();
