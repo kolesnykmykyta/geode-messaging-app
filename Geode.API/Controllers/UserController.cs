@@ -74,6 +74,7 @@ namespace Geode.API.Controllers
             throw new NotImplementedException();
         }
 
+        [Authorize]
         [HttpGet("all")]
         public async Task<IActionResult> GetUsersList([FromQuery] UserListFilterDto dto)
         {
