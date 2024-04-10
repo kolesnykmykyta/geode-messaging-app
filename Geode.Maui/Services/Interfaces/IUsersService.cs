@@ -9,6 +9,6 @@ namespace Geode.Maui.Services.Interfaces
 {
     internal interface IUsersService
     {
-        Task<IEnumerable<UserInfoDto>> GetUserListAsync(UserListFilterDto? filter);
+        Task<IEnumerable<UserInfoDto>> GetUserListAsync(FilterDto? filter);
     }
 }

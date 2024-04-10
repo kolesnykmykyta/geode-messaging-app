@@ -1,6 +1,7 @@
 ﻿using Application.Dtos;
 using Application.Utils.HttpClientWrapper;
 using Auth.Dtos;
+using Blazored.LocalStorage;
 using Geode.Maui.Services.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -15,15 +16,19 @@ namespace Geode.Maui.Services
     internal class UserService : IUsersService
     {
         private readonly IHttpClientWrapper _httpClient;
+        private readonly ILocalStorageService _localStorage;
 
-        public UserService(IHttpClientWrapper httpClient)
+        public UserService(IHttpClientWrapper httpClient, ILocalStorageService localStorage)
         {
             _httpClient = httpClient;
+            _localStorage = localStorage;
         }
-        public async Task<IEnumerable<UserInfoDto>> GetUserListAsync(UserListFilterDto? filter)
+
+        public async Task<IEnumerable<UserInfoDto>> GetUserListAsync(FilterDto? filter)
         {
             Dictionary<string, string>? queryParams = filter == null ? null : CreateDictionaryFromObject(filter);
-            HttpResponseMessage response = await _httpClient.GetAsync("user/all", queryParams);
+            string? accessToken = await _localStorage.GetItemAsStringAsync("BearerToken");
+            HttpResponseMessage response = await _httpClient.GetAsync("user/all", queryParams, accessToken);
 
             if (response.IsSuccessStatusCode)
             {

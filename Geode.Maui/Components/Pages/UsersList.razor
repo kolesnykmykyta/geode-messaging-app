@@ -54,12 +54,12 @@
 </div>
 @code {
     private IEnumerable<UserInfoDto> usersList = new List<UserInfoDto>();
-    private UserListFilterDto filter = new();
+    private FilterDto filter = new();
 
     protected override async Task OnInitializedAsync()
     {
-        // usersList = await usersService.GetUserListAsync(null);
-        filter = new UserListFilterDto();
+        usersList = await usersService.GetUserListAsync(null);
+        filter = new FilterDto();
     }
 
     private async Task UpdateUserList()
