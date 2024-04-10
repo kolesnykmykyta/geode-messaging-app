@@ -4,7 +4,7 @@
 <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet" />
 <link href="_content/MudBlazor/MudBlazor.min.css" rel="stylesheet" />
 
-<div class="d-flex flex-column flex-lg-row gap-3">
+<div class="d-flex flex-column flex-lg-row gap-3 mb-3">
     <div class="d-flex flex-column flex-lg-row">
         <InputText id="search" @bind-Value="@filter.SearchParam" Placeholder="Search" class="form-control w-25"></InputText>
 
@@ -12,6 +12,7 @@
             <MudSelect Class="w-25" @bind-Value="@filter.SortProp" Label="Sorting parameter">
                 <MudSelectItem Value="@("UserName")">Username</MudSelectItem>
                 <MudSelectItem Value="@("Email")">Email</MudSelectItem>
+                <MudSelectItem Value="@("PhoneNumber")">Phone</MudSelectItem>
             </MudSelect>
 
             <MudCheckBox @bind-Value="@filter.SortByDescending">Descending</MudCheckBox>
@@ -21,6 +22,7 @@
         <MudSelect Class="w-25" @bind-Value="@filter.SelectProps" MultiSelection="true" Delimiter="," Label="Select properties">
             <MudSelectItem Value="@("UserName")">Username</MudSelectItem>
             <MudSelectItem Value="@("Email")">Email</MudSelectItem>
+            <MudSelectItem Value="@("PhoneNumber")">Phone</MudSelectItem>
         </MudSelect>
     </div>
     <div class="mb-3 mt-lg-0">
@@ -28,10 +30,11 @@
     </div>
 </div>
 
-<MudDataGrid Items="@usersList">
+<MudDataGrid Items="@usersList" class="mb-3">
     <Columns>
         <PropertyColumn Property="x => x.UserName" />
         <PropertyColumn Property="x => x.Email" />
+        <PropertyColumn Property="x => x.PhoneNumber" />
     </Columns>
 </MudDataGrid>
 
@@ -55,7 +58,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        usersList = await usersService.GetUserListAsync(null);
+        // usersList = await usersService.GetUserListAsync(null);
         filter = new UserListFilterDto();
     }
 

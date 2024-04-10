@@ -15,5 +15,8 @@ namespace Application.Dtos
 
         [JsonPropertyName("email")]
         public string? Email { get; set; }
+
+        [JsonPropertyName("phoneNumber")]
+        public string? PhoneNumber { get; set; }
     }
 }
