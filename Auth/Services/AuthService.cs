@@ -113,7 +113,8 @@ namespace Auth.Services
             List<Claim> userClaims = new List<Claim>
             {
                 new Claim(ClaimTypes.Email, user.Email!),
-                new Claim(ClaimTypes.Name, user.UserName!)
+                new Claim(ClaimTypes.Name, user.UserName!),
+                new Claim(ClaimTypes.NameIdentifier, user.Id!)
             };
 
             foreach(string role in await _userManager.GetRolesAsync(user))
