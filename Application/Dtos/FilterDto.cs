@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Application.Dtos
 {
-    public class UserListFilterDto
+    public class FilterDto
     {
         public int PageNumber { get; set; } = 1;
 

@@ -33,9 +33,31 @@ namespace DataAccess.Repositories
             }
         }
 
-        public IEnumerable<TEntity> GetList(string? searchParam = null, string? sortingProp = null, bool sortDescending = false, int? pageSize = null, int? pageNumber = null, IEnumerable<string>? selectProps = null)
+        public IEnumerable<TEntity> GetList
+            (Dictionary<string, string>? searchParams = null,
+            string? sortingProp = null,
+            bool sortDescending = false,
+            int? pageSize = null,
+            int? pageNumber = null,
+            IEnumerable<string>? selectProps = null)
         {
             var query = _context.Set<TEntity>().AsQueryable();
+
+            if (searchParams != null && searchParams.Count() != 0)
+            {
+                foreach(string key in searchParams.Keys)
+                {
+                    PropertyInfo? entityProperty = typeof(TEntity).GetProperty(key);
+                    if (entityProperty != null)
+                    {
+                        query = query.Where(SpecificContainsExpression(entityProperty, searchParams[key]));
+                    }
+                    else
+                    {
+                        query = query.Where(GlobalContainsExpression(searchParams[key]));
+                    }
+                }
+            }
 
             if (sortingProp != null)
             {
@@ -45,11 +67,6 @@ namespace DataAccess.Repositories
                     query = sortDescending ?
                         query.OrderByDescending(SortingExpression(entityProp)!) : query.OrderBy(SortingExpression(entityProp)!);
                 }
-            }
-
-            if (searchParam != null)
-            {
-                query = query.Where(ContainsExpression(searchParam));
             }
 
             if (pageNumber != null && pageSize != null)
@@ -82,11 +99,21 @@ namespace DataAccess.Repositories
             _context.Entry(entity).State = EntityState.Modified;
         }
 
-        private Expression<Func<TEntity, bool>> ContainsExpression(string searchParam)
+        private Expression<Func<TEntity, bool>> SpecificContainsExpression(PropertyInfo property, string searchParam)
         {
             var parameter = Expression.Parameter(typeof(TEntity), "entity");
             var containsMethod = typeof(string).GetMethod("Contains", new[] { typeof(string) });
-            var _entityProperties = typeof(TEntity).GetProperties(BindingFlags.Public | BindingFlags.Instance);
+            var propValue = Expression.Property(parameter, property);
+            var searchValue = Expression.Constant(searchParam);
+            var containsCall = Expression.Call(propValue, containsMethod, searchValue);
+
+            return Expression.Lambda<Func<TEntity, bool>>(containsCall, parameter);
+        }
+
+        private Expression<Func<TEntity, bool>> GlobalContainsExpression(string searchParam)
+        {
+            var parameter = Expression.Parameter(typeof(TEntity), "entity");
+            var containsMethod = typeof(string).GetMethod("Contains", new[] { typeof(string) });
 
             Expression body = Expression.Constant(false);
 

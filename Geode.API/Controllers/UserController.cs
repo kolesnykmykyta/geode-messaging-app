@@ -76,7 +76,7 @@ namespace Geode.API.Controllers
 
         [Authorize]
         [HttpGet("all")]
-        public async Task<IActionResult> GetUsersList([FromQuery] UserListFilterDto dto)
+        public async Task<IActionResult> GetUsersList([FromQuery] FilterDto dto)
         {
             IEnumerable<UserInfoDto> usersList = await _mediator.Send(_mapper.Map<GetUsersListQuery>(dto));
 

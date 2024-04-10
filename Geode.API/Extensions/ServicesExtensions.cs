@@ -15,8 +15,6 @@ namespace Geode.API.Extensions
             // CQRS Commands
             services.AddScoped<IRequestHandler<ChangeChatNameCommand, bool>, ChangeChatNameCommandHandler>();
             services.AddScoped<IRequestHandler<CreateChatCommand, bool>, CreateChatCommandHandler>();
-            services.AddScoped<IRequestHandler<GetChatMessagesQuery, IEnumerable<Message>>, GetChatMessageQueryHandler>();
-            services.AddScoped<IRequestHandler<GetUserChatsQuery, IEnumerable<Chat>>, GetUserChatsQueryHandler>();
             services.AddScoped<IRequestHandler<JoinChatCommand, bool>, JoinChatCommandHandler>();
             services.AddScoped<IRequestHandler<LeaveChatCommand>, LeaveChatCommandHandler>();
             services.AddScoped<IRequestHandler<SendMessageCommand, bool>, SendMessageCommandHandler>();
@@ -27,7 +25,7 @@ namespace Geode.API.Extensions
             services.AddScoped<IRequestHandler<LoginQuery, TokenDto?>, LoginQueryHandler>();
             services.AddScoped<IRequestHandler<RefreshTokenQuery, TokenDto?>, RefreshTokenQueryHandler>();
             services.AddScoped<IRequestHandler<GetChatMessagesQuery, IEnumerable<Message>>, GetChatMessageQueryHandler>();
-            services.AddScoped<IRequestHandler<GetUserChatsQuery, IEnumerable<Chat>>, GetUserChatsQueryHandler>();
+            services.AddScoped<IRequestHandler<GetUserChatsQuery, IEnumerable<ChatDto>>, GetUserChatsQueryHandler>();
             services.AddScoped<IRequestHandler<GetUsersListQuery, IEnumerable<UserInfoDto>>, GetUsersListQueryHandler>();
         }
     }

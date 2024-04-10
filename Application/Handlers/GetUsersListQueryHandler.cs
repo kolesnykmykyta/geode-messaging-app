@@ -21,7 +21,7 @@ namespace Application.Handlers
         private readonly IMapper _mapper;
 
         public GetUsersListQueryHandler(IUnitOfWork unitOfWork, IMapper mapper)
-        {
+        {   
             _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
@@ -29,8 +29,17 @@ namespace Application.Handlers
         public async Task<IEnumerable<UserInfoDto>> Handle(GetUsersListQuery request, CancellationToken cancellationToken)
         {
             List<string>? selectPropsList = request.SelectProps?.Split(",").ToList();
+            Dictionary<string, string>? searchParameters = null;
+            if (request.SearchParam != null)
+            {
+                searchParameters = new Dictionary<string, string>()
+                    {
+                        {"all", request.SearchParam }
+                    };
+            }
+
             IEnumerable<User> returnList = _unitOfWork.GenericRepository<User>()
-                .GetList(request.SearchParam, request.SortProp, request.SortByDescending, request.PageSize, request.PageNumber, selectPropsList);
+                .GetList(searchParameters, request.SortProp, request.SortByDescending, request.PageSize, request.PageNumber, selectPropsList);
             return _mapper.Map<IEnumerable<UserInfoDto>>(returnList);
         }
     }

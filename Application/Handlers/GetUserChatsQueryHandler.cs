@@ -1,14 +1,43 @@
-﻿using Application.Services;
+﻿using Application.Dtos;
+using Application.Services;
+using AutoMapper;
 using DataAccess.Entities;
+using DataAccess.UnitOfWork;
 using MediatR;
 
 namespace Application.Handlers
 {
-    public class GetUserChatsQueryHandler : IRequestHandler<GetUserChatsQuery, IEnumerable<Chat>>
+    public class GetUserChatsQueryHandler : IRequestHandler<GetUserChatsQuery, IEnumerable<ChatDto>>
     {
-        public Task<IEnumerable<Chat>> Handle(GetUserChatsQuery request, CancellationToken cancellationToken)
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly IMapper _mapper;
+
+        public GetUserChatsQueryHandler(IUnitOfWork unitOfWork, IMapper mapper)
         {
-            throw new NotImplementedException();
+            _unitOfWork = unitOfWork;
+            _mapper = mapper;
+        }
+
+        public async Task<IEnumerable<ChatDto>> Handle(GetUserChatsQuery request, CancellationToken cancellationToken)
+        {
+            List<string>? selectPropsList = request.SelectProps?.Split(",").ToList();
+            Dictionary<string, string>? searchParameters = new()
+            {
+                {"OwnerId", request.OwnerId }
+            };
+
+            if (request.SearchParam != null)
+            {
+                searchParameters = new Dictionary<string, string>()
+                    {
+                        {"all", request.SearchParam }
+                    };
+            }
+
+            IEnumerable<Chat> chatList = _unitOfWork.GenericRepository<Chat>()
+                .GetList(searchParameters, request.SortProp, request.SortByDescending, request.PageSize, request.PageNumber, selectPropsList);
+
+            return _mapper.Map<IEnumerable<ChatDto>>(chatList);
         }
     }
 }
