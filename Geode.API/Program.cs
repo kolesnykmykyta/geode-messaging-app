@@ -64,9 +64,7 @@ namespace Geode.API
 
             builder.Services.AddCqrsServices();
 
-            builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(Program).Assembly));
-
-            builder.Services.AddAutoMapper(typeof(AutomapperProfile));
+            builder.Services.AddHelpers();
 
             var app = builder.Build();
 

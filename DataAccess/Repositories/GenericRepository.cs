@@ -93,10 +93,14 @@ namespace DataAccess.Repositories
             _context.Set<TEntity>().Add(entity);
         }
 
-        public void Update(TEntity entity)
+        public void Update(int id, TEntity entity)
         {
-            _context.Set<TEntity>().Attach(entity);
-            _context.Entry(entity).State = EntityState.Modified;
+            TEntity? entityToUpdate = _context.Set<TEntity>().Find(id);
+            if (entity != null)
+            {
+                _context.Entry(entityToUpdate).CurrentValues.SetValues(entity);
+                _context.Entry(entityToUpdate).State = EntityState.Modified;
+            }
         }
 
         private Expression<Func<TEntity, bool>> SpecificContainsExpression(PropertyInfo property, string searchParam)

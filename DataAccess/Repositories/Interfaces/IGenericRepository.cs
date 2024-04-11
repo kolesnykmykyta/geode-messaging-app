@@ -9,10 +9,17 @@ namespace DataAccess.Repositories.Interfaces
 {
     public interface IGenericRepository<TEntity>
     {
-        public IEnumerable<TEntity> GetList(Dictionary<string, string>? searchParams, string? sortingProp, bool sortDescending, int? pageSize, int? pageNumber, IEnumerable<string>? selectProps = null);
+        public IEnumerable<TEntity> GetList
+            (Dictionary<string, string>? searchParams = null,
+            string? sortingProp = null,
+            bool sortDescending = false,
+            int? pageSize = null,
+            int? pageNumber = null,
+            IEnumerable<string>? selectProps = null);
+
         public TEntity? GetById(int id);
         public void Insert(TEntity entity);
-        public void Update(TEntity entity);
+        public void Update(int id, TEntity entity);
         public void Delete(int id);
     }
 }

@@ -13,6 +13,9 @@ namespace Application.Utils.Automapper
             CreateMap<FilterDto, GetUsersListQuery>().ReverseMap();
             CreateMap<FilterDto, GetUserChatsQuery>().ReverseMap();
             CreateMap<FilterDto, GetUserMessagesQuery>().ReverseMap();
+            CreateMap<CreateChatCommand, Chat>().ReverseMap();
+            CreateMap<ChangeChatNameCommand, Chat>().ReverseMap();
+            CreateMap<ChangeChatNameCommand, ChatDto>().ReverseMap();
 
             // Entities to Dtos
             CreateMap<UserInfoDto, User>().ReverseMap();

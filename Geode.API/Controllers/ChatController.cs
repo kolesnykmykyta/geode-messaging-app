@@ -1,4 +1,4 @@
-﻿using Application.Dtos;
+﻿    using Application.Dtos;
 using Application.Services;
 using AutoMapper;
 using DataAccess.Entities;
@@ -37,34 +37,54 @@ namespace Geode.API.Controllers
             return Ok(chatsList);
         }
 
-        [HttpPost("join/{id}")]
-        public IActionResult JoinChat(int id)
+        [Authorize]
+        [HttpPost]
+        public async Task<IActionResult> CreateNewChat(ChatDto dto)
         {
-            throw new NotImplementedException();
+            string userId = User.FindFirst(ClaimTypes.NameIdentifier)!.Value;
+            CreateChatCommand command = _mapper.Map<CreateChatCommand>(dto);
+
+            command.ChatOwnerId = userId;
+            bool result = await _mediator.Send(command);
+
+            return result ? Ok() : BadRequest();
         }
 
-        [HttpPost("new")]
-        public IActionResult CreateChat()
+        [Authorize]
+        [HttpPut]
+        public async Task<IActionResult> UpdateChat(ChatDto dto)
         {
-            throw new NotImplementedException();
+            string userId = User.FindFirst(ClaimTypes.NameIdentifier)!.Value;
+
+            ChangeChatNameCommand command = _mapper.Map<ChangeChatNameCommand>(dto);
+            command.ChatOwnerId = userId;
+
+            bool result = await _mediator.Send(command);
+            return result ? Ok() : BadRequest();
         }
 
-        [HttpPost("changeName/{id}")]
-        public IActionResult ChangeChatName(int id)
+        [Authorize]
+        [HttpPost("join/{chatId}")]
+        public async Task<IActionResult> JoinChat(int chatId)
         {
-            throw new NotImplementedException();
+            string userId = User.FindFirst(ClaimTypes.NameIdentifier)!.Value;
+
+            JoinChatCommand command = new() { ChatId = chatId, UserId = userId};
+
+            bool result = await _mediator.Send(command);
+            return result ? Ok() : BadRequest();
         }
 
-        [HttpPost("leave/{id}")]
-        public IActionResult LeaveChat(int id)
+        [Authorize]
+        [HttpPost("leave/{chatId}")]
+        public async Task<IActionResult> LeaveChat(int chatId)
         {
-            throw new NotImplementedException();
-        }
+            string userId = User.FindFirst(ClaimTypes.NameIdentifier)!.Value;
 
-        [HttpPost("{id}/send")]
-        public IActionResult SendMessageInChat()
-        {
-            throw new NotImplementedException();
+            LeaveChatCommand command = new() { ChatId = chatId, UserId = userId };
+
+            bool result = await _mediator.Send(command);
+            return result ? Ok() : BadRequest();
         }
     }
 }

@@ -1,13 +1,20 @@
 ﻿using Application.Services;
+using Application.Utils.Helpers.Interfaces;
 using MediatR;
 
 namespace Application.Handlers
 {
-    public class LeaveChatCommandHandler : IRequestHandler<LeaveChatCommand>
+    public class LeaveChatCommandHandler : IRequestHandler<LeaveChatCommand, bool>
     {
-        public Task Handle(LeaveChatCommand request, CancellationToken cancellationToken)
+        private readonly IChatRepositoryHelper _helper;
+
+        public LeaveChatCommandHandler(IMediator mediator, IChatRepositoryHelper helper)
         {
-            throw new NotImplementedException();
+            _helper = helper;
+        }
+        public async Task<bool> Handle(LeaveChatCommand request, CancellationToken cancellationToken)
+        {
+            return _helper.LeaveChat(request.ChatId, request.UserId);
         }
     }
 }

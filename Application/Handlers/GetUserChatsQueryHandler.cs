@@ -34,6 +34,8 @@ namespace Application.Handlers
                     };
             }
 
+            IEnumerable<ChatMember> chatMembers = _unitOfWork.GenericRepository<ChatMember>().GetList();
+
             IEnumerable<Chat> chatList = _unitOfWork.GenericRepository<Chat>()
                 .GetList(searchParameters, request.SortProp, request.SortByDescending, request.PageSize, request.PageNumber, selectPropsList);
 
