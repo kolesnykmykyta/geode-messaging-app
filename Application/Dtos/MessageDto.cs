@@ -8,5 +8,8 @@ namespace Application.Dtos
 {
     public class MessageDto
     {
+        public string? Content { get; set; }
+
+        public DateTime? SentAt { get; set; }
     }
 }

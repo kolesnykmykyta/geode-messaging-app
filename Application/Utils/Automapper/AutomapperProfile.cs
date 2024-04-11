@@ -12,10 +12,12 @@ namespace Application.Utils.Automapper
             // CQRS Messages
             CreateMap<FilterDto, GetUsersListQuery>().ReverseMap();
             CreateMap<FilterDto, GetUserChatsQuery>().ReverseMap();
+            CreateMap<FilterDto, GetUserMessagesQuery>().ReverseMap();
 
             // Entities to Dtos
             CreateMap<UserInfoDto, User>().ReverseMap();
             CreateMap<ChatDto, Chat>().ReverseMap();
+            CreateMap<MessageDto, Message>().ReverseMap();
         }
     }
 }
