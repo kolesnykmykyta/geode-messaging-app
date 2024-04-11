@@ -1,11 +1,9 @@
-﻿    using Application.Dtos;
+﻿using Application.Dtos;
 using Application.Services;
+using Application.Utils.Helpers.Interfaces;
 using AutoMapper;
-using DataAccess.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Components.Forms;
-using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 
@@ -17,21 +15,21 @@ namespace Geode.API.Controllers
     {
         private readonly IMediator _mediator;
         private readonly IMapper _mapper;
+        private readonly IApiUserHelper _userHelper;
 
-        public ChatController(IMediator mediator, IMapper mapper)
+        public ChatController(IMediator mediator, IMapper mapper, IApiUserHelper userHelper)
         {
             _mediator = mediator;
             _mapper = mapper;
+            _userHelper = userHelper;
         }
 
         [Authorize]
         [HttpGet("all")]
         public async Task<IActionResult> GetUserChats([FromQuery] FilterDto dto)
         {
-            string userId = User.FindFirst(ClaimTypes.NameIdentifier)!.Value;
-
             GetUserChatsQuery query = _mapper.Map<GetUserChatsQuery>(dto);
-            query.OwnerId = userId;
+            query.OwnerId = _userHelper.ExtractIdFromUser(User);
 
             IEnumerable<ChatDto> chatsList = await _mediator.Send(query);
             return Ok(chatsList);
@@ -41,12 +39,10 @@ namespace Geode.API.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateNewChat(ChatDto dto)
         {
-            string userId = User.FindFirst(ClaimTypes.NameIdentifier)!.Value;
             CreateChatCommand command = _mapper.Map<CreateChatCommand>(dto);
+            command.ChatOwnerId = _userHelper.ExtractIdFromUser(User);
 
-            command.ChatOwnerId = userId;
             bool result = await _mediator.Send(command);
-
             return result ? Ok() : BadRequest();
         }
 
@@ -54,10 +50,9 @@ namespace Geode.API.Controllers
         [HttpPut]
         public async Task<IActionResult> UpdateChat(ChatDto dto)
         {
-            string userId = User.FindFirst(ClaimTypes.NameIdentifier)!.Value;
 
             ChangeChatNameCommand command = _mapper.Map<ChangeChatNameCommand>(dto);
-            command.ChatOwnerId = userId;
+            command.ChatOwnerId = _userHelper.ExtractIdFromUser(User);
 
             bool result = await _mediator.Send(command);
             return result ? Ok() : BadRequest();
@@ -67,9 +62,11 @@ namespace Geode.API.Controllers
         [HttpPost("join/{chatId}")]
         public async Task<IActionResult> JoinChat(int chatId)
         {
-            string userId = User.FindFirst(ClaimTypes.NameIdentifier)!.Value;
-
-            JoinChatCommand command = new() { ChatId = chatId, UserId = userId};
+            JoinChatCommand command = new()
+            {
+                ChatId = chatId,
+                UserId = _userHelper.ExtractIdFromUser(User),
+            };
 
             bool result = await _mediator.Send(command);
             return result ? Ok() : BadRequest();
@@ -79,9 +76,11 @@ namespace Geode.API.Controllers
         [HttpPost("leave/{chatId}")]
         public async Task<IActionResult> LeaveChat(int chatId)
         {
-            string userId = User.FindFirst(ClaimTypes.NameIdentifier)!.Value;
-
-            LeaveChatCommand command = new() { ChatId = chatId, UserId = userId };
+            LeaveChatCommand command = new()
+            {
+                ChatId = chatId,
+                UserId = _userHelper.ExtractIdFromUser(User)
+            };
 
             bool result = await _mediator.Send(command);
             return result ? Ok() : BadRequest();

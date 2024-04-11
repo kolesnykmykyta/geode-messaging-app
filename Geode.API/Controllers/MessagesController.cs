@@ -1,7 +1,9 @@
 ﻿using Application.Dtos;
 using Application.Services;
+using Application.Utils.Helpers.Interfaces;
 using AutoMapper;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 
@@ -13,20 +15,21 @@ namespace Geode.API.Controllers
     {
         private readonly IMediator _mediator;
         private readonly IMapper _mapper;
+        private readonly IApiUserHelper _userHelper;
 
-        public MessagesController(IMediator mediator, IMapper mapper)
+        public MessagesController(IMediator mediator, IMapper mapper, IApiUserHelper userHelper)
         {
             _mediator = mediator;
             _mapper = mapper;
+            _userHelper = userHelper;
         }
 
+        [Authorize]
         [HttpGet("all")]
         public async Task<IActionResult> GetAllUserMessages([FromQuery] FilterDto dto)
         {
-            string userId = User.FindFirst(ClaimTypes.NameIdentifier)!.Value;
-
             GetUserMessagesQuery query = _mapper.Map<GetUserMessagesQuery>(dto);
-            query.SenderId = userId;
+            query.SenderId = _userHelper.ExtractIdFromUser(User);
 
             IEnumerable<MessageDto> allMessages = await _mediator.Send(query);
             return Ok(allMessages);
