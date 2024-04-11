@@ -9,7 +9,7 @@ namespace DataAccess.Repositories.Interfaces
 {
     public interface IGenericRepository<TEntity>
     {
-        public IEnumerable<TEntity> GetList
+        public IQueryable<TEntity> GetList
             (Dictionary<string, string>? searchParams = null,
             string? sortingProp = null,
             bool sortDescending = false,

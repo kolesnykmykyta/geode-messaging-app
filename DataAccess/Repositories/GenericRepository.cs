@@ -33,7 +33,7 @@ namespace DataAccess.Repositories
             }
         }
 
-        public IEnumerable<TEntity> GetList
+        public IQueryable<TEntity> GetList
             (Dictionary<string, string>? searchParams = null,
             string? sortingProp = null,
             bool sortDescending = false,
@@ -80,7 +80,7 @@ namespace DataAccess.Repositories
                 query = query.Select(x => SelectEntityWithDefinedProperties(x, selectProps));
             }
 
-            return query.ToList();
+            return query;
         }
 
         public TEntity? GetById(int id)

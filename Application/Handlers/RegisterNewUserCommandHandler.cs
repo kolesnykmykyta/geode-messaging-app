@@ -16,7 +16,7 @@ namespace Application.Handlers
 
         public Task<RegisterResultDto> Handle(RegisterNewUserCommand request, CancellationToken cancellationToken)
         {
-            return (_authService.RegisterAsync(request.Dto!));
+            return _authService.RegisterAsync(request.Dto!);
         }
     }
 }

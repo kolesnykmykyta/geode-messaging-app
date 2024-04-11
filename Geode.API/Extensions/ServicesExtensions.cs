@@ -39,6 +39,7 @@ namespace Geode.API.Extensions
             services.AddAutoMapper(typeof(AutomapperProfile));
 
             services.AddScoped<IChatRepositoryHelper, ChatRepositoryHelper>();
+            services.AddScoped<IApiUserHelper, ApiUserHelper>();
         }
     }
 }

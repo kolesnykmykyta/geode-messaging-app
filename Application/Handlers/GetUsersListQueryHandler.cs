@@ -1,5 +1,6 @@
 ﻿using Application.Dtos;
 using Application.Services;
+using Application.Utils.Helpers.Interfaces;
 using AutoMapper;
 using DataAccess.DbContext;
 using DataAccess.Entities;
@@ -19,24 +20,19 @@ namespace Application.Handlers
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
+        private readonly IRepositoryParametersHelper _parametersHelper;
 
-        public GetUsersListQueryHandler(IUnitOfWork unitOfWork, IMapper mapper)
+        public GetUsersListQueryHandler(IUnitOfWork unitOfWork, IMapper mapper, IRepositoryParametersHelper parametersHelper)
         {   
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+            _parametersHelper = parametersHelper;
         }
 
         public async Task<IEnumerable<UserInfoDto>> Handle(GetUsersListQuery request, CancellationToken cancellationToken)
         {
-            List<string>? selectPropsList = request.SelectProps?.Split(",").ToList();
-            Dictionary<string, string>? searchParameters = null;
-            if (request.SearchParam != null)
-            {
-                searchParameters = new Dictionary<string, string>()
-                    {
-                        {"all", request.SearchParam }
-                    };
-            }
+            IEnumerable<string>? selectPropsList = _parametersHelper.SplitSelectProperties(request.SelectProps);
+            Dictionary<string, string>? searchParameters = _parametersHelper.GenerateSearchParametersDictionary(request.SearchParam);
 
             IEnumerable<User> returnList = _unitOfWork.GenericRepository<User>()
                 .GetList(searchParameters, request.SortProp, request.SortByDescending, request.PageSize, request.PageNumber, selectPropsList);

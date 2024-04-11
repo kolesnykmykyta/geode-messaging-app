@@ -1,5 +1,6 @@
 ﻿using Application.Dtos;
 using Application.Services;
+using Application.Utils.Helpers.Interfaces;
 using AutoMapper;
 using DataAccess.Entities;
 using DataAccess.UnitOfWork;
@@ -11,30 +12,20 @@ namespace Application.Handlers
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
+        private readonly IRepositoryParametersHelper _parametersHelper;
 
-        public GetUserChatsQueryHandler(IUnitOfWork unitOfWork, IMapper mapper)
+        public GetUserChatsQueryHandler(IUnitOfWork unitOfWork, IMapper mapper, IRepositoryParametersHelper parametersHelper)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+            _parametersHelper = parametersHelper;
         }
 
         public async Task<IEnumerable<ChatDto>> Handle(GetUserChatsQuery request, CancellationToken cancellationToken)
         {
-            List<string>? selectPropsList = request.SelectProps?.Split(",").ToList();
-            Dictionary<string, string>? searchParameters = new()
-            {
-                {"OwnerId", request.OwnerId }
-            };
-
-            if (request.SearchParam != null)
-            {
-                searchParameters = new Dictionary<string, string>()
-                    {
-                        {"all", request.SearchParam }
-                    };
-            }
-
-            IEnumerable<ChatMember> chatMembers = _unitOfWork.GenericRepository<ChatMember>().GetList();
+            IEnumerable<string>? selectPropsList = _parametersHelper.SplitSelectProperties(request.SelectProps);
+            Dictionary<string, string> searchParameters = _parametersHelper.GenerateSearchParametersDictionary(request.SearchParam);
+            searchParameters["OwnerId"] = request.OwnerId;
 
             IEnumerable<Chat> chatList = _unitOfWork.GenericRepository<Chat>()
                 .GetList(searchParameters, request.SortProp, request.SortByDescending, request.PageSize, request.PageNumber, selectPropsList);
