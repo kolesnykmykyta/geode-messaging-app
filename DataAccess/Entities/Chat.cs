@@ -14,5 +14,7 @@ namespace DataAccess.Entities
         public string ChatOwnerId { get; set; } = string.Empty;
 
         public User? ChatOwner { get; set; }
+
+        public IEnumerable<ChatMember> ChatMembers { get; set; }
     }
 }

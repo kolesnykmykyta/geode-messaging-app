@@ -1,6 +1,7 @@
 ﻿using Application.Utils.Helpers.Interfaces;
 using DataAccess.Entities;
 using DataAccess.UnitOfWork;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,6 +17,23 @@ namespace Application.Utils.Helpers
         public ChatRepositoryHelper(IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
+        }
+
+        public IEnumerable<Chat> GetUserChats
+            (string userId,
+            Dictionary<string, string>? searchParams = null,
+            string? sortingProp = null,
+            bool sortDescending = false,
+            int? pageSize = null,
+            int? pageNumber = null,
+            IEnumerable<string>? selectProps = null)
+        {
+            IQueryable<Chat> output = _unitOfWork.GenericRepository<Chat>()
+                .GetList(searchParams, sortingProp, sortDescending, pageSize, pageNumber, selectProps)
+                .Include(c => c.ChatMembers)
+                .Where(c => c.ChatMembers.Any(cm => cm.UserId == userId));
+
+            return output;
         }
 
         public bool JoinChat(int chatId, string userId)

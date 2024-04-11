@@ -35,11 +35,14 @@ namespace Geode.API.Extensions
 
         public static void AddHelpers(this IServiceCollection services)
         {
+            // Nuget packages
             services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(Program).Assembly));
             services.AddAutoMapper(typeof(AutomapperProfile));
 
+            // Own helpers
             services.AddScoped<IChatRepositoryHelper, ChatRepositoryHelper>();
             services.AddScoped<IApiUserHelper, ApiUserHelper>();
+            services.AddScoped<IRepositoryParametersHelper, RepositoryParametersHelper>();
         }
     }
 }

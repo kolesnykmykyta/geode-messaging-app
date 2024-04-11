@@ -10,13 +10,13 @@ namespace Application.Handlers
 {
     public class GetUserChatsQueryHandler : IRequestHandler<GetUserChatsQuery, IEnumerable<ChatDto>>
     {
-        private readonly IUnitOfWork _unitOfWork;
+        private readonly IChatRepositoryHelper _chatHelper;
         private readonly IMapper _mapper;
         private readonly IRepositoryParametersHelper _parametersHelper;
 
-        public GetUserChatsQueryHandler(IUnitOfWork unitOfWork, IMapper mapper, IRepositoryParametersHelper parametersHelper)
+        public GetUserChatsQueryHandler(IChatRepositoryHelper chatHelper, IMapper mapper, IRepositoryParametersHelper parametersHelper)
         {
-            _unitOfWork = unitOfWork;
+            _chatHelper = chatHelper;
             _mapper = mapper;
             _parametersHelper = parametersHelper;
         }
@@ -25,10 +25,9 @@ namespace Application.Handlers
         {
             IEnumerable<string>? selectPropsList = _parametersHelper.SplitSelectProperties(request.SelectProps);
             Dictionary<string, string> searchParameters = _parametersHelper.GenerateSearchParametersDictionary(request.SearchParam);
-            searchParameters["OwnerId"] = request.OwnerId;
 
-            IEnumerable<Chat> chatList = _unitOfWork.GenericRepository<Chat>()
-                .GetList(searchParameters, request.SortProp, request.SortByDescending, request.PageSize, request.PageNumber, selectPropsList);
+            IEnumerable<Chat> chatList = _chatHelper
+                .GetUserChats(request.UserId, searchParameters, request.SortProp, request.SortByDescending, request.PageSize, request.PageNumber, selectPropsList);
 
             return _mapper.Map<IEnumerable<ChatDto>>(chatList);
         }

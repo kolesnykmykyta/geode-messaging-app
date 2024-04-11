@@ -29,7 +29,7 @@ namespace Geode.API.Controllers
         public async Task<IActionResult> GetUserChats([FromQuery] FilterDto dto)
         {
             GetUserChatsQuery query = _mapper.Map<GetUserChatsQuery>(dto);
-            query.OwnerId = _userHelper.ExtractIdFromUser(User);
+            query.UserId = _userHelper.ExtractIdFromUser(User);
 
             IEnumerable<ChatDto> chatsList = await _mediator.Send(query);
             return Ok(chatsList);

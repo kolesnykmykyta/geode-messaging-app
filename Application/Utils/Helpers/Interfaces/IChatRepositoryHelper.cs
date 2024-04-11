@@ -9,7 +9,14 @@ namespace Application.Utils.Helpers.Interfaces
 {
     public interface IChatRepositoryHelper
     {
-        IEnumerable<Chat> GetUserChats(string userId);
+        IEnumerable<Chat> GetUserChats
+            (string userId,
+            Dictionary<string, string>? searchParams = null,
+            string? sortingProp = null,
+            bool sortDescending = false,
+            int? pageSize = null,
+            int? pageNumber = null,
+            IEnumerable<string>? selectProps = null);
 
         bool LeaveChat(int chatId, string userId);
 
