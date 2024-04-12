@@ -18,7 +18,7 @@ namespace Geode.Maui.Services
             _localStorage = localStorage;
         }
 
-        public async Task<IEnumerable<MessageDto>> GetAllUserMessages(FilterDto? filter)
+        public async Task<IEnumerable<MessageDto>> GetAllUserMessagesAsync(FilterDto? filter)
         {
             Dictionary<string, string>? queryParams = filter == null ? null : CreateDictionaryFromObject(filter);
             string? accessToken = await _localStorage.GetItemAsStringAsync("BearerToken");

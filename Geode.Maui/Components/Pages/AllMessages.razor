@@ -38,13 +38,13 @@
 
     protected override async Task OnInitializedAsync()
     {
-        messages = await messagesService.GetAllUserMessages(null);
+        messages = await messagesService.GetAllUserMessagesAsync(null);
         filter = new FilterDto();
     }
 
     private async Task UpdateUserList()
     {
-        messages = await messagesService.GetAllUserMessages(filter);
+        messages = await messagesService.GetAllUserMessagesAsync(filter);
     }
 
     private async Task NextPage()
