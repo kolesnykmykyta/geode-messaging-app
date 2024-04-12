@@ -20,7 +20,9 @@ namespace Application.Handlers.Chats
         public async Task<bool> Handle(CreateChatCommand request, CancellationToken cancellationToken)
         {
             Chat chatToCreate = _mapper.Map<Chat>(request);
+            ChatMember member = new ChatMember() { UserId = request.ChatOwnerId, Chat = chatToCreate};
             _unifOfWork.GenericRepository<Chat>().Insert(chatToCreate);
+            _unifOfWork.GenericRepository<ChatMember>().Insert(member);
             _unifOfWork.SaveChanges();
             return true;
         }

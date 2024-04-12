@@ -15,6 +15,6 @@ namespace DataAccess.Entities
 
         public User? ChatOwner { get; set; }
 
-        public IEnumerable<ChatMember> ChatMembers { get; set; }
+        public IEnumerable<ChatMember> ChatMembers { get; set; } = new List<ChatMember>();
     }
 }

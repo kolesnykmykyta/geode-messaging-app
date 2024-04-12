@@ -2,6 +2,7 @@
 using DataAccess.Entities;
 using DataAccess.UnitOfWork;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -29,9 +30,15 @@ namespace Application.Utils.Helpers
             IEnumerable<string>? selectProps = null)
         {
             IQueryable<Chat> output = _unitOfWork.GenericRepository<Chat>()
-                .GetList(searchParams, sortingProp, sortDescending, pageSize, pageNumber, selectProps)
+                .GetList(searchParams, sortingProp, sortDescending, null, null, selectProps)
                 .Include(c => c.ChatMembers)
                 .Where(c => c.ChatMembers.Any(cm => cm.UserId == userId));
+
+            if (pageSize != null && pageNumber != null)
+            {
+                output = output.Skip(((int)pageNumber - 1) * (int)pageSize)
+                                .Take((int)pageSize);
+            }
 
             return output;
         }
