@@ -1,6 +1,6 @@
 ﻿using MediatR;
 
-namespace Application.Services
+namespace Application.Services.Users
 {
     public class UpdateUsernameCommand : IRequest<bool>
     {

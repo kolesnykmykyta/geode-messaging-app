@@ -2,7 +2,7 @@
 using DataAccess.Entities;
 using MediatR;
 
-namespace Application.Services
+namespace Application.Services.Users
 {
     public class GetUsersListQuery : IRequest<IEnumerable<UserInfoDto>>
     {

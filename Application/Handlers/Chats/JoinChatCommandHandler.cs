@@ -1,9 +1,9 @@
-﻿using Application.Services;
+﻿using Application.Services.Chats;
 using Application.Utils.Helpers.Interfaces;
 using DataAccess.UnitOfWork;
 using MediatR;
 
-namespace Application.Handlers
+namespace Application.Handlers.Chats
 {
     public class JoinChatCommandHandler : IRequestHandler<JoinChatCommand, bool>
     {

@@ -1,5 +1,5 @@
 ﻿using Application.Dtos;
-using Application.Services;
+using Application.Services.Messages;
 using Application.Utils.Helpers.Interfaces;
 using AutoMapper;
 using MediatR;

@@ -1,8 +1,8 @@
-﻿using Application.Services;
+﻿using Application.Services.Chats;
 using DataAccess.Entities;
 using MediatR;
 
-namespace Application.Handlers
+namespace Application.Handlers.Chats
 {
     public class GetChatMessageQueryHandler : IRequestHandler<GetChatMessagesQuery, IEnumerable<Message>>
     {

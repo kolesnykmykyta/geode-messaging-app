@@ -1,4 +1,4 @@
-﻿using Application.Services;
+﻿using Application.Services.Users;
 using Auth.Dtos;
 using Auth.Services.Interfaces;
 using MediatR;
@@ -8,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Application.Handlers
+namespace Application.Handlers.Users
 {
     public class RefreshTokenQueryHandler : IRequestHandler<RefreshTokenQuery, TokenDto?>
     {

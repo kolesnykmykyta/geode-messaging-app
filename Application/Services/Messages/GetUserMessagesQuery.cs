@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Application.Services
+namespace Application.Services.Messages
 {
     public class GetUserMessagesQuery : IRequest<IEnumerable<MessageDto>>
     {

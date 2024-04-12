@@ -1,5 +1,6 @@
 ﻿using Application.Dtos;
 using Application.Services;
+using Application.Services.Users;
 using Auth.Dtos;
 using AutoMapper;
 using MediatR;

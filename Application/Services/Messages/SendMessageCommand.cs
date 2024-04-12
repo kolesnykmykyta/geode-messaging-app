@@ -1,6 +1,6 @@
 ﻿using MediatR;
 
-namespace Application.Services
+namespace Application.Services.Messages
 {
     public class SendMessageCommand : IRequest<bool>
     {

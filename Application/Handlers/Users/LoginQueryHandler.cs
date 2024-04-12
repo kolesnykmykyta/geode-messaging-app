@@ -1,9 +1,9 @@
-﻿using Application.Services;
+﻿using Application.Services.Users;
 using Auth.Dtos;
 using Auth.Services.Interfaces;
 using MediatR;
 
-namespace Application.Handlers
+namespace Application.Handlers.Users
 {
     public class LoginQueryHandler : IRequestHandler<LoginQuery, TokenDto?>
     {

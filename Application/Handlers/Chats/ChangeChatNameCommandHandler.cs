@@ -1,10 +1,10 @@
-﻿using Application.Services;
+﻿using Application.Services.Chats;
 using AutoMapper;
 using DataAccess.Entities;
 using DataAccess.UnitOfWork;
 using MediatR;
 
-namespace Application.Handlers
+namespace Application.Handlers.Chats
 {
     public class ChangeChatNameCommandHandler : IRequestHandler<ChangeChatNameCommand, bool>
     {

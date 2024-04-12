@@ -1,6 +1,10 @@
 ﻿using Application.Dtos;
-using Application.Handlers;
-using Application.Services;
+using Application.Handlers.Chats;
+using Application.Handlers.Messages;
+using Application.Handlers.Users;
+using Application.Services.Chats;
+using Application.Services.Messages;
+using Application.Services.Users;
 using Application.Utils;
 using Application.Utils.Automapper;
 using Application.Utils.Helpers;

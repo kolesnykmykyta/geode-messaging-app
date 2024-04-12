@@ -1,12 +1,12 @@
 ﻿using Application.Dtos;
-using Application.Services;
+using Application.Services.Chats;
 using Application.Utils.Helpers.Interfaces;
 using AutoMapper;
 using DataAccess.Entities;
 using DataAccess.UnitOfWork;
 using MediatR;
 
-namespace Application.Handlers
+namespace Application.Handlers.Chats
 {
     public class GetUserChatsQueryHandler : IRequestHandler<GetUserChatsQuery, IEnumerable<ChatDto>>
     {

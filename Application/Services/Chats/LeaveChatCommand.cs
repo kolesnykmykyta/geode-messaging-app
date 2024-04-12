@@ -1,6 +1,6 @@
 ﻿using MediatR;
 
-namespace Application.Services
+namespace Application.Services.Chats
 {
     public class LeaveChatCommand : IRequest<bool>
     {

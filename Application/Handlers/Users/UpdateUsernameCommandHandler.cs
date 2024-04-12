@@ -1,7 +1,7 @@
-﻿using Application.Services;
+﻿using Application.Services.Users;
 using MediatR;
 
-namespace Application.Handlers
+namespace Application.Handlers.Users
 {
     public class UpdateUsernameCommandHandler : IRequestHandler<UpdateUsernameCommand, bool>
     {

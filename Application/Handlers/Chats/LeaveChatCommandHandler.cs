@@ -1,8 +1,8 @@
-﻿using Application.Services;
+﻿using Application.Services.Chats;
 using Application.Utils.Helpers.Interfaces;
 using MediatR;
 
-namespace Application.Handlers
+namespace Application.Handlers.Chats
 {
     public class LeaveChatCommandHandler : IRequestHandler<LeaveChatCommand, bool>
     {

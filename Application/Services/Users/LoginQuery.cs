@@ -1,7 +1,7 @@
 ﻿using Auth.Dtos;
 using MediatR;
 
-namespace Application.Services
+namespace Application.Services.Users
 {
     public class LoginQuery : IRequest<TokenDto?>
     {

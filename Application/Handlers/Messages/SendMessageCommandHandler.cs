@@ -1,7 +1,7 @@
-﻿using Application.Services;
+﻿using Application.Services.Messages;
 using MediatR;
 
-namespace Application.Handlers
+namespace Application.Handlers.Messages
 {
     public class SendMessageCommandHandler : IRequestHandler<SendMessageCommand, bool>
     {
