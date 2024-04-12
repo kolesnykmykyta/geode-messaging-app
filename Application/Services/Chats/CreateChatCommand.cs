@@ -2,7 +2,7 @@
 
 namespace Application.Services.Chats
 {
-    public class CreateChatCommand : IRequest<bool>
+    public class CreateChatCommand : IRequest
     {
         public string Name { get; set; } = string.Empty;
 

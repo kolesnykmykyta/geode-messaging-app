@@ -18,6 +18,8 @@ namespace Application.Utils.Helpers.Interfaces
             int? pageNumber = null,
             IEnumerable<string>? selectProps = null);
 
+        void CreateNewChat(Chat newChat);
+
         bool LeaveChat(int chatId, string userId);
 
         bool JoinChat(int chatId, string userId);

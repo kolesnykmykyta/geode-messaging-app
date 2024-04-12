@@ -1,6 +1,9 @@
 ﻿@page "/messages"
 @inject IMessagesService messagesService
 
+<link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet" />
+<link href="_content/MudBlazor/MudBlazor.min.css" rel="stylesheet" />
+
 <div class="d-flex flex-column flex-lg-row gap-3 mb-3">
     <div class="d-flex flex-column flex-lg-row">
         <InputText id="search" @bind-Value="@filter.SearchParam" Placeholder="Search" class="form-control w-25"></InputText>

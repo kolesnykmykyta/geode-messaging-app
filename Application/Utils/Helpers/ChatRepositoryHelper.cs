@@ -20,6 +20,14 @@ namespace Application.Utils.Helpers
             _unitOfWork = unitOfWork;
         }
 
+        public void CreateNewChat(Chat newChat)
+        {
+            ChatMember member = new ChatMember() { UserId = newChat.ChatOwnerId, Chat = newChat };
+            _unitOfWork.GenericRepository<Chat>().Insert(newChat);
+            _unitOfWork.GenericRepository<ChatMember>().Insert(member);
+            _unitOfWork.SaveChanges();
+        }
+
         public IEnumerable<Chat> GetUserChats
             (string userId,
             Dictionary<string, string>? searchParams = null,

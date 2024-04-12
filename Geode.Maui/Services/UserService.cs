@@ -17,29 +17,22 @@ namespace Geode.Maui.Services
     {
         private readonly IHttpClientWrapper _httpClient;
         private readonly ILocalStorageService _localStorage;
+        private readonly IServicesHelper _helper;
 
-        public UserService(IHttpClientWrapper httpClient, ILocalStorageService localStorage)
+        public UserService(IHttpClientWrapper httpClient, ILocalStorageService localStorage, IServicesHelper helper)
         {
             _httpClient = httpClient;
             _localStorage = localStorage;
+            _helper = helper;
         }
 
         public async Task<IEnumerable<UserInfoDto>> GetUserListAsync(FilterDto? filter)
         {
-            Dictionary<string, string>? queryParams = filter == null ? null : CreateDictionaryFromObject(filter);
+            Dictionary<string, string>? queryParams = filter == null ? null : _helper.CreateDictionaryFromObject(filter);
             string? accessToken = await _localStorage.GetItemAsStringAsync("BearerToken");
             HttpResponseMessage response = await _httpClient.GetAsync("user/all", queryParams, accessToken);
 
-            if (response.IsSuccessStatusCode)
-            {
-                string jsonResponseString = await response.Content.ReadAsStringAsync();
-                List<UserInfoDto>? responseBody = JsonSerializer.Deserialize<List<UserInfoDto>>(jsonResponseString);
-                return responseBody;
-            }
-            else
-            {
-                return null;
-            }
+            return await _helper.DeserializeJsonAsync<IEnumerable<UserInfoDto>>(response);
         }
 
         private Dictionary<string,string> CreateDictionaryFromObject(object obj)
