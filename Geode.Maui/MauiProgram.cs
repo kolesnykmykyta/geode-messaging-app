@@ -32,6 +32,7 @@ namespace Geode.Maui
             builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
 
             builder.Services.AddScoped<IUsersService, UserService>();
+            builder.Services.AddScoped<IMessagesService, MessagesService>();
 
             builder.Services.AddBlazoredLocalStorage();
 
