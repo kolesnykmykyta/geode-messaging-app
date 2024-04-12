@@ -1,0 +1,63 @@
+﻿@page "/chats"
+@inject IChatsService chatsService
+
+<link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet" />
+<link href="_content/MudBlazor/MudBlazor.min.css" rel="stylesheet" />
+
+<div class="d-flex flex-column flex-lg-row gap-3 mb-3">
+    <div class="d-flex flex-column flex-lg-row">
+        <InputText id="search" @bind-Value="@filter.SearchParam" Placeholder="Search" class="form-control w-25"></InputText>
+
+        <div class="w-50 d-flex gap-3 align-items-center">
+            <MudSelect Class="w-25" @bind-Value="@filter.SortProp" Label="Sorting parameter">
+                <MudSelectItem Value="@("Id")">Id</MudSelectItem>
+                <MudSelectItem Value="@("Name")">Name</MudSelectItem>
+            </MudSelect>
+
+            <MudCheckBox @bind-Value="@filter.SortByDescending">Descending</MudCheckBox>
+        </div>
+    </div>
+    <div>
+        <MudSelect Class="w-25" @bind-Value="@filter.SelectProps" MultiSelection="true" Delimiter="," Label="Select properties">
+            <MudSelectItem Value="@("Id")">Id</MudSelectItem>
+            <MudSelectItem Value="@("Name")">Name</MudSelectItem>
+        </MudSelect>
+    </div>
+    <div class="mb-3 mt-lg-0">
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" @onclick="UpdateUserList">Apply parameters</MudButton>
+    </div>
+</div>
+
+<MudDataGrid Items="@chats" class="mb-3">
+    <Columns>
+        <PropertyColumn Property="x => x.Id" />
+        <PropertyColumn Property="x => x.Name" />
+    </Columns>
+</MudDataGrid>
+
+@code {
+    private IEnumerable<ChatDto> chats = new List<ChatDto>();
+    private FilterDto filter = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        chats = await chatsService.GetAllUserChatsAsync(null);
+    }
+
+    private async Task UpdateUserList()
+    {
+        chats = await chatsService.GetAllUserChatsAsync(filter);
+    }
+
+    private async Task NextPage()
+    {
+        filter.PageNumber += 1;
+        await UpdateUserList();
+    }
+
+    private async Task PreviousPage()
+    {
+        filter.PageNumber -= 1;
+        await UpdateUserList();
+    }
+}
