@@ -18,6 +18,15 @@ namespace Geode.Maui.Services
             _localStorage = localStorage;
         }
 
+        public async Task<bool> CreateNewChat(string chatName)
+        {
+            ChatDto newChat = new ChatDto() { Name = chatName };
+            string? accessToken = await _localStorage.GetItemAsStringAsync("BearerToken");
+            HttpResponseMessage response = await _httpClient.PostAsync("chat", newChat, accessToken);
+
+            return response.IsSuccessStatusCode;
+        }
+
         public async Task<IEnumerable<ChatDto>> GetAllUserChatsAsync(FilterDto? filter)
         {
             Dictionary<string, string>? queryParams = filter == null ? null : CreateDictionaryFromObject(filter);

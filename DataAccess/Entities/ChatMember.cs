@@ -16,8 +16,8 @@ namespace DataAccess.Entities
         public int ChatId { get; set; }
 
         // Navigation properties
-        public User User { get; set; }
+        public User? User { get; set; }
 
-        public Chat Chat { get; set; }
+        public Chat? Chat { get; set; }
     }
 }
