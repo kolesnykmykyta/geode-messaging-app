@@ -37,5 +37,35 @@ namespace Geode.Maui.Services
 
             return await _helper.DeserializeJsonAsync<IEnumerable<ChatDto>>(response);
         }
+
+        public async Task<bool> JoinChatAsync(string? chatId)
+        {
+            int intId;
+            if (int.TryParse(chatId, out intId))
+            {
+                string? accessToken = await _localStorage.GetItemAsStringAsync("BearerToken");
+                HttpResponseMessage response = await _httpClient.PostAsync($"chat/join/{chatId}", null, accessToken);
+                return response.IsSuccessStatusCode;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        public async Task<bool> LeaveChatAsync(string? chatId)
+        {
+            int intId;
+            if (int.TryParse(chatId, out intId))
+            {
+                string? accessToken = await _localStorage.GetItemAsStringAsync("BearerToken");
+                HttpResponseMessage response = await _httpClient.PostAsync($"chat/leave/{chatId}", null, accessToken);
+                return response.IsSuccessStatusCode;
+            }
+            else
+            {
+                return false;
+            }
+        }
     }
 }

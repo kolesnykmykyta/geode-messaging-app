@@ -12,5 +12,9 @@ namespace Geode.Maui.Services.Interfaces
         Task<IEnumerable<ChatDto>> GetAllUserChatsAsync(FilterDto? filter);
 
         Task<bool> CreateNewChat(string chatName);
+
+        Task<bool> JoinChatAsync(string? chatId);
+
+        Task<bool> LeaveChatAsync(string? chatId);
     }
 }

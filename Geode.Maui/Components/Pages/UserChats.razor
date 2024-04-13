@@ -26,7 +26,14 @@
     <div class="mb-3 mt-lg-0">
         <MudButton Variant="Variant.Filled" Color="Color.Primary" @onclick="UpdateUserList">Apply parameters</MudButton>
     </div>
+    <div>
     <a href="/chats/new">New chat</a>
+    </div>
+    <div>
+        <InputText id="chatId" @bind-Value="@chatId" Placeholder="Chat Id" class="form-control w-25"></InputText>
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" @onclick="JoinChat">Join</MudButton>
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" @onclick="LeaveChat">Leave</MudButton>
+    </div>
 </div>
 
 <MudDataGrid Items="@chats" class="mb-3">
@@ -39,6 +46,7 @@
 @code {
     private IEnumerable<ChatDto> chats = new List<ChatDto>();
     private FilterDto filter = new();
+    private string chatId = string.Empty;
 
     protected override async Task OnInitializedAsync()
     {
@@ -60,5 +68,23 @@
     {
         filter.PageNumber -= 1;
         await UpdateUserList();
+    }
+
+    private async Task JoinChat()
+    {
+        bool isSuccess = await chatsService.JoinChatAsync(chatId);
+        if (isSuccess)
+        {
+            await UpdateUserList();
+        }
+    }
+
+    private async Task LeaveChat()
+    {
+        bool isSuccess = await chatsService.LeaveChatAsync(chatId);
+        if (isSuccess)
+        {
+            await UpdateUserList();
+        }
     }
 }
