@@ -1,0 +1,8 @@
+﻿@page "/chats/{ChatId:int}"
+
+<h3>ChatId: @ChatId</h3>
+
+@code {
+    [Parameter]
+    public int ChatId { get; set; }
+}

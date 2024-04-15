@@ -43,6 +43,11 @@
     <Columns>
         <PropertyColumn Property="x => x.Id" />
         <PropertyColumn Property="x => x.Name" />
+        <TemplateColumn>
+            <CellTemplate>
+                <MudLink Href="@($"chats/{context.Item.Id}")">Go to chat</MudLink>
+            </CellTemplate>
+        </TemplateColumn>
     </Columns>
 </MudDataGrid>
 
