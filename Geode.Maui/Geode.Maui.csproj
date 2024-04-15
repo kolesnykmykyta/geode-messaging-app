@@ -58,6 +58,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <Content Remove="Components\Pages\ChatSettings.razor" />
       <Content Remove="Components\Pages\UserChats.razor" />
       <Content Remove="Components\Pages\UsersList.razor" />
     </ItemGroup>
@@ -83,12 +84,14 @@
     </ItemGroup>
 
     <ItemGroup>
+      <_ContentIncludedByDefault Remove="Components\Pages\ChatSettings.razor" />
       <_ContentIncludedByDefault Remove="Components\Pages\Login.razor" />
       <_ContentIncludedByDefault Remove="Components\Pages\UserChats.razor" />
       <_ContentIncludedByDefault Remove="Components\Pages\UsersList.razor" />
     </ItemGroup>
 
     <ItemGroup>
+      <None Include="Components\Pages\ChatSettings.razor" />
       <None Include="Components\Pages\Login.razor" />
       <None Include="Components\Pages\UserChats.razor" />
       <None Include="Components\Pages\UsersList.razor" />
@@ -100,6 +103,10 @@
 
     <ItemGroup>
       <UpToDateCheckInput Remove="Components\Pages\UserChats.razor" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <UpToDateCheckInput Remove="Components\Pages\ChatSettings.razor" />
     </ItemGroup>
 
 </Project>

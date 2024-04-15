@@ -29,6 +29,11 @@ namespace Geode.Maui.Services
             return response.IsSuccessStatusCode;
         }
 
+        public Task<bool> DeleteChatAsync(int chatId)
+        {
+            throw new NotImplementedException();
+        }
+
         public async Task<IEnumerable<ChatDto>> GetAllUserChatsAsync(FilterDto? filter)
         {
             Dictionary<string, string>? queryParams = filter == null ? null : _helper.CreateDictionaryFromObject(filter);
@@ -66,6 +71,17 @@ namespace Geode.Maui.Services
             {
                 return false;
             }
+        }
+
+        public async Task UpdateChatAsync(ChatDto dto)
+        {
+            string? accessToken = await _localStorage.GetItemAsStringAsync("BearerToken");
+            HttpResponseMessage response = await _httpClient.PutAsync($"chat", dto, accessToken);
+        }
+
+        Task IChatsService.DeleteChatAsync(int chatId)
+        {
+            throw new NotImplementedException();
         }
     }
 }

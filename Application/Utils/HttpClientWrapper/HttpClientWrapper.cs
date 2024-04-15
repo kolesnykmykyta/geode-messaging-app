@@ -44,6 +44,17 @@ namespace Application.Utils.HttpClientWrapper
             return response;
         }
 
+        public async Task<HttpResponseMessage> PutAsync(string url, object? content = null, string? accessToken = null)
+        {
+            using HttpClient httpClient = CreateHttpClient(accessToken);
+
+            string? jsonContent = JsonSerializer.Serialize(content);
+            StringContent requestContent = new StringContent(jsonContent, Encoding.UTF8, "application/json");
+
+            HttpResponseMessage response = await httpClient.PutAsync($"{ApiBase}/{url}", requestContent);
+            return response;
+        }
+
         private HttpClient CreateHttpClient(string? accessToken)
         {
             HttpClient client = new HttpClient();

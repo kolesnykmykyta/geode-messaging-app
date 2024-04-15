@@ -1,0 +1,28 @@
+﻿@page "/chats/{ChatId:int}/settings"
+@inject IChatsService chatsService
+@inject NavigationManager navigationManager;
+
+<div class="justify-content-center">
+    <EditForm Model="@dto" OnSubmit="UpdateChat" FormName="newChat">
+        <ValidationSummary />
+
+        <label for="inputValue">Chat Name</label>
+        <InputText id="name" @bind-Value="@dto.Name" />
+
+        <button type="submit">Update</button>
+    </EditForm>
+</div>
+
+@code {
+    [Parameter]
+    public int ChatId { get; set; }
+    private ChatDto dto { get; set; } = new();
+
+    private async Task UpdateChat(EditContext context)
+    {
+        ChatDto contextDto = (ChatDto)context.Model;
+        contextDto.Id = ChatId;
+        await chatsService.UpdateChatAsync(contextDto);
+        navigationManager.NavigateTo("chats");
+    }
+}

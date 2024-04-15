@@ -16,5 +16,9 @@ namespace Geode.Maui.Services.Interfaces
         Task<bool> JoinChatAsync(string? chatId);
 
         Task<bool> LeaveChatAsync(string? chatId);
+
+        Task DeleteChatAsync(int chatId);
+
+        Task UpdateChatAsync(ChatDto dto);
     }
 }
