@@ -11,7 +11,7 @@ namespace Geode.Maui.Authentication
     {
         Task LogInAsync(LoginDto dto);
 
-        Task RegisterAsync(RegisterDto dto);
+        Task<IEnumerable<string>?> RegisterAsync(RegisterDto dto);
 
         Task LogoutAsync();
     }

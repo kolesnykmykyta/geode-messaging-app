@@ -28,8 +28,10 @@
 
     private async Task RegisterAsync(EditContext context)
     {
+        message = "Registering...";
+
         RegisterDto contextDto = (RegisterDto)context.Model;
-        await authService.RegisterAsync(contextDto);
-        message = "Registration finished";
+        IEnumerable<string>? errors = await authService.RegisterAsync(contextDto);
+        message = errors == null ? "Successflully registered!" : string.Join("\n", errors);
     }
 }
