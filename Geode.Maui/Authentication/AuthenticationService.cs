@@ -57,7 +57,6 @@ namespace Geode.Maui.Authentication
         public async Task<IEnumerable<string>?> RegisterAsync(RegisterDto dto)
         {
             HttpResponseMessage response = await _httpClient.PostAsync("user/register", dto);
-            await _localStorage.SetItemAsStringAsync(await response.Content.ReadAsStringAsync(), "regresponse");
 
             if (response.StatusCode == HttpStatusCode.BadRequest)
             {
