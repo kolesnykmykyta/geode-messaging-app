@@ -1,4 +1,5 @@
-﻿using DataAccess.Entities;
+﻿using Application.Dtos;
+using DataAccess.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +10,7 @@ namespace Application.Utils.Helpers.Interfaces
 {
     public interface IChatRepositoryHelper
     {
-        IEnumerable<Chat> GetUserChats
+        IEnumerable<ChatDto> GetUserChats
             (string userId,
             Dictionary<string, string>? searchParams = null,
             string? sortingProp = null,

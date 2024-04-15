@@ -1,4 +1,6 @@
-﻿using Application.Utils.Helpers.Interfaces;
+﻿using Application.Dtos;
+using Application.Utils.Helpers.Interfaces;
+using AutoMapper;
 using DataAccess.Entities;
 using DataAccess.UnitOfWork;
 using Microsoft.EntityFrameworkCore;
@@ -14,10 +16,12 @@ namespace Application.Utils.Helpers
     public class ChatRepositoryHelper : IChatRepositoryHelper
     {
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IMapper _mapper;
 
-        public ChatRepositoryHelper(IUnitOfWork unitOfWork)
+        public ChatRepositoryHelper(IUnitOfWork unitOfWork, IMapper mapper)
         {
             _unitOfWork = unitOfWork;
+            _mapper = mapper;
         }
 
         public void CreateNewChat(Chat newChat)
@@ -28,7 +32,7 @@ namespace Application.Utils.Helpers
             _unitOfWork.SaveChanges();
         }
 
-        public IEnumerable<Chat> GetUserChats
+        public IEnumerable<ChatDto> GetUserChats
             (string userId,
             Dictionary<string, string>? searchParams = null,
             string? sortingProp = null,
@@ -37,18 +41,26 @@ namespace Application.Utils.Helpers
             int? pageNumber = null,
             IEnumerable<string>? selectProps = null)
         {
-            IQueryable<Chat> output = _unitOfWork.GenericRepository<Chat>()
+            IQueryable<Chat> chatList = _unitOfWork.GenericRepository<Chat>()
                 .GetList(searchParams, sortingProp, sortDescending, null, null, selectProps)
                 .Include(c => c.ChatMembers)
                 .Where(c => c.ChatMembers.Any(cm => cm.UserId == userId));
 
             if (pageSize != null && pageNumber != null)
             {
-                output = output.Skip(((int)pageNumber - 1) * (int)pageSize)
+                chatList = chatList.Skip(((int)pageNumber - 1) * (int)pageSize)
                                 .Take((int)pageSize);
             }
 
-            return output;
+            List<ChatDto> chatDtos = new List<ChatDto>();
+            foreach(Chat chat in chatList)
+            {
+                ChatDto dto = _mapper.Map<ChatDto>(chat);
+                dto.IsUserOwner = userId == chat.ChatOwnerId;
+                chatDtos.Add(dto);
+            }
+
+            return chatDtos;
         }
 
         public bool JoinChat(int chatId, string userId)

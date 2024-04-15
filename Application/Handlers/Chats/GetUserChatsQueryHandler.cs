@@ -26,10 +26,10 @@ namespace Application.Handlers.Chats
             IEnumerable<string>? selectPropsList = _parametersHelper.SplitSelectProperties(request.SelectProps);
             Dictionary<string, string> searchParameters = _parametersHelper.GenerateSearchParametersDictionary(request.SearchParam);
 
-            IEnumerable<Chat> chatList = _chatHelper
+            IEnumerable<ChatDto> chatList = _chatHelper
                 .GetUserChats(request.UserId, searchParameters, request.SortProp, request.SortByDescending, request.PageSize, request.PageNumber, selectPropsList);
 
-            return _mapper.Map<IEnumerable<ChatDto>>(chatList);
+            return chatList;
         }
     }
 }

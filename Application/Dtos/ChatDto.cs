@@ -14,5 +14,8 @@ namespace Application.Dtos
 
         [JsonPropertyName("name")]
         public string? Name { get; set; }
+
+        [JsonPropertyName("isUserOwner")]
+        public bool IsUserOwner { get; set; }
     }
 }
