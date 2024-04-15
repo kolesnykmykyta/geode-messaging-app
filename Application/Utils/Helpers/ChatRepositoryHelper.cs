@@ -54,7 +54,12 @@ namespace Application.Utils.Helpers
         public bool JoinChat(int chatId, string userId)
         {
             Chat? existingChat = _unitOfWork.GenericRepository<Chat>().GetById(chatId);
-            if (existingChat == null)
+            ChatMember? existingChatMember = _unitOfWork.GenericRepository<ChatMember>()
+                .GetList()
+                .Where(cm => cm.ChatId == chatId && cm.UserId == userId)
+                .FirstOrDefault();
+
+            if (existingChat == null || existingChatMember != null)
             {
                 return false;
             }
