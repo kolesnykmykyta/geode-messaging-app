@@ -27,6 +27,7 @@ namespace Geode.API.Extensions
             services.AddScoped<IRequestHandler<SendMessageCommand, bool>, SendMessageCommandHandler>();
             services.AddScoped<IRequestHandler<UpdateUsernameCommand, bool>, UpdateUsernameCommandHandler>();
             services.AddScoped<IRequestHandler<RegisterNewUserCommand, RegisterResultDto>, RegisterNewUserCommandHandler>();
+            services.AddScoped<IRequestHandler<DeleteChatCommand, bool>, DeleteChatCommandHandler>();
 
             // CQRS Queries
             services.AddScoped<IRequestHandler<LoginQuery, TokenDto?>, LoginQueryHandler>();

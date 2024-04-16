@@ -59,6 +59,20 @@ namespace Geode.API.Controllers
         }
 
         [Authorize]
+        [HttpDelete("delete/{chatId}")]
+        public async Task<IActionResult> DeleteChat(int chatId)
+        {
+            DeleteChatCommand command = new DeleteChatCommand()
+            {
+                ChatId = chatId,
+                UserId = _userHelper.ExtractIdFromUser(User),
+            };
+
+            bool result = await _mediator.Send(command);
+            return result ? Ok() : BadRequest();
+        }
+
+        [Authorize]
         [HttpPost("join/{chatId}")]
         public async Task<IActionResult> JoinChat(int chatId)
         {
