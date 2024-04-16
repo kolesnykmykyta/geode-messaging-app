@@ -8,8 +8,10 @@
 
         <label for="inputValue">Chat Name</label>
         <InputText id="name" @bind-Value="@dto.Name" />
-
-        <button type="submit">Update</button>
+        <div>
+            <button type="submit">Update</button>
+            <button @onclick="DeleteChat">Delete</button>
+        </div>
     </EditForm>
 </div>
 
@@ -23,6 +25,12 @@
         ChatDto contextDto = (ChatDto)context.Model;
         contextDto.Id = ChatId;
         await chatsService.UpdateChatAsync(contextDto);
+        navigationManager.NavigateTo("chats");
+    }
+
+    private async Task DeleteChat()
+    {
+        await chatsService.DeleteChatAsync(ChatId);
         navigationManager.NavigateTo("chats");
     }
 }

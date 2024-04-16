@@ -14,6 +14,14 @@ namespace Application.Utils.HttpClientWrapper
     {
         const string ApiBase = "https://localhost:7077/api";
 
+        public async Task<HttpResponseMessage> DeleteAsync(string url, string? accessToken = null)
+        {
+            using HttpClient httpClient = CreateHttpClient(accessToken);
+
+            HttpResponseMessage response = await httpClient.DeleteAsync($"{ApiBase}/{url}");
+            return response;
+        }
+
         public async Task<HttpResponseMessage> GetAsync(string url, Dictionary<string, string>? queryParams = null, string? accessToken = null)
         {
             using HttpClient httpClient = CreateHttpClient(accessToken);
