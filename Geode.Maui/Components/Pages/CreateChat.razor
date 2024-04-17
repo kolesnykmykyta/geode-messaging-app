@@ -5,13 +5,15 @@
 <h3>New chat</h3>
 <p>@message</p>
 <div class="justify-content-center">
-    <EditForm Model="@dto" OnSubmit="HandleSubmit" FormName="newChat">
+    <EditForm Model="@dto" OnSubmit="HandleSubmit" FormName="newChat" class="form-group w-50">
         <ValidationSummary />
 
-        <label for="inputValue">Chat Name</label>
-        <InputText id="name" @bind-Value="@dto.Name" />
+        <div class="mb-3">
+            <label for="inputValue">Chat Name</label>
+            <InputText id="name" @bind-Value="@dto.Name" class="form-control"/>
+        </div>
 
-        <button type="submit">Create</button>
+        <button class="btn btn-primary" type="submit">Create</button>
     </EditForm>
 </div>
 
