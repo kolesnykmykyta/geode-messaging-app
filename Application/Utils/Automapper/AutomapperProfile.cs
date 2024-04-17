@@ -24,6 +24,9 @@ namespace Application.Utils.Automapper
             CreateMap<UserInfoDto, User>().ReverseMap();
             CreateMap<ChatDto, Chat>().ReverseMap();
             CreateMap<MessageDto, Message>().ReverseMap();
+            CreateMap<Message, ChatMessageDto>()
+                .ForMember(cm => cm.Sender, m => m.MapFrom(x => x.Sender.UserName))
+                .ReverseMap();
         }
     }
 }

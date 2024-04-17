@@ -34,5 +34,15 @@ namespace Geode.API.Controllers
             IEnumerable<MessageDto> allMessages = await _mediator.Send(query);
             return Ok(allMessages);
         }
+
+        [Authorize]
+        [HttpGet("chat/{chatId}")]
+        public async Task<IActionResult> GetAllMessagesInChat(int chatId)
+        {
+            GetChatMessagesQuery query = new GetChatMessagesQuery(chatId);
+
+            IEnumerable<ChatMessageDto> messages = await _mediator.Send(query);
+            return Ok(messages);
+        }
     }
 }

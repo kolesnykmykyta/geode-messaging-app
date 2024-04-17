@@ -32,6 +32,17 @@ namespace Application.Utils.Helpers
             _unitOfWork.SaveChanges();
         }
 
+        public IEnumerable<ChatMessageDto> GetMessagesInChat(int chatId)
+        {
+            IEnumerable<Message> chatMessages = _unitOfWork.GenericRepository<Message>()
+                .GetList()
+                .Where(m => m.ChatId == chatId)
+                .OrderByDescending(m => m.SentAt)
+                .Include(m => m.Sender);
+
+            return _mapper.Map<IEnumerable<ChatMessageDto>>(chatMessages);
+        }
+
         public IEnumerable<ChatDto> GetUserChats
             (string userId,
             Dictionary<string, string>? searchParams = null,
