@@ -1,8 +1,20 @@
 ﻿@page "/chats/{ChatId:int}"
+@inject IMessagesService messagesService
 
-<h3>ChatId: @ChatId</h3>
+@foreach(ChatMessageDto message in messages)
+{
+    <h6>@message.Sender</h6>
+    <p>@message.Content</p>
+}
 
 @code {
     [Parameter]
     public int ChatId { get; set; }
+
+    IEnumerable<ChatMessageDto> messages { get; set; } = new List<ChatMessageDto>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        messages = await messagesService.GetAllChatMessages(ChatId);
+    }
 }

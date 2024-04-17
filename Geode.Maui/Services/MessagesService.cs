@@ -20,6 +20,14 @@ namespace Geode.Maui.Services
             _helper = helper;
         }
 
+        public async Task<IEnumerable<ChatMessageDto>> GetAllChatMessages(int chatId)
+        {
+            string? accessToken = await _localStorage.GetItemAsStringAsync("BearerToken");
+            HttpResponseMessage response = await _httpClient.GetAsync($"messages/chat/{chatId}", null, accessToken);
+
+            return await _helper.DeserializeJsonAsync<IEnumerable<ChatMessageDto>>(response);
+        }
+
         public async Task<IEnumerable<MessageDto>> GetAllUserMessagesAsync(FilterDto? filter)
         {
             Dictionary<string, string>? queryParams = filter == null ? null : _helper.CreateDictionaryFromObject(filter);
