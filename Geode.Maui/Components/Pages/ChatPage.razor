@@ -7,8 +7,7 @@
 
 @foreach (ChatMessageDto message in messages)
 {
-    <h5>@message.Sender</h5>
-    <p>@message.Content</p>
+    <p>@message.Sender : @message.Content</p>
 }
 
 @code {
