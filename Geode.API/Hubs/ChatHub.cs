@@ -27,7 +27,7 @@ namespace Geode.API.Hubs
         public async Task SendMessage(int chatId, string message)
         {
             string userId = _userHelper.ExtractIdFromUser(Context.GetHttpContext()!.User);
-            string sender = Context.GetHttpContext()!.User.FindFirst(ClaimTypes.Name)!.Value;
+            string sender = _userHelper.ExtractNameFromUser(Context.GetHttpContext()!.User);
 
             SendMessageCommand command = new SendMessageCommand()
             {

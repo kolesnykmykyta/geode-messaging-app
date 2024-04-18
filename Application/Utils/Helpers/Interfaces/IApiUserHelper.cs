@@ -5,5 +5,7 @@ namespace Application.Utils.Helpers.Interfaces
     public interface IApiUserHelper
     {
         string ExtractIdFromUser(ClaimsPrincipal user);
+
+        string ExtractNameFromUser(ClaimsPrincipal user);
     }
 }

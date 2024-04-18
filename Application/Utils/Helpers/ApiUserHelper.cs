@@ -13,7 +13,12 @@ namespace Application.Utils.Helpers
     {
         public string ExtractIdFromUser(ClaimsPrincipal user)
         {
-            return user.FindFirst(ClaimTypes.NameIdentifier)!.Value;
+            return user.FindFirstValue(ClaimTypes.NameIdentifier)!;
+        }
+
+        public string ExtractNameFromUser(ClaimsPrincipal user)
+        {
+            return user.FindFirstValue(ClaimTypes.Name)!;
         }
     }
 }
