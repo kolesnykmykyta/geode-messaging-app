@@ -5,6 +5,7 @@ using DataAccess.DbContext;
 using DataAccess.Entities;
 using DataAccess.UnitOfWork;
 using Geode.API.Extensions;
+using Geode.API.Hubs;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -20,6 +21,8 @@ namespace Geode.API
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
+
+            builder.Services.AddSignalR();
 
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -80,6 +83,8 @@ namespace Geode.API
             app.UseAuthorization();
 
             app.MapControllers();
+
+            app.MapHub<ChatHub>("/chathub");
 
             app.Run();
         }

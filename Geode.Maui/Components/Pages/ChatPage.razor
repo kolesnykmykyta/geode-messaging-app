@@ -1,9 +1,13 @@
 ﻿@page "/chats/{ChatId:int}"
 @inject IMessagesService messagesService
+@inject ILocalStorageService localStorage
+
+<InputText @bind-Value="@messageInput" class="form-control"></InputText>
+<MudButton OnClick="SendMessage">Send message</MudButton>
 
 @foreach(ChatMessageDto message in messages)
 {
-    <h6>@message.Sender</h6>
+    <h5>@message.Sender</h5>
     <p>@message.Content</p>
 }
 
@@ -11,10 +15,42 @@
     [Parameter]
     public int ChatId { get; set; }
 
-    IEnumerable<ChatMessageDto> messages { get; set; } = new List<ChatMessageDto>();
+    private List<ChatMessageDto> messages { get; set; } = new List<ChatMessageDto>();
+    private string? messageInput;
+    private HubConnection hubConnection;
 
     protected override async Task OnInitializedAsync()
     {
-        messages = await messagesService.GetAllChatMessages(ChatId);
+        string token = await localStorage.GetItemAsStringAsync("BearerToken");
+        messages = (await messagesService.GetAllChatMessages(ChatId)).ToList();
+        hubConnection = new HubConnectionBuilder()
+        .WithUrl("https://localhost:7077/chathub", options =>
+        {
+            options.AccessTokenProvider = () => Task.FromResult(token);
+        })
+        .Build();
+
+        hubConnection.On<string, string>("ReceiveMessage", (message, sender) =>
+        {
+            InvokeAsync(() =>
+            {
+                messages.Insert(0, new ChatMessageDto()
+                {
+                    Content = message,
+                    Sender = sender,
+                });
+
+                StateHasChanged();
+            });
+        });
+
+        await hubConnection.StartAsync();
+
+        await hubConnection.InvokeAsync("JoinChat", ChatId);
+    }
+
+    private async Task SendMessage()
+    {
+        await hubConnection.SendAsync("SendMessage", ChatId, messageInput);
     }
 }
