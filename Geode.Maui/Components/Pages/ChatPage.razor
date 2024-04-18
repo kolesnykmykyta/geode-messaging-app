@@ -1,11 +1,11 @@
 ﻿@page "/chats/{ChatId:int}"
 @inject IMessagesService messagesService
-@inject ILocalStorageService localStorage
+@inject IChatHubService hubService
 
 <InputText @bind-Value="@messageInput" class="form-control"></InputText>
 <MudButton OnClick="SendMessage">Send message</MudButton>
 
-@foreach(ChatMessageDto message in messages)
+@foreach (ChatMessageDto message in messages)
 {
     <h5>@message.Sender</h5>
     <p>@message.Content</p>
@@ -17,40 +17,28 @@
 
     private List<ChatMessageDto> messages { get; set; } = new List<ChatMessageDto>();
     private string? messageInput;
-    private HubConnection hubConnection;
 
     protected override async Task OnInitializedAsync()
     {
-        string token = await localStorage.GetItemAsStringAsync("BearerToken");
         messages = (await messagesService.GetAllChatMessages(ChatId)).ToList();
-        hubConnection = new HubConnectionBuilder()
-        .WithUrl("https://localhost:7077/chathub", options =>
-        {
-            options.AccessTokenProvider = () => Task.FromResult(token);
-        })
-        .Build();
-
-        hubConnection.On<string, string>("ReceiveMessage", (message, sender) =>
-        {
-            InvokeAsync(() =>
-            {
-                messages.Insert(0, new ChatMessageDto()
-                {
-                    Content = message,
-                    Sender = sender,
-                });
-
-                StateHasChanged();
-            });
-        });
-
-        await hubConnection.StartAsync();
-
-        await hubConnection.InvokeAsync("JoinChat", ChatId);
+        await hubService.ConnectToChatHubAsync(ChatId);
+        hubService.OnMessageReceived += ProcessNewMessage;
     }
 
     private async Task SendMessage()
     {
-        await hubConnection.SendAsync("SendMessage", ChatId, messageInput);
+        if (messageInput != null)
+        {
+            await hubService.SendMessageAsync(ChatId, messageInput);
+        }
+    }
+
+    private void ProcessNewMessage(ChatMessageDto newMessage)
+    {
+        InvokeAsync(() =>
+        {
+            messages.Insert(0, newMessage);
+            StateHasChanged();
+        });
     }
 }
