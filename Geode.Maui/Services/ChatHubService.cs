@@ -10,11 +10,13 @@ using System.Threading.Tasks;
 
 namespace Geode.Maui.Services
 {
-    internal class ChatHubService : IChatHubService
+    internal class ChatHubService : IChatHubService, IAsyncDisposable
     {
         public event Action<ChatMessageDto> OnMessageReceived;
         private HubConnection _hubConnection;
         private readonly ILocalStorageService _localStorage;
+
+        private bool _disposed;
 
         public ChatHubService(ILocalStorageService localStorage)
         {
@@ -51,6 +53,25 @@ namespace Geode.Maui.Services
         public async Task SendMessageAsync(int chatId, string message)
         {
             await _hubConnection.SendAsync("SendMessage", chatId, message);
+        }
+
+        public async ValueTask DisposeAsync()
+        {
+            await DisposeAsync(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual async Task DisposeAsync(bool disposing)
+        {
+            if (!_disposed)
+            {
+                if (disposing)
+                {
+                    await _hubConnection.StopAsync();
+                    OnMessageReceived = null;
+                }
+            }
+            _disposed = true;
         }
     }
 }
