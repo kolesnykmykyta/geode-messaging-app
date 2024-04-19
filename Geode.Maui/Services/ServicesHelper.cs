@@ -34,16 +34,9 @@ namespace Geode.Maui.Services
 
         public async Task<TResult?> DeserializeJsonAsync<TResult>(HttpResponseMessage responseMessage)
         {
-            if (responseMessage.IsSuccessStatusCode)
-            {
-                string jsonResponseString = await responseMessage.Content.ReadAsStringAsync();
-                TResult? responseBody = JsonSerializer.Deserialize<TResult>(jsonResponseString);
-                return responseBody;
-            }
-            else
-            {
-                return default(TResult);
-            }
+            string jsonResponseString = await responseMessage.Content.ReadAsStringAsync();
+            TResult? responseBody = JsonSerializer.Deserialize<TResult>(jsonResponseString);
+            return responseBody;
         }
     }
 }

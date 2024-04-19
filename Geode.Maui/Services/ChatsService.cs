@@ -35,7 +35,14 @@ namespace Geode.Maui.Services
             string? accessToken = await _localStorage.GetItemAsStringAsync("BearerToken");
             HttpResponseMessage response = await _httpClient.GetAsync("chat/all", queryParams, accessToken);
 
-            return await _helper.DeserializeJsonAsync<IEnumerable<ChatDto>>(response);
+            if (response.IsSuccessStatusCode)
+            {
+                return await _helper.DeserializeJsonAsync<IEnumerable<ChatDto>>(response);
+            }
+            else
+            {
+                return new List<ChatDto>();
+            }
         }
 
         public async Task<bool> JoinChatAsync(string? chatId)

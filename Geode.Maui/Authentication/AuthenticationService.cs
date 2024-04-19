@@ -36,8 +36,7 @@ namespace Geode.Maui.Authentication
 
             if (response.IsSuccessStatusCode)
             {
-                string jsonResponseString = await response.Content.ReadAsStringAsync();
-                TokenDto? responseBody = JsonSerializer.Deserialize<TokenDto>(jsonResponseString);
+                TokenDto? responseBody = await _helper.DeserializeJsonAsync<TokenDto>(response);
 
                 await _localStorage.SetItemAsStringAsync(BearerTokenName, responseBody!.AccessToken);
                 await _localStorage.SetItemAsStringAsync(RefreshTokenName, responseBody!.RefreshToken);
@@ -60,8 +59,7 @@ namespace Geode.Maui.Authentication
 
             if (response.StatusCode == HttpStatusCode.BadRequest)
             {
-                string jsonResponseString = await response.Content.ReadAsStringAsync();
-                RegisterResultDto? result = JsonSerializer.Deserialize<RegisterResultDto>(jsonResponseString);
+                RegisterResultDto? result = await _helper.DeserializeJsonAsync<RegisterResultDto>(response);
                 return result.Errors;
             }
 

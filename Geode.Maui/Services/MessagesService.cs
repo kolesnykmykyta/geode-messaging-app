@@ -25,7 +25,14 @@ namespace Geode.Maui.Services
             string? accessToken = await _localStorage.GetItemAsStringAsync("BearerToken");
             HttpResponseMessage response = await _httpClient.GetAsync($"messages/chat/{chatId}", null, accessToken);
 
-            return await _helper.DeserializeJsonAsync<IEnumerable<ChatMessageDto>>(response);
+            if (response.IsSuccessStatusCode)
+            {
+                return await _helper.DeserializeJsonAsync<IEnumerable<ChatMessageDto>>(response);
+            }
+            else
+            {
+                return new List<ChatMessageDto>();
+            }
         }
 
         public async Task<IEnumerable<MessageDto>> GetAllUserMessagesAsync(FilterDto? filter)
@@ -34,7 +41,14 @@ namespace Geode.Maui.Services
             string? accessToken = await _localStorage.GetItemAsStringAsync("BearerToken");
             HttpResponseMessage response = await _httpClient.GetAsync("messages/all", queryParams, accessToken);
 
-            return await _helper.DeserializeJsonAsync<IEnumerable<MessageDto>>(response);
+            if (response.IsSuccessStatusCode)
+            {
+                return await _helper.DeserializeJsonAsync<IEnumerable<MessageDto>>(response);
+            }
+            else
+            {
+                return new List<MessageDto>();
+            }
         }
     }
 }

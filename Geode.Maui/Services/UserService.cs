@@ -32,26 +32,14 @@ namespace Geode.Maui.Services
             string? accessToken = await _localStorage.GetItemAsStringAsync("BearerToken");
             HttpResponseMessage response = await _httpClient.GetAsync("user/all", queryParams, accessToken);
 
-            return await _helper.DeserializeJsonAsync<IEnumerable<UserInfoDto>>(response);
-        }
-
-        private Dictionary<string,string> CreateDictionaryFromObject(object obj)
-        {
-            Type type = obj.GetType();
-            var properties = type.GetProperties(BindingFlags.Public | BindingFlags.Instance);
-
-            var output = new Dictionary<string, string>();
-
-            foreach (var prop in properties)
+            if (response.IsSuccessStatusCode)
             {
-                var value = prop.GetValue(obj);
-                if (value != null)
-                {
-                    output.Add(prop.Name, value.ToString());
-                }
+                return await _helper.DeserializeJsonAsync<IEnumerable<UserInfoDto>>(response);
             }
-
-            return output;
+            else
+            {
+                return new List<UserInfoDto>();
+            }
         }
     }
 }
