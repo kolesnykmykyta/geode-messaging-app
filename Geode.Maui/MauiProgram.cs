@@ -35,7 +35,7 @@ namespace Geode.Maui
             builder.Services.AddScoped<IMessagesService, MessagesService>();
             builder.Services.AddScoped<IChatsService, ChatsService>();
             builder.Services.AddScoped<IServicesHelper, ServicesHelper>();
-            builder.Services.AddScoped<IChatHubService, ChatHubService>();
+            builder.Services.AddTransient<IChatHubService, ChatHubService>();
 
             builder.Services.AddBlazoredLocalStorage();
 
