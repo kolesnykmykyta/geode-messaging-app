@@ -11,6 +11,8 @@ namespace DataAccess.DbContext
         {
         }
 
+        public DatabaseContext() { }
+
         DbSet<Chat> Chats { get; set; }
 
         DbSet<ChatMember> ChatMembers { get; set; }
