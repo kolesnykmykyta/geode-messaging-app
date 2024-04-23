@@ -13,11 +13,11 @@ namespace DataAccess.DbContext
 
         public DatabaseContext() { }
 
-        DbSet<Chat> Chats { get; set; }
+        public DbSet<Chat> Chats { get; set; }
 
-        DbSet<ChatMember> ChatMembers { get; set; }
+        public DbSet<ChatMember> ChatMembers { get; set; }
 
-        DbSet<Message> Messages { get; set; }
+        public DbSet<Message> Messages { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
