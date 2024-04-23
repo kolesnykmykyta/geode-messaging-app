@@ -131,7 +131,7 @@ namespace Auth.Services
                 claims: userClaims,
                 expires: DateTime.Now.AddHours(1),
                 issuer: _config.GetSection("Jwt:Issuer").Value,
-                audience: _config.GetSection("Jwt:Issuer").Value,
+                audience: _config.GetSection("Jwt:Audience").Value,
                 signingCredentials: credentials
                 );
 
