@@ -2,6 +2,7 @@
 using Auth.Services;
 using DataAccess.Entities;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore.SqlServer.Storage.Internal;
 using Microsoft.Extensions.Configuration;
 using Moq;
 using System;
@@ -29,6 +30,7 @@ namespace Geode.Auth.Tests.Services
         }
 
         [Fact]
+        [Trait("Category", "LoginAsync")]
         public async Task LoginAsync_NonExistingUser_ReturnsNull()
         {
             _userManagerMock.Setup(x => x.FindByEmailAsync(It.IsAny<string>()))
@@ -41,6 +43,7 @@ namespace Geode.Auth.Tests.Services
         }
 
         [Fact]
+        [Trait("Category", "LoginAsync")]
         public async Task LoginAsync_WrongPassword_ReturnsNull()
         {
             _userManagerMock.Setup(x => x.FindByEmailAsync(It.IsAny<string>()))
@@ -56,6 +59,7 @@ namespace Geode.Auth.Tests.Services
         }
 
         [Fact]
+        [Trait("Category", "LoginAsync")]
         public async Task LoginAsync_CorrectCredentials_ReturnsTokens()
         {
             PrepareMocksForLoginTest();
@@ -69,6 +73,7 @@ namespace Geode.Auth.Tests.Services
         }
 
         [Fact]
+        [Trait("Category", "LoginAsync")]
         public async Task LoginAsync_CorrectCredentials_UpdatesUserRefreshToken()
         {
             PrepareMocksForLoginTest();
@@ -80,6 +85,7 @@ namespace Geode.Auth.Tests.Services
         }
 
         [Fact]
+        [Trait("Category", "LoginAsync")]
         public async Task LoginAsync_CorrectCredentials_ReturnsTokenWithClaims()
         {
             PrepareMocksForLoginTest();
@@ -99,6 +105,57 @@ namespace Geode.Auth.Tests.Services
             Assert.Equal(expectedId, actualId);
             Assert.Equal(expectedEmail, actualEmail);
             Assert.Equal(expectedUsername, actualUsername);
+        }
+
+        [Fact]
+        [Trait("Category", "RegisterAsync")]
+        public async Task RegisterAsync_SuccessCreation_ReturnsPositiveResult()
+        {
+            IdentityResult mockResult = IdentityResult.Success;
+            _userManagerMock.Setup(x => x.CreateAsync(It.IsAny<User>(), It.IsAny<string>()))
+                .ReturnsAsync(mockResult);
+            AuthService sut = new AuthService(_userManagerMock.Object, null);
+
+            RegisterResultDto actual = await sut.RegisterAsync(new RegisterDto());
+
+            Assert.True(actual.IsSuccess);
+            Assert.Null(actual.Errors);
+        }
+
+        [Fact]
+        [Trait("Category", "RegisterAsync")]
+        public async Task RegisterAsync_FailedCreation_ReturnsNegativeResult()
+        {
+            IdentityResult mockResult = IdentityResult.Failed();
+            _userManagerMock.Setup(x => x.CreateAsync(It.IsAny<User>(), It.IsAny<string>()))
+                .ReturnsAsync(mockResult);
+            AuthService sut = new AuthService(_userManagerMock.Object, null);
+
+            RegisterResultDto actual = await sut.RegisterAsync(new RegisterDto());
+
+            Assert.False(actual.IsSuccess);
+        }
+
+        [Fact]
+        [Trait("Category", "RegisterAsync")]
+        public async Task RegisterAsync_FailedCreation_ReturnsAllErrors()
+        {
+            List<IdentityError> mockErrors = new List<IdentityError>
+            {
+                new IdentityError { Code = "Test1", Description = "Test error 1" },
+                new IdentityError { Code = "Test2", Description = "Test error 2" }
+            };
+            IdentityResult mockResult = IdentityResult.Failed(mockErrors.ToArray());
+            _userManagerMock.Setup(x => x.CreateAsync(It.IsAny<User>(), It.IsAny<string>()))
+                .ReturnsAsync(mockResult);
+            AuthService sut = new AuthService(_userManagerMock.Object, null);
+
+            RegisterResultDto actual = await sut.RegisterAsync(new RegisterDto());
+            
+            Assert.NotNull(actual.Errors);
+            Assert.Equal(mockErrors.Count, actual.Errors.Count());
+            Assert.Equal(mockErrors[0].Description, actual.Errors.ToList()[0]);
+            Assert.Equal(mockErrors[1].Description, actual.Errors.ToList()[1]);
         }
 
 
