@@ -55,5 +55,16 @@ namespace Geode.DataAccess.Tests
 
             mockDbContext.Verify(x => x.SaveChanges(), Times.Once);
         }
+
+        [Fact]
+        public void Dispose_Invoke_InvokesContextMethod()
+        {
+            Mock<DatabaseContext> mockDbContext = new Mock<DatabaseContext>();
+            UnitOfWork sut = new UnitOfWork(mockDbContext.Object);
+
+            sut.Dispose();
+
+            mockDbContext.Verify(x => x.Dispose(), Times.Once);
+        }
     }
 }
