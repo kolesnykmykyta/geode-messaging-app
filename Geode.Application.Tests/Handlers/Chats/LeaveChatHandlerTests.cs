@@ -21,7 +21,7 @@ namespace Geode.Application.Tests.Handlers.Chats
         }
 
         [Fact]
-        public async Task Handler_Invocation_PassesExectutionToHelper()
+        public async Task Handler_Invocation_PassesExecutionToHelper()
         {
             LeaveChatCommand testCommand = new LeaveChatCommand() { ChatId = 1, UserId = "test" };
             LeaveChatCommandHandler sut = new LeaveChatCommandHandler(_repositoryHelperMock.Object);

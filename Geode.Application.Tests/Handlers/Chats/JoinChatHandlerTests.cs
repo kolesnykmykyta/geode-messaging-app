@@ -21,7 +21,7 @@ namespace Geode.Application.Tests.Handlers.Chats
         }
 
         [Fact]
-        public async Task Handler_Invocation_PassesExectutionToHelper()
+        public async Task Handler_Invocation_PassesExecutionToHelper()
         {
             JoinChatCommand testCommand = new JoinChatCommand() { ChatId = 1, UserId = "test" };
             JoinChatCommandHandler sut = new JoinChatCommandHandler(_repositoryHelperMock.Object);

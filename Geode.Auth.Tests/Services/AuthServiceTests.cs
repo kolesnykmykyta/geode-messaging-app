@@ -54,7 +54,6 @@ namespace Geode.Auth.Tests.Services
 
             TokenDto? actual = await sut.LoginAsync(new LoginDto() { Email = "test", Password = "test" });
 
-            // Should I also verify mock methods invocation?
             Assert.Null(actual);
         }
 
@@ -157,8 +156,6 @@ namespace Geode.Auth.Tests.Services
             Assert.Equal(mockErrors[0].Description, actual.Errors.ToList()[0]);
             Assert.Equal(mockErrors[1].Description, actual.Errors.ToList()[1]);
         }
-
-
 
         private void PrepareMocksForLoginTest()
         {
