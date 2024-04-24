@@ -9,7 +9,7 @@ namespace Application.Handlers.Chats
     {
         private readonly IChatRepositoryHelper _helper;
 
-        public JoinChatCommandHandler(IMediator mediator, IChatRepositoryHelper helper)
+        public JoinChatCommandHandler(IChatRepositoryHelper helper)
         {
             _helper = helper;
         }

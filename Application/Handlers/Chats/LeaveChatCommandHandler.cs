@@ -8,7 +8,7 @@ namespace Application.Handlers.Chats
     {
         private readonly IChatRepositoryHelper _helper;
 
-        public LeaveChatCommandHandler(IMediator mediator, IChatRepositoryHelper helper)
+        public LeaveChatCommandHandler(IChatRepositoryHelper helper)
         {
             _helper = helper;
         }
