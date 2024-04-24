@@ -32,7 +32,7 @@ namespace Geode.Auth.Tests.Services
         public async Task LoginAsync_NonExistingUser_ReturnsNull()
         {
             _userManagerMock.Setup(x => x.FindByEmailAsync(It.IsAny<string>()))
-                .Returns(Task.FromResult<User>(null));
+                .ReturnsAsync((User)null);
             AuthService sut = new AuthService(_userManagerMock.Object, _configMock.Object);
 
             TokenDto? actual = await sut.LoginAsync(new LoginDto() { Email = "test", Password = "test" });
@@ -44,9 +44,9 @@ namespace Geode.Auth.Tests.Services
         public async Task LoginAsync_WrongPassword_ReturnsNull()
         {
             _userManagerMock.Setup(x => x.FindByEmailAsync(It.IsAny<string>()))
-                .Returns(Task.FromResult(new User()));
+                .ReturnsAsync(new User());
             _userManagerMock.Setup(x => x.CheckPasswordAsync(It.IsAny<User>(), It.IsAny<string>()))
-                .Returns(Task.FromResult(false));
+                .ReturnsAsync(false);
             AuthService sut = new AuthService(_userManagerMock.Object, _configMock.Object);
 
             TokenDto? actual = await sut.LoginAsync(new LoginDto() { Email = "test", Password = "test" });
@@ -101,14 +101,16 @@ namespace Geode.Auth.Tests.Services
             Assert.Equal(expectedUsername, actualUsername);
         }
 
+
+
         private void PrepareMocksForLoginTest()
         {
             _userManagerMock.Setup(x => x.FindByEmailAsync(It.IsAny<string>()))
-                .Returns(Task.FromResult(new User() { UserName = "TestUser", Email = "TestEmail", Id = "TestId" }));
+                .ReturnsAsync(new User() { UserName = "TestUser", Email = "TestEmail", Id = "TestId" });
             _userManagerMock.Setup(x => x.CheckPasswordAsync(It.IsAny<User>(), It.IsAny<string>()))
-                .Returns(Task.FromResult(true));
+                .ReturnsAsync(true);
             _userManagerMock.Setup(x => x.GetRolesAsync(It.IsAny<User>()))
-                .Returns(Task.FromResult<IList<string>>(new List<string>()));
+                .ReturnsAsync(new List<string>());
 
             _configMock.Setup(x => x.GetSection("Jwt:Key").Value)
                 .Returns("TestKeyTestKeyTestKeyTestKeyTestKey");
