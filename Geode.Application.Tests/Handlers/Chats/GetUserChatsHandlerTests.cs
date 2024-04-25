@@ -72,7 +72,7 @@ namespace Geode.Application.Tests.Handlers.Chats
 
             IEnumerable<ChatDto> actual = await sut.Handle(new GetUserChatsQuery(), CancellationToken.None);
 
-            Assert.Equal(expected, actual);
+            Assert.Same(expected, actual);
         }
     }
 }

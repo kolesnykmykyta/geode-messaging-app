@@ -43,7 +43,7 @@ namespace Geode.Application.Tests.Handlers.Messages
 
             IEnumerable<ChatMessageDto> actual = await sut.Handle(testQuery, CancellationToken.None);
 
-            Assert.Equal(expected, actual);
+            Assert.Same(expected, actual);
         }
     }
 }

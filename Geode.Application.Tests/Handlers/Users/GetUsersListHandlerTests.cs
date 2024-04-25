@@ -1,11 +1,13 @@
 ﻿using Application.Dtos;
-using Application.Handlers.Chats;
 using Application.Handlers.Messages;
+using Application.Handlers.Users;
 using Application.Services.Messages;
+using Application.Services.Users;
 using Application.Utils.Helpers.Interfaces;
 using AutoMapper;
 using DataAccess.Entities;
 using DataAccess.UnitOfWork;
+using Microsoft.Identity.Client;
 using Moq;
 using System;
 using System.Collections.Generic;
@@ -14,18 +16,18 @@ using System.Text;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace Geode.Application.Tests.Handlers.Messages
+namespace Geode.Application.Tests.Handlers.Users
 {
-    public class GetUserMessagesHandlerTests
+    public class GetUsersListHandlerTests
     {
         private readonly Mock<IUnitOfWork> _uowMock;
         private readonly Mock<IMapper> _mapperMock;
         private readonly Mock<IRepositoryParametersHelper> _parametersHelper;
 
-        public GetUserMessagesHandlerTests()
+        public GetUsersListHandlerTests()
         {
             _uowMock = new Mock<IUnitOfWork>();
-            _uowMock.Setup(x => x.GenericRepository<Message>().GetList(
+            _uowMock.Setup(x => x.GenericRepository<User>().GetList(
                 It.IsAny<Dictionary<string, string>>(),
                 It.IsAny<string>(),
                 It.IsAny<bool>(),
@@ -40,19 +42,14 @@ namespace Geode.Application.Tests.Handlers.Messages
         [Fact]
         public async Task Handle_Invocation_PreparesSearchParameters()
         {
-            Dictionary<string, string> dictionaryFromHelper = new Dictionary<string, string>();
-            _parametersHelper.Setup(x => x.GenerateSearchParametersDictionary(It.IsAny<string>()))
-                .Returns(dictionaryFromHelper);
-            GetUserMessagesQueryHandler sut = new GetUserMessagesQueryHandler(
+            GetUsersListQueryHandler sut = new GetUsersListQueryHandler(
                 _uowMock.Object,
                 _mapperMock.Object,
                 _parametersHelper.Object);
 
-            _ = await sut.Handle(new GetUserMessagesQuery() { SenderId = "Test"}, CancellationToken.None);
+            _ = await sut.Handle(new GetUsersListQuery(), CancellationToken.None);
 
             _parametersHelper.Verify(x => x.GenerateSearchParametersDictionary(It.IsAny<string>()), Times.Once);
-            Assert.True(dictionaryFromHelper.ContainsKey("SenderId"));
-            Assert.True(dictionaryFromHelper["SenderId"] == "Test");
         }
 
         [Fact]
@@ -61,40 +58,40 @@ namespace Geode.Application.Tests.Handlers.Messages
             Dictionary<string, string> dictionaryFromHelper = new Dictionary<string, string>();
             _parametersHelper.Setup(x => x.GenerateSearchParametersDictionary(It.IsAny<string>()))
                 .Returns(dictionaryFromHelper);
-            GetUserMessagesQueryHandler sut = new GetUserMessagesQueryHandler(
+            GetUsersListQueryHandler sut = new GetUsersListQueryHandler(
                 _uowMock.Object,
                 _mapperMock.Object,
                 _parametersHelper.Object);
 
-            _ = await sut.Handle(new GetUserMessagesQuery() { SenderId = "Test" }, CancellationToken.None);
+            _ = await sut.Handle(new GetUsersListQuery(), CancellationToken.None);
 
             _parametersHelper.Verify(x => x.SplitSelectProperties(It.IsAny<string>()), Times.Once);
         }
 
         [Fact]
-        public async Task Handle_Invocation_ReturnsResultFromUnitOfWork()
+        public async Task Handle_Invoction_ReturnsResultFromUnitOfWork()
         {
-            IQueryable<Message> uowResult = new List<Message>().AsQueryable();
-            List<MessageDto> expected = new List<MessageDto>();
-            _uowMock.Setup(x => x.GenericRepository<Message>().GetList(
-                It.IsAny<Dictionary<string, string>>(),
-                It.IsAny<string>(),
-                It.IsAny<bool>(),
-                It.IsAny<int?>(),
-                It.IsAny<int?>(),
-                It.IsAny<IEnumerable<string>>()))
-                .Returns(() => uowResult);
-            _mapperMock.Setup(x => x.Map<IEnumerable<MessageDto>>(uowResult))
+            IQueryable<User> resultFromUow = new List<User>().AsQueryable();
+            IEnumerable<UserInfoDto> expected = new List<UserInfoDto>();
+            _uowMock.Setup(x => x.GenericRepository<User>().GetList(
+                    It.IsAny<Dictionary<string, string>>(),
+                    It.IsAny<string>(),
+                    It.IsAny<bool>(),
+                    It.IsAny<int?>(),
+                    It.IsAny<int?>(),
+                    It.IsAny<IEnumerable<string>>()))
+                    .Returns(resultFromUow);
+            _mapperMock.Setup(x => x.Map<IEnumerable<UserInfoDto>>(resultFromUow))
                 .Returns(expected);
             Dictionary<string, string> dictionaryFromHelper = new Dictionary<string, string>();
             _parametersHelper.Setup(x => x.GenerateSearchParametersDictionary(It.IsAny<string>()))
                 .Returns(dictionaryFromHelper);
-            GetUserMessagesQueryHandler sut = new GetUserMessagesQueryHandler(
+            GetUsersListQueryHandler sut = new GetUsersListQueryHandler(
                 _uowMock.Object,
                 _mapperMock.Object,
                 _parametersHelper.Object);
 
-            IEnumerable<MessageDto> actual = await sut.Handle(new GetUserMessagesQuery(), CancellationToken.None);
+            IEnumerable<UserInfoDto> actual = await sut.Handle(new GetUsersListQuery(), CancellationToken.None);
 
             Assert.Same(expected, actual);
         }
