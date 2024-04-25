@@ -25,7 +25,6 @@ namespace Geode.API.Extensions
             services.AddScoped<IRequestHandler<JoinChatCommand, bool>, JoinChatCommandHandler>();
             services.AddScoped<IRequestHandler<LeaveChatCommand, bool>, LeaveChatCommandHandler>();
             services.AddScoped<IRequestHandler<SendMessageCommand>, SendMessageCommandHandler>();
-            services.AddScoped<IRequestHandler<UpdateUsernameCommand, bool>, UpdateUsernameCommandHandler>();
             services.AddScoped<IRequestHandler<RegisterNewUserCommand, RegisterResultDto>, RegisterNewUserCommandHandler>();
             services.AddScoped<IRequestHandler<DeleteChatCommand, bool>, DeleteChatCommandHandler>();
 
