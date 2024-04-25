@@ -9,7 +9,7 @@ namespace Geode.Maui.Authentication
 {
     public interface IAuthenticationService
     {
-        Task LogInAsync(LoginDto dto);
+        Task<bool> LogInAsync(LoginDto dto);
 
         Task<IEnumerable<string>?> RegisterAsync(RegisterDto dto);
 

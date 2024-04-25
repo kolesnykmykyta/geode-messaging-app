@@ -16,13 +16,17 @@
             <button type="submit" class="btn btn-primary mt-4">Submit</button>
         </div>
     </EditForm>
+    <p>@message</p>
 </div>
 @code {
     private LoginDto dto = new LoginDto();
+    private string message = string.Empty;
 
     private async Task LoginAsync(EditContext context)
     {
+        message = "Logging in...";
         LoginDto contextDto = (LoginDto)context.Model;
-        await authService.LogInAsync(contextDto);
+        bool result = await authService.LogInAsync(contextDto);
+        message = result ? "Successfully logged in!" : "Login was failed. Check your credentials";
     }
 }

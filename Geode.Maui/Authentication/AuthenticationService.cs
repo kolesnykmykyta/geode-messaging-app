@@ -29,7 +29,7 @@ namespace Geode.Maui.Authentication
             _authStateProvider = (CustomAuthStateProvider)stateProvider;
         }
 
-        public async Task LogInAsync(LoginDto dto)
+        public async Task<bool> LogInAsync(LoginDto dto)
         {
             ClaimsIdentity identity = new ClaimsIdentity();
             HttpResponseMessage response = await _httpClient.PostAsync("user/login", dto);
@@ -44,6 +44,7 @@ namespace Geode.Maui.Authentication
             }
 
             await _authStateProvider.LogInAsync(new ClaimsPrincipal(identity));
+            return response.IsSuccessStatusCode;
         }
 
         public async Task LogoutAsync()
