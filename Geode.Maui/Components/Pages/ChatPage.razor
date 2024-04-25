@@ -3,11 +3,11 @@
 @inject IChatHubService hubService
 
 <InputText @bind-Value="@messageInput" class="form-control"></InputText>
-<MudButton OnClick="SendMessage">Send message</MudButton>
+<MudButton OnClick="SendMessage" class="btn btn-primary">Send message</MudButton>
 
 @foreach (ChatMessageDto message in messages)
 {
-    <p>@message.Sender : @message.Content</p>
+    <div class="chat ml-2 p-3">@message.Sender : @message.Content</div>
 }
 
 @code {
