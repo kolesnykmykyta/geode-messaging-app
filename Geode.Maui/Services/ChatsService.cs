@@ -10,21 +10,18 @@ namespace Geode.Maui.Services
     internal class ChatsService : IChatsService
     {
         private readonly IHttpClientWrapper _httpClient;
-        private readonly ILocalStorageService _localStorage;
         private readonly IServicesHelper _helper;
 
-        public ChatsService(IHttpClientWrapper httpClient, ILocalStorageService localStorage, IServicesHelper helper)
+        public ChatsService(IHttpClientWrapper httpClient, IServicesHelper helper)
         {
             _httpClient = httpClient;
-            _localStorage = localStorage;
             _helper = helper;
         }
 
         public async Task<bool> CreateNewChat(string chatName)
         {
             ChatDto newChat = new ChatDto() { Name = chatName };
-            string? accessToken = await _localStorage.GetItemAsStringAsync("BearerToken");
-            HttpResponseMessage response = await _httpClient.PostAsync("chat", newChat, accessToken);
+            HttpResponseMessage response = await _httpClient.PostAsync("chat", newChat, await _helper.GetAccessTokenAsync());
 
             return response.IsSuccessStatusCode;
         }
@@ -32,8 +29,7 @@ namespace Geode.Maui.Services
         public async Task<IEnumerable<ChatDto>> GetAllUserChatsAsync(FilterDto? filter)
         {
             Dictionary<string, string>? queryParams = filter == null ? null : _helper.CreateDictionaryFromObject(filter);
-            string? accessToken = await _localStorage.GetItemAsStringAsync("BearerToken");
-            HttpResponseMessage response = await _httpClient.GetAsync("chat/all", queryParams, accessToken);
+            HttpResponseMessage response = await _httpClient.GetAsync("chat/all", queryParams, await _helper.GetAccessTokenAsync());
 
             if (response.IsSuccessStatusCode)
             {
@@ -50,8 +46,7 @@ namespace Geode.Maui.Services
             int intId;
             if (int.TryParse(chatId, out intId))
             {
-                string? accessToken = await _localStorage.GetItemAsStringAsync("BearerToken");
-                HttpResponseMessage response = await _httpClient.PostAsync($"chat/join/{chatId}", null, accessToken);
+                HttpResponseMessage response = await _httpClient.PostAsync($"chat/join/{chatId}", null, await _helper.GetAccessTokenAsync());
                 return response.IsSuccessStatusCode;
             }
             else
@@ -65,8 +60,7 @@ namespace Geode.Maui.Services
             int intId;
             if (int.TryParse(chatId, out intId))
             {
-                string? accessToken = await _localStorage.GetItemAsStringAsync("BearerToken");
-                HttpResponseMessage response = await _httpClient.PostAsync($"chat/leave/{chatId}", null, accessToken);
+                HttpResponseMessage response = await _httpClient.PostAsync($"chat/leave/{chatId}", null, await _helper.GetAccessTokenAsync());
                 return response.IsSuccessStatusCode;
             }
             else
@@ -77,14 +71,12 @@ namespace Geode.Maui.Services
 
         public async Task UpdateChatAsync(ChatDto dto)
         {
-            string? accessToken = await _localStorage.GetItemAsStringAsync("BearerToken");
-            HttpResponseMessage response = await _httpClient.PutAsync($"chat", dto, accessToken);
+            HttpResponseMessage response = await _httpClient.PutAsync($"chat", dto, await _helper.GetAccessTokenAsync());
         }
 
         public async Task DeleteChatAsync(int chatId)
         {
-            string? accessToken = await _localStorage.GetItemAsStringAsync("BearerToken");
-            HttpResponseMessage response = await _httpClient.DeleteAsync($"chat/delete/{chatId}", accessToken);
+            HttpResponseMessage response = await _httpClient.DeleteAsync($"chat/delete/{chatId}", await _helper.GetAccessTokenAsync());
         }
     }
 }

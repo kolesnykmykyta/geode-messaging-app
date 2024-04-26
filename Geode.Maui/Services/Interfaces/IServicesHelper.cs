@@ -8,6 +8,7 @@ namespace Geode.Maui.Services.Interfaces
 {
     internal interface IServicesHelper
     {
+        Task<string> GetAccessTokenAsync();
         Dictionary<string, string> CreateDictionaryFromObject(object obj);
 
         Task<TResult?> DeserializeJsonAsync<TResult>(HttpResponseMessage responseMessage);

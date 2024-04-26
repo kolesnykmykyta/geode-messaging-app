@@ -1,5 +1,6 @@
 ﻿using Application.Dtos;
 using Azure;
+using Blazored.LocalStorage;
 using Geode.Maui.Services.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -13,6 +14,17 @@ namespace Geode.Maui.Services
 {
     internal class ServicesHelper : IServicesHelper
     {
+        private readonly ILocalStorageService _localStorage;
+        
+        public ServicesHelper(ILocalStorageService localStorage)
+        {
+            _localStorage = localStorage;
+        }
+        
+        public async Task<string> GetAccessTokenAsync()
+        {
+            return await _localStorage.GetItemAsStringAsync("BearerToken");
+        }
         public Dictionary<string, string> CreateDictionaryFromObject(object obj)
         {
             Type type = obj.GetType();

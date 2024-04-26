@@ -16,21 +16,18 @@ namespace Geode.Maui.Services
     internal class UserService : IUsersService
     {
         private readonly IHttpClientWrapper _httpClient;
-        private readonly ILocalStorageService _localStorage;
         private readonly IServicesHelper _helper;
 
-        public UserService(IHttpClientWrapper httpClient, ILocalStorageService localStorage, IServicesHelper helper)
+        public UserService(IHttpClientWrapper httpClient, IServicesHelper helper)
         {
             _httpClient = httpClient;
-            _localStorage = localStorage;
             _helper = helper;
         }
 
         public async Task<IEnumerable<UserInfoDto>> GetUserListAsync(FilterDto? filter)
         {
             Dictionary<string, string>? queryParams = filter == null ? null : _helper.CreateDictionaryFromObject(filter);
-            string? accessToken = await _localStorage.GetItemAsStringAsync("BearerToken");
-            HttpResponseMessage response = await _httpClient.GetAsync("user/all", queryParams, accessToken);
+            HttpResponseMessage response = await _httpClient.GetAsync("user/all", queryParams, await _helper.GetAccessTokenAsync());
 
             if (response.IsSuccessStatusCode)
             {
