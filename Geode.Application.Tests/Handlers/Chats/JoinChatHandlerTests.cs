@@ -21,7 +21,7 @@ namespace Geode.Application.Tests.Handlers.Chats
         }
 
         [Fact]
-        public async Task Handler_Invocation_PassesExecutionToHelper()
+        public async Task Handle_Invocation_PassesExecutionToHelper()
         {
             JoinChatCommand testCommand = new JoinChatCommand() { ChatId = 1, UserId = "test" };
             JoinChatCommandHandler sut = new JoinChatCommandHandler(_repositoryHelperMock.Object);
@@ -34,7 +34,7 @@ namespace Geode.Application.Tests.Handlers.Chats
         [Theory]
         [InlineData(true)]
         [InlineData(false)]
-        public async Task Handler_Invocation_ReturnsResultFromHelper(bool expected)
+        public async Task Handle_Invocation_ReturnsResultFromHelper(bool expected)
         {
             JoinChatCommand testCommand = new JoinChatCommand() { ChatId = 1, UserId = "test" };
             _repositoryHelperMock.Setup(x => x.JoinChat(testCommand.ChatId, testCommand.UserId))

@@ -21,7 +21,7 @@ namespace Geode.Application.Tests.Handlers.Chats
         }
 
         [Fact]
-        public async Task Handler_Invocation_PassesExecutionToHelper()
+        public async Task Handle_Invocation_PassesExecutionToHelper()
         {
             LeaveChatCommand testCommand = new LeaveChatCommand() { ChatId = 1, UserId = "test" };
             LeaveChatCommandHandler sut = new LeaveChatCommandHandler(_repositoryHelperMock.Object);
@@ -34,7 +34,7 @@ namespace Geode.Application.Tests.Handlers.Chats
         [Theory]
         [InlineData(true)]
         [InlineData(false)]
-        public async Task Handler_Invocation_ReturnsResultFromHelper(bool expected)
+        public async Task Handle_Invocation_ReturnsResultFromHelper(bool expected)
         {
             LeaveChatCommand testCommand = new LeaveChatCommand() { ChatId = 1, UserId = "test" };
             _repositoryHelperMock.Setup(x => x.LeaveChat(testCommand.ChatId, testCommand.UserId))
