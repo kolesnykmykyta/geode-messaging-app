@@ -108,16 +108,16 @@ namespace Application.Utils.Helpers
             else
             {
                 Chat? existingChat = _unitOfWork.GenericRepository<Chat>().GetById(chatId);
-                if (existingChat == null || existingChat.ChatOwnerId == userId)
-                {
-                    return false;
-                }
-
-                else
+                if (existingChat == null || !existingChat.ChatOwnerId.Equals(userId))
                 {
                     _unitOfWork.GenericRepository<ChatMember>().Delete(existingChatMembership.Id);
                     _unitOfWork.SaveChanges();
                     return true;
+                }
+
+                else
+                {
+                    return false;
                 }
             }
         }
