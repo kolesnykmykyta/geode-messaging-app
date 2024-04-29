@@ -21,6 +21,7 @@ namespace Geode.API
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
+            builder.Services.AddHealthChecks();
 
             builder.Services.AddSignalR();
 
@@ -81,6 +82,8 @@ namespace Geode.API
             app.UseHttpsRedirection();
 
             app.UseAuthorization();
+
+            app.MapHealthChecks("/health");
 
             app.MapControllers();
 
