@@ -24,12 +24,21 @@ namespace Application.Utils.Helpers
             _mapper = mapper;
         }
 
-        public void CreateNewChat(Chat newChat)
+        public bool CreateNewChat(Chat newChat)
         {
             ChatMember member = new ChatMember() { UserId = newChat.ChatOwnerId, Chat = newChat };
             _unitOfWork.GenericRepository<Chat>().Insert(newChat);
             _unitOfWork.GenericRepository<ChatMember>().Insert(member);
-            _unitOfWork.SaveChanges();
+            try
+            {
+                _unitOfWork.SaveChanges();
+            }
+            catch
+            {
+                return false;
+            }
+
+            return true;
         }
 
         public IEnumerable<ChatMessageDto> GetMessagesInChat(int chatId)

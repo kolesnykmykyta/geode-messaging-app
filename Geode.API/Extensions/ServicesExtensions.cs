@@ -21,7 +21,7 @@ namespace Geode.API.Extensions
         {
             // CQRS Commands
             services.AddScoped<IRequestHandler<ChangeChatNameCommand, bool>, ChangeChatNameCommandHandler>();
-            services.AddScoped<IRequestHandler<CreateChatCommand>, CreateChatCommandHandler>();
+            services.AddScoped<IRequestHandler<CreateChatCommand, bool>, CreateChatCommandHandler>();
             services.AddScoped<IRequestHandler<JoinChatCommand, bool>, JoinChatCommandHandler>();
             services.AddScoped<IRequestHandler<LeaveChatCommand, bool>, LeaveChatCommandHandler>();
             services.AddScoped<IRequestHandler<SendMessageCommand>, SendMessageCommandHandler>();

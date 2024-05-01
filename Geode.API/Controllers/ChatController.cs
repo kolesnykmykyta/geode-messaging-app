@@ -42,8 +42,8 @@ namespace Geode.API.Controllers
             CreateChatCommand command = _mapper.Map<CreateChatCommand>(dto);
             command.ChatOwnerId = _userHelper.ExtractIdFromUser(User);
 
-            await _mediator.Send(command);
-            return Ok();
+            bool result = await _mediator.Send(command);
+            return result? Ok() : BadRequest();
         }
 
         [Authorize]

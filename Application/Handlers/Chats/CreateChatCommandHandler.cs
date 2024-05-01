@@ -7,7 +7,7 @@ using MediatR;
 
 namespace Application.Handlers.Chats
 {
-    public class CreateChatCommandHandler : IRequestHandler<CreateChatCommand>
+    public class CreateChatCommandHandler : IRequestHandler<CreateChatCommand, bool>
     {
         private readonly IMapper _mapper;
         private readonly IChatRepositoryHelper _repositoryHelper;
@@ -18,10 +18,10 @@ namespace Application.Handlers.Chats
             _repositoryHelper = repositoryHelper;
         }
 
-        public async Task Handle(CreateChatCommand request, CancellationToken cancellationToken)
+        public async Task<bool> Handle(CreateChatCommand request, CancellationToken cancellationToken)
         {
             Chat chatToCreate = _mapper.Map<Chat>(request);
-            _repositoryHelper.CreateNewChat(chatToCreate);
+            return _repositoryHelper.CreateNewChat(chatToCreate);
         }
     }
 }

@@ -21,7 +21,7 @@ namespace Application.Utils.Helpers.Interfaces
 
         IEnumerable<ChatMessageDto> GetMessagesInChat(int chatId);
 
-        void CreateNewChat(Chat newChat);
+        bool CreateNewChat(Chat newChat);
 
         bool LeaveChat(int chatId, string userId);
 
