@@ -1,4 +1,7 @@
 ﻿using DataAccess.DbContext;
+using DataAccess.Entities;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.EntityFrameworkCore;
@@ -10,7 +13,7 @@ namespace Geode.Api.IntegrationTests
     {
         private const string ConnectionString = "Server=(localdb)\\MSSQLLocalDB;Database=TestGeodeDb;Integrated Security=true;";
 
-        internal DatabaseContext DbContext { get; }
+        internal DatabaseContext DbContext { get; } 
 
         private bool _disposed;
 
@@ -18,7 +21,6 @@ namespace Geode.Api.IntegrationTests
         {
             DbContextOptionsBuilder<DatabaseContext> builder = new DbContextOptionsBuilder<DatabaseContext>();
             builder.UseSqlServer(ConnectionString);
-
             DbContext = new DatabaseContext(builder.Options);
         }
 
