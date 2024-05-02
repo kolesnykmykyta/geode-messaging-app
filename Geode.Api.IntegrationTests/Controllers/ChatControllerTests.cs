@@ -2,6 +2,7 @@
 using Auth.Dtos;
 using Azure.Core;
 using DataAccess.Entities;
+using Geode.Api.IntegrationTests.TestHelpers;
 using Geode.API;
 using Microsoft.EntityFrameworkCore;
 using System.Net;
@@ -11,15 +12,10 @@ using Xunit;
 
 namespace Geode.Api.IntegrationTests.Controllers
 {
-    public class ChatControllerTests : IClassFixture<CustomWebApplicationFactory<Program>>
+    public class ChatControllerTests : BaseTestClass
     {
-        private readonly HttpClient _httpClient;
-        private readonly CustomWebApplicationFactory<Program> _factory;
-
-        public ChatControllerTests(CustomWebApplicationFactory<Program> factory)
+        public ChatControllerTests(CustomWebApplicationFactory<Program> factory) : base(factory)
         {
-            _httpClient = factory.CreateClient();
-            _factory = factory;
         }
 
         [Fact]
@@ -39,12 +35,11 @@ namespace Geode.Api.IntegrationTests.Controllers
             Assert.Equal(HttpStatusCode.OK, actual.StatusCode);
         }
 
-        // TODO: Fix collection Assertion
-        // [Fact]
-        public async Task GetUserChats_AuthorizedUser_ReturnsExpectedChats()
+        [Fact]
+        public async Task GetUserChats_NoFilter_ReturnsExpectedChats()
         {
             await AuthorizeUserAsync();
-            List<ChatDto> expected = GetUserChats_ExpectedChats();
+            List<ChatDto> expected = GetUserChats_NoFilter_ExpectedChats();
 
             HttpResponseMessage response = await _httpClient.GetAsync("/api/chat/all");
             string responseBody = await response.Content.ReadAsStringAsync();
@@ -52,10 +47,7 @@ namespace Geode.Api.IntegrationTests.Controllers
 
             Assert.NotNull(actual);
             Assert.Equal(expected.Count, actual.Count);
-            foreach (ChatDto dto in expected)
-            {
-                Assert.Contains(dto, actual);
-            }
+            Assert.Equal(expected.OrderBy(x => x.Id), actual.OrderBy(x => x.Id), new ChatEqualityComparer());
         }
 
         [Fact]
@@ -329,7 +321,7 @@ namespace Geode.Api.IntegrationTests.Controllers
 
             _ = await _httpClient.PostAsync("/api/chat/join/3", null);
 
-            Assert.True(_factory.DbContext.ChatMembers.Any(x => x.ChatId == 3 && x.UserId == "a5701fde-c6b7-42d8-9f6b-965d7111b39f"));
+            Assert.True(_factory.DbContext.ChatMembers.Any(x => x.ChatId == 3 && x.UserId == TestUserId));
 
             ChatMemberCleanup(3);
         }
@@ -379,7 +371,7 @@ namespace Geode.Api.IntegrationTests.Controllers
 
             _ = await _httpClient.PostAsync("/api/chat/leave/1", null);
 
-            Assert.True(_factory.DbContext.ChatMembers.Any(x => x.ChatId == 1 && x.UserId == "a5701fde-c6b7-42d8-9f6b-965d7111b39f"));
+            Assert.True(_factory.DbContext.ChatMembers.Any(x => x.ChatId == 1 && x.UserId == TestUserId));
         }
 
         [Fact]
@@ -401,7 +393,7 @@ namespace Geode.Api.IntegrationTests.Controllers
 
             _ = await _httpClient.PostAsync("/api/chat/leave/3", null);
 
-            Assert.False(_factory.DbContext.ChatMembers.Any(x => x.ChatId == 3 && x.UserId == "a5701fde-c6b7-42d8-9f6b-965d7111b39f"));
+            Assert.False(_factory.DbContext.ChatMembers.Any(x => x.ChatId == 3 && x.UserId == TestUserId));
         }
 
         private void ChatCleanup(string chatName)
@@ -419,7 +411,7 @@ namespace Geode.Api.IntegrationTests.Controllers
         private void ChatMemberCleanup(int chatId)
         {
             ChatMember? existingMember = _factory.DbContext.ChatMembers
-                .FirstOrDefault(x => x.ChatId == chatId && x.UserId == "a5701fde-c6b7-42d8-9f6b-965d7111b39f");
+                .FirstOrDefault(x => x.ChatId == chatId && x.UserId == TestUserId);
 
             if (existingMember != null)
             {
@@ -430,7 +422,7 @@ namespace Geode.Api.IntegrationTests.Controllers
 
         private int CreateTestChat()
         {
-            Chat newChat = new Chat() { Name = "testchat", ChatOwnerId = "a5701fde-c6b7-42d8-9f6b-965d7111b39f" };
+            Chat newChat = new Chat() { Name = "testchat", ChatOwnerId = TestUserId };
             _factory.DbContext.Chats.Add(newChat);
             _factory.DbContext.SaveChanges();
 
@@ -443,32 +435,22 @@ namespace Geode.Api.IntegrationTests.Controllers
 
         private void CreateTestChatMember()
         {
-            ChatMember newMember = new ChatMember() { ChatId = 3, UserId = "a5701fde-c6b7-42d8-9f6b-965d7111b39f" };
+            ChatMember newMember = new ChatMember() { ChatId = 3, UserId = TestUserId };
             _factory.DbContext.ChatMembers.Add(newMember);
             _factory.DbContext.SaveChanges();
         }
 
-        private async Task AuthorizeUserAsync()
-        {
-            LoginDto loginDto = new LoginDto()
-            {
-                Email = "test@test.com",
-                Password = "Passw0rd_",
-            };
-
-            HttpResponseMessage response = await _httpClient.PostAsJsonAsync<LoginDto>("/api/user/login", loginDto);
-            string responseBody = await response.Content.ReadAsStringAsync();
-            TokenDto? tokens = JsonSerializer.Deserialize<TokenDto>(responseBody);
-
-            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", tokens.AccessToken);
-        }
-
-        private List<ChatDto> GetUserChats_ExpectedChats()
+        private List<ChatDto> GetUserChats_NoFilter_ExpectedChats()
         {
             return new List<ChatDto>()
             {
                 new ChatDto { Id = 1, Name = "Owner", IsUserOwner = true },
                 new ChatDto { Id = 2, Name = "Member", IsUserOwner = false },
+                new ChatDto { Id = 3080, Name = "API", IsUserOwner = true },
+                new ChatDto { Id = 3081, Name = "UnitTests", IsUserOwner = true },
+                new ChatDto { Id = 3082, Name = "IntegrationTests", IsUserOwner = true },
+                new ChatDto { Id = 3083, Name = "MAUI", IsUserOwner = true },
+                new ChatDto { Id = 3084, Name = "MySQL", IsUserOwner = true },
             };
         }
 

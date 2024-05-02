@@ -11,15 +11,10 @@ using Xunit;
 
 namespace Geode.Api.IntegrationTests.Controllers
 {
-    public class UserControllerTests : IClassFixture<CustomWebApplicationFactory<Program>>
+    public class UserControllerTests : BaseTestClass
     {
-        private readonly HttpClient _httpClient;
-        private readonly CustomWebApplicationFactory<Program> _factory;
-
-        public UserControllerTests(CustomWebApplicationFactory<Program> factory)
+        public UserControllerTests(CustomWebApplicationFactory<Program> factory) : base(factory)
         {
-            _httpClient = factory.CreateClient();
-            _factory = factory;
         }
 
         [Fact]
@@ -41,7 +36,7 @@ namespace Geode.Api.IntegrationTests.Controllers
         {
             LoginDto loginDto = new LoginDto()
             {
-                Email = "test@test.com",
+                Email = TestUserEmail,
                 Password = "wrong",
             };
 
@@ -55,8 +50,8 @@ namespace Geode.Api.IntegrationTests.Controllers
         {
             LoginDto loginDto = new LoginDto()
             {
-                Email = "test@test.com",
-                Password = "Passw0rd_",
+                Email = TestUserEmail,
+                Password = TestUserPassword,
             };
 
             HttpResponseMessage actual = await _httpClient.PostAsJsonAsync<LoginDto>("/api/user/login", loginDto);
@@ -69,8 +64,8 @@ namespace Geode.Api.IntegrationTests.Controllers
         {
             LoginDto loginDto = new LoginDto()
             {
-                Email = "test@test.com",
-                Password = "Passw0rd_",
+                Email = TestUserEmail,
+                Password = TestUserPassword,
             };
 
             HttpResponseMessage response = await _httpClient.PostAsJsonAsync<LoginDto>("/api/user/login", loginDto);
@@ -87,20 +82,20 @@ namespace Geode.Api.IntegrationTests.Controllers
         {
             User testUser = _factory.DbContext.Users
                 .AsNoTracking()
-                .First(u => u.UserName == "test");
+                .First(u => u.UserName == TestUserName);
             string oldToken = testUser.RefreshToken!;
 
             LoginDto loginDto = new LoginDto()
             {
-                Email = "test@test.com",
-                Password = "Passw0rd_",
+                Email = TestUserEmail,
+                Password = TestUserPassword,
             };
 
             _ = await _httpClient.PostAsJsonAsync<LoginDto>("/api/user/login", loginDto);
 
             testUser = _factory.DbContext.Users
                 .AsNoTracking()
-                .First(u => u.UserName == "test");
+                .First(u => u.UserName == TestUserName);
             string newToken = testUser.RefreshToken!;
 
             Assert.NotEqual(oldToken, newToken);
@@ -111,20 +106,20 @@ namespace Geode.Api.IntegrationTests.Controllers
         {
             User testUser = _factory.DbContext.Users
                 .AsNoTracking()
-                .First(u => u.UserName == "test");
+                .First(u => u.UserName == TestUserName);
             DateTime? oldExpiry = testUser.RefreshTokenExpirationDate;
 
             LoginDto loginDto = new LoginDto()
             {
-                Email = "test@test.com",
-                Password = "Passw0rd_",
+                Email = TestUserPassword,
+                Password = TestUserPassword,
             };
 
             _ = await _httpClient.PostAsJsonAsync<LoginDto>("/api/user/login", loginDto);
 
             testUser = _factory.DbContext.Users
                 .AsNoTracking()
-                .First(u => u.UserName == "test");
+                .First(u => u.UserName == TestUserName);
             DateTime? newExpiry = testUser.RefreshTokenExpirationDate;
 
             Assert.True(oldExpiry <= newExpiry);
