@@ -7,7 +7,7 @@ using MediatR;
 
 namespace Application.Handlers.Messages
 {
-    public class GetChatMessagesQueryHandler : IRequestHandler<GetChatMessagesQuery, IEnumerable<ChatMessageDto>>
+    public class GetChatMessagesQueryHandler : IRequestHandler<GetChatMessagesQuery, IEnumerable<ChatMessageDto>?>
     {
         private readonly IChatRepositoryHelper _helper;
 
@@ -16,7 +16,7 @@ namespace Application.Handlers.Messages
             _helper = helper;
         }
 
-        public async Task<IEnumerable<ChatMessageDto>> Handle(GetChatMessagesQuery request, CancellationToken cancellationToken)
+        public async Task<IEnumerable<ChatMessageDto>?> Handle(GetChatMessagesQuery request, CancellationToken cancellationToken)
         {
             return _helper.GetMessagesInChat(request.ChatId);
         }

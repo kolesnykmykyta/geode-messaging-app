@@ -41,8 +41,8 @@ namespace Geode.API.Controllers
         {
             GetChatMessagesQuery query = new GetChatMessagesQuery(chatId);
 
-            IEnumerable<ChatMessageDto> messages = await _mediator.Send(query);
-            return Ok(messages);
+            IEnumerable<ChatMessageDto>? messages = await _mediator.Send(query);
+            return messages != null ? Ok(messages) : BadRequest();
         }
     }
 }

@@ -4,7 +4,7 @@ using MediatR;
 
 namespace Application.Services.Messages
 {
-    public class GetChatMessagesQuery : IRequest<IEnumerable<ChatMessageDto>>
+    public class GetChatMessagesQuery : IRequest<IEnumerable<ChatMessageDto>?>
     {
         public GetChatMessagesQuery(int chatId)
         {

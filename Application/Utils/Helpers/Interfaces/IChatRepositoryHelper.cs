@@ -19,7 +19,7 @@ namespace Application.Utils.Helpers.Interfaces
             int? pageNumber = null,
             IEnumerable<string>? selectProps = null);
 
-        IEnumerable<ChatMessageDto> GetMessagesInChat(int chatId);
+        IEnumerable<ChatMessageDto>? GetMessagesInChat(int chatId);
 
         bool CreateNewChat(Chat newChat);
 

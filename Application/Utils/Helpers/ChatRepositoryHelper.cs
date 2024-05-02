@@ -41,15 +41,26 @@ namespace Application.Utils.Helpers
             return true;
         }
 
-        public IEnumerable<ChatMessageDto> GetMessagesInChat(int chatId)
+        public IEnumerable<ChatMessageDto>? GetMessagesInChat(int chatId)
         {
-            IEnumerable<Message> chatMessages = _unitOfWork.GenericRepository<Message>()
+            Chat? exisingChat = _unitOfWork.GenericRepository<Chat>()
                 .GetList()
-                .Where(m => m.ChatId == chatId)
-                .OrderByDescending(m => m.SentAt)
-                .Include(m => m.Sender);
+                .FirstOrDefault(x => x.Id == chatId);
 
-            return _mapper.Map<IEnumerable<ChatMessageDto>>(chatMessages);
+            if (exisingChat == null)
+            {
+                return null;
+            }
+            else
+            {
+                IEnumerable<Message> chatMessages = _unitOfWork.GenericRepository<Message>()
+                    .GetList()
+                    .Where(m => m.ChatId == chatId)
+                    .OrderByDescending(m => m.SentAt)
+                    .Include(m => m.Sender);
+
+                return _mapper.Map<IEnumerable<ChatMessageDto>>(chatMessages);
+            }
         }
 
         public IEnumerable<ChatDto> GetUserChats
