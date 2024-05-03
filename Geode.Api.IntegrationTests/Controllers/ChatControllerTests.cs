@@ -39,7 +39,7 @@ namespace Geode.Api.IntegrationTests.Controllers
         public async Task GetUserChats_NoFilter_ReturnsExpectedChats()
         {
             await AuthorizeUserAsync();
-            List<ChatDto> expected = GetUserChats_NoFilter_ExpectedChats();
+            List<ChatDto> expected = GetUserChats_ExpectedChats();
 
             HttpResponseMessage response = await _httpClient.GetAsync("/api/chat/all");
             string responseBody = await response.Content.ReadAsStringAsync();
@@ -440,7 +440,7 @@ namespace Geode.Api.IntegrationTests.Controllers
             _factory.DbContext.SaveChanges();
         }
 
-        private List<ChatDto> GetUserChats_NoFilter_ExpectedChats()
+        public static List<ChatDto> GetUserChats_ExpectedChats()
         {
             return new List<ChatDto>()
             {

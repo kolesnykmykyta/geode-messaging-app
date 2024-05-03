@@ -1,10 +1,13 @@
-﻿using Auth.Dtos;
+﻿using Application.Dtos;
+using Auth.Dtos;
 using Auth.Services;
 using DataAccess.Entities;
+using Geode.Api.IntegrationTests.TestHelpers;
 using Geode.API;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Routing.Constraints;
 using Microsoft.EntityFrameworkCore;
+using System.Buffers;
 using System.Net;
 using System.Text.Json;
 using Xunit;
@@ -373,6 +376,106 @@ namespace Geode.Api.IntegrationTests.Controllers
             Assert.Equal(oldExpiry, newExpiry);
         }
 
+        [Fact]
+        public async Task GetUsersList_Unauthorized_ReturnsUnauthorized()
+        {
+            HttpResponseMessage actual = await _httpClient.GetAsync("/api/user/all");
+
+            Assert.Equal(HttpStatusCode.Unauthorized, actual.StatusCode);
+        }
+
+        [Fact]
+        public async Task GetUsersList_Authorized_ReturnsOk()
+        {
+            await AuthorizeUserAsync();
+
+            HttpResponseMessage actual = await _httpClient.GetAsync("/api/user/all");
+
+            Assert.Equal(HttpStatusCode.OK, actual.StatusCode);
+        }
+
+        [Fact]
+        public async Task GetUsersList_Authorized_ReturnsExpectedUsers()
+        {
+            await AuthorizeUserAsync();
+            List<UserInfoDto> expected = GetUsersList_ExpectedResult().ToList();
+
+            HttpResponseMessage response = await _httpClient.GetAsync("/api/user/all");
+            string responseBody = await response.Content.ReadAsStringAsync();
+            List<UserInfoDto>? actual = JsonSerializer.Deserialize<List<UserInfoDto>>(responseBody);
+
+            Assert.NotNull(actual);
+            Assert.Equal(expected.Count, actual.Count);
+            Assert.Equal(expected.OrderBy(x => x.UserName), actual.OrderBy(x => x.UserName), new UserInfoDtoEqualityComparer());
+        }
+
+        [Fact]
+        public async Task GetUsersList_SortByPhone_ReturnsExpectedResult()
+        {
+            await AuthorizeUserAsync();
+            List<UserInfoDto> expected = GetUsersList_ExpectedResult()
+                .OrderBy(x => x.PhoneNumber)
+                .ToList();
+
+            HttpResponseMessage response = await _httpClient.GetAsync("/api/user/all?SortProp=PhoneNumber");
+            string responseBody = await response.Content.ReadAsStringAsync();
+            List<UserInfoDto>? actual = JsonSerializer.Deserialize<List<UserInfoDto>>(responseBody);
+
+            Assert.NotNull(actual);
+            Assert.Equal(expected.Count, actual.Count);
+            Assert.Equal(expected, actual, new UserInfoDtoEqualityComparer());
+        }
+
+        [Fact]
+        public async Task GetUsersList_SortByEmailDescending_ReturnsExpectedResult()
+        {
+            await AuthorizeUserAsync();
+            List<UserInfoDto> expected = GetUsersList_ExpectedResult()
+                .OrderByDescending(x => x.Email)
+                .ToList();
+
+            HttpResponseMessage response = await _httpClient.GetAsync("/api/user/all?SortProp=Email&SortByDescending=true");
+            string responseBody = await response.Content.ReadAsStringAsync();
+            List<UserInfoDto>? actual = JsonSerializer.Deserialize<List<UserInfoDto>>(responseBody);
+
+            Assert.NotNull(actual);
+            Assert.Equal(expected.Count, actual.Count);
+            Assert.Equal(expected, actual, new UserInfoDtoEqualityComparer());
+        }
+
+        [Fact]
+        public async Task GetUsersList_SearchByValue_ReturnsExpectedResult()
+        {
+            string searchValue = "expired";
+            await AuthorizeUserAsync();
+            List<UserInfoDto> expected = GetUsersList_ExpectedResult()
+                .Where(x => x.UserName.Contains(searchValue))
+                .ToList();
+
+            HttpResponseMessage response = await _httpClient.GetAsync($"/api/user/all?SearchParam={searchValue}");
+            string responseBody = await response.Content.ReadAsStringAsync();
+            List<UserInfoDto>? actual = JsonSerializer.Deserialize<List<UserInfoDto>>(responseBody);
+
+            Assert.NotNull(actual);
+            Assert.Equal(expected.Count, actual.Count);
+            Assert.Equal(expected.OrderBy(x => x.UserName), actual.OrderBy(x => x.UserName), new UserInfoDtoEqualityComparer());
+        }
+
+        [Fact]
+        public async Task GetUsersList_SelectOnlyUsernameAndEmail_ReturnsExpectedResult()
+        {
+            await AuthorizeUserAsync();
+            List<UserInfoDto> expected = GetUsersList_ExpectedResultWithNoPhones().ToList();
+
+            HttpResponseMessage response = await _httpClient.GetAsync($"/api/user/all?SelectProps=UserName,Email");
+            string responseBody = await response.Content.ReadAsStringAsync();
+            List<UserInfoDto>? actual = JsonSerializer.Deserialize<List<UserInfoDto>>(responseBody);
+
+            Assert.NotNull(actual);
+            Assert.Equal(expected.Count, actual.Count);
+            Assert.Equal(expected.OrderBy(x => x.UserName), actual.OrderBy(x => x.UserName), new UserInfoDtoEqualityComparer());
+        }
+
         private void RegistrationTestCleanup(string username)
         {
             User? userAfterTest = _factory.DbContext.Users
@@ -411,6 +514,32 @@ namespace Geode.Api.IntegrationTests.Controllers
             yield return new object?[] { "String1" }; // No not numeric/alphabetic characters
             yield return new object?[] { "Sg1!" }; // Too short password
             yield return new object?[] { "123456789" }; // No alphabetic characters
+        }
+
+        private IQueryable<UserInfoDto> GetUsersList_ExpectedResult()
+        {
+            return new List<UserInfoDto>
+            {
+                new UserInfoDto {UserName = "expiredtoken", Email = "expiredtoken@test.com", PhoneNumber = "123"},
+                new UserInfoDto {UserName = "test", Email = "test@test.com", PhoneNumber = "456"},
+                new UserInfoDto {UserName = "validrefresh", Email = "validrefresh@test.com", PhoneNumber = "789"},
+                new UserInfoDto {UserName = "test1", Email = "test1@test.com", PhoneNumber = "111"},
+                new UserInfoDto {UserName = "test2", Email = "test2@test.com", PhoneNumber = "222"},
+            }
+            .AsQueryable();
+        }
+
+        private IQueryable<UserInfoDto> GetUsersList_ExpectedResultWithNoPhones()
+        {
+            return new List<UserInfoDto>
+            {
+                new UserInfoDto {UserName = "expiredtoken", Email = "expiredtoken@test.com"},
+                new UserInfoDto {UserName = "test", Email = "test@test.com"},
+                new UserInfoDto {UserName = "validrefresh", Email = "validrefresh@test.com"},
+                new UserInfoDto {UserName = "test1", Email = "test1@test.com"},
+                new UserInfoDto {UserName = "test2", Email = "test2@test.com"},
+            }
+            .AsQueryable();
         }
     }
 }
