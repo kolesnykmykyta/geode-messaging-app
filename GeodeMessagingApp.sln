@@ -27,7 +27,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Geode.Application.Tests", "
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "IntegrationTests", "IntegrationTests", "{F540BB07-5890-49FD-9673-2F88E1CB11B6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Geode.Api.IntegrationTests", "Geode.Api.IntegrationTests\Geode.Api.IntegrationTests.csproj", "{72D88520-25E9-4DCE-8704-944A1D00414E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Geode.Api.IntegrationTests", "Geode.Api.IntegrationTests\Geode.Api.IntegrationTests.csproj", "{72D88520-25E9-4DCE-8704-944A1D00414E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Geode.Api.Tests", "Geode.Api.Tests\Geode.Api.Tests.csproj", "{BAEDED2A-6748-4CE0-8EF6-DD882AA07313}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -79,6 +81,10 @@ Global
 		{72D88520-25E9-4DCE-8704-944A1D00414E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{72D88520-25E9-4DCE-8704-944A1D00414E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{72D88520-25E9-4DCE-8704-944A1D00414E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BAEDED2A-6748-4CE0-8EF6-DD882AA07313}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BAEDED2A-6748-4CE0-8EF6-DD882AA07313}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BAEDED2A-6748-4CE0-8EF6-DD882AA07313}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BAEDED2A-6748-4CE0-8EF6-DD882AA07313}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -91,6 +97,7 @@ Global
 		{45056C73-4D6F-4AFE-8432-6EB65F3C7941} = {81003F95-E21F-4FC9-B66F-CDFE99A348E2}
 		{9C0CE263-1EA6-466E-B1BC-DFA70B579AEB} = {81003F95-E21F-4FC9-B66F-CDFE99A348E2}
 		{72D88520-25E9-4DCE-8704-944A1D00414E} = {F540BB07-5890-49FD-9673-2F88E1CB11B6}
+		{BAEDED2A-6748-4CE0-8EF6-DD882AA07313} = {81003F95-E21F-4FC9-B66F-CDFE99A348E2}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {4DB096B1-6D64-48C7-B54D-63F02624636C}
