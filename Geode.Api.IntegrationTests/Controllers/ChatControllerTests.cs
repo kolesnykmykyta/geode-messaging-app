@@ -186,19 +186,15 @@ namespace Geode.Api.IntegrationTests.Controllers
         {
             await AuthorizeUserAsync();
             ChatDto updatedChat = new ChatDto() { Id = 1, Name = "NewName" };
-            Chat oldChat = _factory.DbContext.Chats
-                .AsNoTracking()
-                .First(x => x.Id == 1);
-            string oldName = oldChat.Name;
+            Chat oldChat = GetChatById(1);
+            string expected = oldChat.Name;
 
             _ = await _httpClient.PutAsJsonAsync("/api/chat", updatedChat);
 
-            string newName = _factory.DbContext.Chats
-                .AsNoTracking()
-                .First(x => x.Id == 1)
-                .Name;
-            Assert.NotEqual(oldName, newName);
-            Assert.Equal(updatedChat.Name, newName);
+            string actual = GetChatById(1).Name;
+
+            Assert.NotEqual(expected, actual);
+            Assert.Equal(updatedChat.Name, actual);
 
             _factory.DbContext.Chats.Update(oldChat);
             _factory.DbContext.SaveChanges();
@@ -438,6 +434,15 @@ namespace Geode.Api.IntegrationTests.Controllers
             ChatMember newMember = new ChatMember() { ChatId = 3, UserId = TestUserId };
             _factory.DbContext.ChatMembers.Add(newMember);
             _factory.DbContext.SaveChanges();
+        }
+
+        private Chat GetChatById(int id)
+        {
+            Chat chat = _factory.DbContext.Chats
+                .AsNoTracking()
+                .First(x => x.Id == id);
+
+            return chat;
         }
 
         public static List<ChatDto> GetUserChats_ExpectedChats()
