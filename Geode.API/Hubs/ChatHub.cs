@@ -37,7 +37,7 @@ namespace Geode.API.Hubs
             };
             await _mediator.Send(command);
 
-            await Clients.Group($"chat-{chatId}").SendAsync("ReceiveMessage", message, sender);
+            await Clients.Group($"chat-{chatId}").SendCoreAsync("ReceiveMessage",new object[] { message, sender });
         }
     }
 }
