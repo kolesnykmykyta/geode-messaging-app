@@ -16,6 +16,15 @@ namespace Geode.Api.IntegrationTests.Controllers
 {
     public class UserControllerTests : BaseTestClass
     {
+        private const string NonExistingUserAccessToken = "eyJhbGciOiJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzA0L3htbGRzaWctbW9yZSNobWFjLXNoYTI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9lbWFpbGFkZHJlc3MiOiJUT0RFTEVURUB0ZXN0LmNvbSIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL25hbWUiOiJUT0RFTEVURSIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL25hbWVpZGVudGlmaWVyIjoiYzMwMjRhMTItMjE5ZS00ZjBhLWI3MTQtMTY0NWNhYzU5OGU2IiwiZXhwIjoxNzE0NTQ5ODg3LCJpc3MiOiJodHRwczovL2xvY2FsaG9zdDo3MDc3IiwiYXVkIjoiaHR0cHM6Ly9sb2NhbGhvc3Q6NzA3NyJ9._lV06snngwiI61dGen5MvntCGsxJr57ArBiMHczAZtM";
+        private const string NonExistingUserRefreshToken = "RNg0mU0nIzRnkGomX1Rf6QpCl3YS6xzNcuL/dIxmPC0=";
+
+        private const string ExpiredUserAccessToken = "eyJhbGciOiJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzA0L3htbGRzaWctbW9yZSNobWFjLXNoYTI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9lbWFpbGFkZHJlc3MiOiJleHBpcmVkdG9rZW5AdGVzdC5jb20iLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiZXhwaXJlZHRva2VuIiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvbmFtZWlkZW50aWZpZXIiOiI4NzdhNDZhOS0zYmZhLTQwY2EtOGFkOS1jMDIyYzAxYjMxMjAiLCJleHAiOjE3MTQ1NDk5MjMsImlzcyI6Imh0dHBzOi8vbG9jYWxob3N0OjcwNzciLCJhdWQiOiJodHRwczovL2xvY2FsaG9zdDo3MDc3In0._CrF4GHD0VyJh2rgZNBl3OEJtIY6dmWKUmvvIFzreyc";
+        private const string ExpiredUserRefreshToken = "kava0pGkyUeXQGPCyWBTzIsZkD/uLTUdjLzl4xqgqEI=";
+
+        private const string RefreshTestAccessToken = "eyJhbGciOiJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzA0L3htbGRzaWctbW9yZSNobWFjLXNoYTI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9lbWFpbGFkZHJlc3MiOiJ2YWxpZHJlZnJlc2hAdGVzdC5jb20iLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoidmFsaWRyZWZyZXNoIiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvbmFtZWlkZW50aWZpZXIiOiJiYzA3NTE5YS1kYjE3LTQ5MDQtYmUxOS03YzE2OTQwZWJiYzUiLCJleHAiOjE3MTQ1NTIyMjEsImlzcyI6Imh0dHBzOi8vbG9jYWxob3N0OjcwNzciLCJhdWQiOiJodHRwczovL2xvY2FsaG9zdDo3MDc3In0.DQsK0WmaZrqySLvzfggpQ6fqJzRJIrDGkicfIPALs7Y";
+        private const string RefreshTestUserName = "validrefresh";
+
         public UserControllerTests(CustomWebApplicationFactory<Program> factory) : base(factory)
         {
         }
@@ -272,8 +281,8 @@ namespace Geode.Api.IntegrationTests.Controllers
         {
             TokenDto testDto = new TokenDto()
             {
-                AccessToken = "eyJhbGciOiJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzA0L3htbGRzaWctbW9yZSNobWFjLXNoYTI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9lbWFpbGFkZHJlc3MiOiJUT0RFTEVURUB0ZXN0LmNvbSIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL25hbWUiOiJUT0RFTEVURSIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL25hbWVpZGVudGlmaWVyIjoiYzMwMjRhMTItMjE5ZS00ZjBhLWI3MTQtMTY0NWNhYzU5OGU2IiwiZXhwIjoxNzE0NTQ5ODg3LCJpc3MiOiJodHRwczovL2xvY2FsaG9zdDo3MDc3IiwiYXVkIjoiaHR0cHM6Ly9sb2NhbGhvc3Q6NzA3NyJ9._lV06snngwiI61dGen5MvntCGsxJr57ArBiMHczAZtM",
-                RefreshToken = "RNg0mU0nIzRnkGomX1Rf6QpCl3YS6xzNcuL/dIxmPC0=",
+                AccessToken = NonExistingUserAccessToken,
+                RefreshToken = NonExistingUserRefreshToken,
             };
 
             HttpResponseMessage actual = await _httpClient.PostAsJsonAsync("/api/user/refresh", testDto);
@@ -286,8 +295,8 @@ namespace Geode.Api.IntegrationTests.Controllers
         {
             TokenDto testDto = new TokenDto()
             {
-                AccessToken = "eyJhbGciOiJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzA0L3htbGRzaWctbW9yZSNobWFjLXNoYTI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9lbWFpbGFkZHJlc3MiOiJleHBpcmVkdG9rZW5AdGVzdC5jb20iLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiZXhwaXJlZHRva2VuIiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvbmFtZWlkZW50aWZpZXIiOiI4NzdhNDZhOS0zYmZhLTQwY2EtOGFkOS1jMDIyYzAxYjMxMjAiLCJleHAiOjE3MTQ1NDk5MjMsImlzcyI6Imh0dHBzOi8vbG9jYWxob3N0OjcwNzciLCJhdWQiOiJodHRwczovL2xvY2FsaG9zdDo3MDc3In0._CrF4GHD0VyJh2rgZNBl3OEJtIY6dmWKUmvvIFzreyc",
-                RefreshToken = "kava0pGkyUeXQGPCyWBTzIsZkD/uLTUdjLzl4xqgqEI=",
+                AccessToken = ExpiredUserAccessToken,
+                RefreshToken = ExpiredUserRefreshToken,
             };
 
             HttpResponseMessage actual = await _httpClient.PostAsJsonAsync("/api/user/refresh", testDto);
@@ -298,13 +307,11 @@ namespace Geode.Api.IntegrationTests.Controllers
         [Fact]
         public async Task Refresh_ValidToken_ReturnsOk()
         {
-            User testUser = _factory.DbContext.Users
-                .AsNoTracking()
-                .First(u => u.UserName == "validrefresh");
+            string refreshToken = ExtractRefreshTokenFromUser(RefreshTestUserName);
             TokenDto testDto = new TokenDto()
             {
-                AccessToken = "eyJhbGciOiJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzA0L3htbGRzaWctbW9yZSNobWFjLXNoYTI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9lbWFpbGFkZHJlc3MiOiJ2YWxpZHJlZnJlc2hAdGVzdC5jb20iLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoidmFsaWRyZWZyZXNoIiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvbmFtZWlkZW50aWZpZXIiOiJiYzA3NTE5YS1kYjE3LTQ5MDQtYmUxOS03YzE2OTQwZWJiYzUiLCJleHAiOjE3MTQ1NTIyMjEsImlzcyI6Imh0dHBzOi8vbG9jYWxob3N0OjcwNzciLCJhdWQiOiJodHRwczovL2xvY2FsaG9zdDo3MDc3In0.DQsK0WmaZrqySLvzfggpQ6fqJzRJIrDGkicfIPALs7Y",
-                RefreshToken = testUser.RefreshToken!,
+                AccessToken = RefreshTestAccessToken,
+                RefreshToken = refreshToken,
             };
 
             HttpResponseMessage actual = await _httpClient.PostAsJsonAsync("/api/user/refresh", testDto);
@@ -315,13 +322,11 @@ namespace Geode.Api.IntegrationTests.Controllers
         [Fact]
         public async Task Refresh_ValidToken_ReturnsNewPairOfTokens()
         {
-            User testUser = _factory.DbContext.Users
-                .AsNoTracking()
-                .First(u => u.UserName == "validrefresh");
+            string refreshToken = ExtractRefreshTokenFromUser(RefreshTestUserName);
             TokenDto testDto = new TokenDto()
             {
-                AccessToken = "eyJhbGciOiJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzA0L3htbGRzaWctbW9yZSNobWFjLXNoYTI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9lbWFpbGFkZHJlc3MiOiJ2YWxpZHJlZnJlc2hAdGVzdC5jb20iLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoidmFsaWRyZWZyZXNoIiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvbmFtZWlkZW50aWZpZXIiOiJiYzA3NTE5YS1kYjE3LTQ5MDQtYmUxOS03YzE2OTQwZWJiYzUiLCJleHAiOjE3MTQ1NTIyMjEsImlzcyI6Imh0dHBzOi8vbG9jYWxob3N0OjcwNzciLCJhdWQiOiJodHRwczovL2xvY2FsaG9zdDo3MDc3In0.DQsK0WmaZrqySLvzfggpQ6fqJzRJIrDGkicfIPALs7Y",
-                RefreshToken = testUser.RefreshToken!,
+                AccessToken = RefreshTestAccessToken,
+                RefreshToken = refreshToken,
             };
 
             HttpResponseMessage response = await _httpClient.PostAsJsonAsync("/api/user/refresh", testDto);
@@ -336,23 +341,17 @@ namespace Geode.Api.IntegrationTests.Controllers
         [Fact]
         public async Task Refresh_ValidToken_ChangesRefreshToken()
         {
-            User testUser = _factory.DbContext.Users
-                .AsNoTracking()
-                .First(u => u.UserName == "validrefresh");
-
-            string oldToken = testUser.RefreshToken!;
+            string expected = ExtractRefreshTokenFromUser(RefreshTestUserName);
             TokenDto testDto = new TokenDto()
             {
-                AccessToken = "eyJhbGciOiJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzA0L3htbGRzaWctbW9yZSNobWFjLXNoYTI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9lbWFpbGFkZHJlc3MiOiJ2YWxpZHJlZnJlc2hAdGVzdC5jb20iLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoidmFsaWRyZWZyZXNoIiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvbmFtZWlkZW50aWZpZXIiOiJiYzA3NTE5YS1kYjE3LTQ5MDQtYmUxOS03YzE2OTQwZWJiYzUiLCJleHAiOjE3MTQ1NTIyMjEsImlzcyI6Imh0dHBzOi8vbG9jYWxob3N0OjcwNzciLCJhdWQiOiJodHRwczovL2xvY2FsaG9zdDo3MDc3In0.DQsK0WmaZrqySLvzfggpQ6fqJzRJIrDGkicfIPALs7Y",
-                RefreshToken = testUser.RefreshToken!,
+                AccessToken = RefreshTestAccessToken,
+                RefreshToken = expected,
             };
 
             _ = await _httpClient.PostAsJsonAsync("/api/user/refresh", testDto);
-            User updatedUser = _factory.DbContext.Users
-                .First(u => u.UserName == "validrefresh");
-            string newToken = updatedUser.RefreshToken!;
+            string actual = ExtractRefreshTokenFromUser(RefreshTestUserName);
 
-            Assert.NotEqual(oldToken, newToken);
+            Assert.NotEqual(expected, actual);
         }
 
         [Fact]
@@ -360,20 +359,20 @@ namespace Geode.Api.IntegrationTests.Controllers
         {
             User testUser = _factory.DbContext.Users
                 .AsNoTracking()
-                .First(u => u.UserName == "validrefresh");
-            DateTime? oldExpiry = testUser.RefreshTokenExpirationDate;
+                .First(u => u.UserName == RefreshTestUserName);
+            DateTime? expected = testUser.RefreshTokenExpirationDate;
             TokenDto testDto = new TokenDto()
             {
-                AccessToken = "eyJhbGciOiJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzA0L3htbGRzaWctbW9yZSNobWFjLXNoYTI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9lbWFpbGFkZHJlc3MiOiJ2YWxpZHJlZnJlc2hAdGVzdC5jb20iLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoidmFsaWRyZWZyZXNoIiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvbmFtZWlkZW50aWZpZXIiOiJiYzA3NTE5YS1kYjE3LTQ5MDQtYmUxOS03YzE2OTQwZWJiYzUiLCJleHAiOjE3MTQ1NTIyMjEsImlzcyI6Imh0dHBzOi8vbG9jYWxob3N0OjcwNzciLCJhdWQiOiJodHRwczovL2xvY2FsaG9zdDo3MDc3In0.DQsK0WmaZrqySLvzfggpQ6fqJzRJIrDGkicfIPALs7Y",
+                AccessToken = RefreshTestAccessToken,
                 RefreshToken = testUser.RefreshToken!,
             };
 
             _ = await _httpClient.PostAsJsonAsync("/api/user/refresh", testDto);
-            testUser = _factory.DbContext.Users
-                .First(u => u.UserName == "validrefresh");
-            DateTime? newExpiry = testUser.RefreshTokenExpirationDate;
 
-            Assert.Equal(oldExpiry, newExpiry);
+            testUser = _factory.DbContext.Users
+                .First(u => u.UserName == RefreshTestUserName);
+            DateTime? actual = testUser.RefreshTokenExpirationDate;
+            Assert.Equal(expected, actual);
         }
 
         [Fact]
@@ -487,6 +486,15 @@ namespace Geode.Api.IntegrationTests.Controllers
                 _factory.DbContext.Users.Remove(userAfterTest);
                 _factory.DbContext.SaveChanges();
             }
+        }
+
+        private string ExtractRefreshTokenFromUser(string username)
+        {
+            User testUser = _factory.DbContext.Users
+                .AsNoTracking()
+                .First(u => u.UserName == username);
+
+            return testUser.RefreshToken!;
         }
 
         public static IEnumerable<object?[]> InvalidEmails()
