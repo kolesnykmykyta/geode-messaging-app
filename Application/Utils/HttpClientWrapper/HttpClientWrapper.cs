@@ -12,7 +12,7 @@ namespace Application.Utils.HttpClientWrapper
 {
     public class HttpClientWrapper : IHttpClientWrapper
     {
-        const string ApiBase = "https://localhost:7077/api";
+        const string ApiBase = "https://geode-api-dev.azurewebsites.net/api";
 
         public async Task<HttpResponseMessage> DeleteAsync(string url, string? accessToken = null)
         {

@@ -25,6 +25,11 @@ namespace Geode.API
 
             builder.Services.AddSignalR();
 
+            //builder.Services.AddCors(options =>
+            //{
+            //    options.AddDefaultPolicy(builder => builder.WithOrigins("https://0.0.0.0").AllowCredentials().AllowAnyMethod().AllowAnyHeader());
+            //});
+
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
@@ -87,7 +92,10 @@ namespace Geode.API
 
             app.MapControllers();
 
+            // app.UseCors((builder => builder.WithOrigins("https://0.0.0.0").AllowCredentials().AllowAnyMethod().AllowAnyHeader()));
+
             app.MapHub<ChatHub>("/chathub");
+            app.MapHub<WebRtcHub>("/webrtc");
 
             app.Run();
         }

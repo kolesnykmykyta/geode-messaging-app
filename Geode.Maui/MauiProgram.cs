@@ -40,7 +40,6 @@ namespace Geode.Maui
             builder.Services.AddBlazoredLocalStorage();
 
             builder.Services.AddMudServices();
-
 #if DEBUG
     		builder.Services.AddBlazorWebViewDeveloperTools();
     		builder.Logging.AddDebug();

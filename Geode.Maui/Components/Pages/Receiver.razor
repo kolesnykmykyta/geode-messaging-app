@@ -1,0 +1,124 @@
+﻿@page "/receiver"
+
+<h3>Receiver</h3>
+<link rel="stylesheet" href="css/rtcstyles.css">
+<div>
+    <input placeholder="Username" type="text" id="username-input" /><br>
+    <button onclick="joinCall()">Join call</button>
+</div>
+<div id="video-call-div">
+    <video muted id="local-video" autoplay></video>
+    <video id="remote-video" autoplay></video>
+    <div class="actions-div">
+        <button onclick="muteVideo()">Mute video</button>
+        <button onclick="muteAudio()">Mute audio</button>
+    </div>
+</div>
+<script>
+    const connection = new signalR.HubConnectionBuilder()
+        .withUrl("https://geode-api.azurewebsites.net/webrtc")
+        .build()
+
+    connection.on("ReceiveSignallingData", (data) => {
+        console.log("Received message from hub")
+        handleSignallingData(data)
+    });
+
+    connection.start().then(() => {
+        console.log("Connection established.");
+    }).catch(err => console.error(err));
+
+    function handleSignallingData(data) {
+        switch (data.type) {
+            case "offer":
+                console.log("Processing offer: ", data.value)
+                peerConn.setRemoteDescription(JSON.parse(data.value))
+                createAndSendAnswer()
+                break
+            case "candidate":
+                console.log("Processing candidate: ", data.value)                
+                peerConn.addIceCandidate(JSON.parse(data.value))
+        }
+    }
+
+    function createAndSendAnswer() {
+        peerConn.createAnswer((answer) => {
+            peerConn.setLocalDescription(answer)
+            username = document.getElementById("username-input").value
+            connection.invoke("SendAnswer", username, JSON.stringify(answer))
+        }, error => {
+            console.log(error)
+        })
+    }
+
+
+    let localStream
+    let peerConn
+    let username
+
+    function joinCall() {
+
+        username = document.getElementById("username-input").value
+
+        document.getElementById("video-call-div")
+            .style.display = "inline"
+
+        navigator.getUserMedia({
+            video: {
+                frameRate: 24,
+                width: {
+                    min: 480, ideal: 720, max: 1280
+                },
+                aspectRatio: 1.33333
+            },
+            audio: true
+        }, (stream) => {
+            localStream = stream
+            document.getElementById("local-video").srcObject = localStream
+
+            let configuration = {
+                iceServers: [
+                    {
+                        "urls": ["stun:stun.l.google.com:19302",
+                            "stun:stun1.l.google.com:19302",
+                            "stun:stun2.l.google.com:19302"]
+                    }
+                ]
+            }
+
+            peerConn = new RTCPeerConnection(configuration)
+            peerConn.addStream(localStream)
+
+            peerConn.onaddstream = (e) => {
+                document.getElementById("remote-video")
+                    .srcObject = e.stream
+            }
+
+            peerConn.onicecandidate = ((e) => {
+                if (e.candidate == null)
+                    return
+
+                username = document.getElementById("username-input").value
+                connection.invoke("SendCandidate", username, JSON.stringify(e.candidate))
+            })
+
+            username = document.getElementById("username-input").value
+            connection.invoke("JoinCall", username)
+
+        }, (error) => {
+            console.log(error)
+        })
+    }
+        
+    let isAudio = true
+    function muteAudio() {
+        isAudio = !isAudio
+        localStream.getAudioTracks()[0].enabled = isAudio
+    }
+
+    let isVideo = true
+    function muteVideo() {
+        isVideo = !isVideo
+        localStream.getVideoTracks()[0].enabled = isVideo
+    }
+</script>

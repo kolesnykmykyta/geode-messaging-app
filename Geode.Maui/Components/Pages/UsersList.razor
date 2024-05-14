@@ -37,6 +37,11 @@
         <PropertyColumn Property="x => x.UserName" />
         <PropertyColumn Property="x => x.Email" />
         <PropertyColumn Property="x => x.PhoneNumber" />
+        <TemplateColumn>
+            <CellTemplate>
+                <MudLink Href="@($"call/{context.Item.UserName}")">Call</MudLink>
+            </CellTemplate>
+        </TemplateColumn>
     </Columns>
 </MudDataGrid>
 

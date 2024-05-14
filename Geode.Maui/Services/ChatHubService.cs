@@ -28,7 +28,7 @@ namespace Geode.Maui.Services
             string token = await _localStorage.GetItemAsStringAsync("BearerToken");
 
             _hubConnection = new HubConnectionBuilder()
-            .WithUrl("https://localhost:7077/chathub", options =>
+            .WithUrl("https://geode-api-dev.azurewebsites.net/chathub", options =>
             {
                 options.AccessTokenProvider = () => Task.FromResult(token);
             })

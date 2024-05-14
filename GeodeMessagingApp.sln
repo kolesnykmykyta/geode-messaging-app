@@ -29,7 +29,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "IntegrationTests", "Integra
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Geode.Api.IntegrationTests", "Geode.Api.IntegrationTests\Geode.Api.IntegrationTests.csproj", "{72D88520-25E9-4DCE-8704-944A1D00414E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Geode.Api.Tests", "Geode.Api.Tests\Geode.Api.Tests.csproj", "{BAEDED2A-6748-4CE0-8EF6-DD882AA07313}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Geode.Api.Tests", "Geode.Api.Tests\Geode.Api.Tests.csproj", "{BAEDED2A-6748-4CE0-8EF6-DD882AA07313}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
