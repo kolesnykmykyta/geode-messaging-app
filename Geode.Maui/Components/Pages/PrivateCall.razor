@@ -13,83 +13,83 @@
     </div>
 </div>
 
-@code{
+@code {
     [Parameter]
     public string? Remote { get; set; }
 
-    protected override async Task OnInitializedAsync(){
+    protected override async Task OnInitializedAsync()
+    {
         // await JsRuntime.InvokeVoidAsync("joinCall", Remote);
     }
 }
 
 <script>
+    let rtcHub
+    let localStream
+    let peerConnection
+    let receiver
 
-let rtcHub
-let localStream
-let peerConnection
-let receiver
+    function joinCall(username) {
+        receiver = username
+        setupPeerConnection()
+    }
 
-function joinCall(username) {
-    receiver = username
-    setupPeerConnection()
-}
+    function handleOffer(data) {
+        console.log("Processing offer: ", data)
 
-function handleOffer(data) {
-    console.log("Processing offer: ", data)
-
-    peerConn.setRemoteDescription(JSON.parse(data))
-    peerConn.createAnswer((answer) => {
-        peerConn.setLocalDescription(answer)
-        connection.invoke("SendAnswer", receiver, JSON.stringify(answer))
-    }, error => {
-        console.log(error)
-    })
-}
-
-function handleAnswer(data) {
-    console.log("Processing answer: ", data)
-    peerConnection.setRemoteDescription(JSON.parse(data))
-}
-
-function handleCandidate(data) {
-    console.log("Processing candidate: ", data)
-    peerConnection.addIceCandidate(JSON.parse(data))
-}
-
-function initializeHubConnection() {
-    accessToken = localStorage.getItem("BearerToken");
-    rtcHub = new signalR.HubConnectionBuilder()
-            .withUrl("https://geode-api-dev.azurewebsites.net/webrtc", {
-            accessTokenFactory: () => {
-                return accessToken
-            }
+        peerConn.setRemoteDescription(JSON.parse(data))
+        peerConn.createAnswer((answer) => {
+            peerConn.setLocalDescription(answer)
+            console.log("Sending answer: ", data)
+            connection.invoke("SendAnswer", receiver, JSON.stringify(answer))
+        }, error => {
+            console.log(error)
         })
-        .build()
+    }
 
-    rtcHub.on("ReceiveAnswer", (data) => handleAnswer(data))
-    rtcHub.on("ReceiveCandidate", (data) => handleCandidate(data))
-    rtcHub.on("ReceiveOffer", (data) => handleOffer(data))
+    function handleAnswer(data) {
+        console.log("Processing answer: ", data)
+        peerConnection.setRemoteDescription(JSON.parse(data))
+    }
 
-    rtcHub.start().then(() => console.log("Connection established."))
-        .catch(err => console.error(err));
-}
+    function handleCandidate(data) {
+        console.log("Processing candidate: ", data)
+        peerConnection.addIceCandidate(JSON.parse(data))
+    }
 
-function setupPeerConnection() {
-    document.getElementById("video-call-div")
-        .style.display = "inline"
+    function initializeHubConnection() {
+        accessToken = localStorage.getItem("BearerToken")
+        console.log("Bearer token: ", accessToken)
+        rtcHub = new signalR.HubConnectionBuilder()
+            .withUrl("https://geode-api-dev.azurewebsites.net/webrtc", {
+                accessTokenFactory: () => accessToken
+            })
+            .build()
 
-    navigator.getUserMedia({
-        video: {
-            frameRate: 24,
-            width: {
-                min: 480, ideal: 720, max: 1280
+        rtcHub.on("ReceiveAnswer", (data) => handleAnswer(data))
+        rtcHub.on("ReceiveCandidate", (data) => handleCandidate(data))
+        rtcHub.on("ReceiveOffer", (data) => handleOffer(data))
+
+        rtcHub.start().then(() => console.log("Connection established."))
+            .catch(err => console.error(err));
+    }
+
+    function setupPeerConnection() {
+        document.getElementById("video-call-div")
+            .style.display = "inline"
+
+        navigator.getUserMedia({
+            video: {
+                frameRate: 24,
+                width: {
+                    min: 480, ideal: 720, max: 1280
+                },
+                aspectRatio: 1.33333
             },
-            aspectRatio: 1.33333
-        },
-        audio: true
-    }, (stream) => {
-        localStream = stream
-        document.getElementById("local-video").srcObject = localStream
+            audio: true
+        }, (stream) => {
+            localStream = stream
+            document.getElementById("local-video").srcObject = localStream
             const configuration = {
                 iceServers: [
                     {
@@ -100,47 +100,45 @@ function setupPeerConnection() {
                 ]
             }
 
-        peerConnection = new RTCPeerConnection(configuration)
-        peerConnection.addStream(localStream)
+            peerConnection = new RTCPeerConnection(configuration)
+            peerConnection.addStream(localStream)
 
-        peerConnection.onaddstream = (e) => {
-            document.getElementById("remote-video")
-                .srcObject = e.stream
-        }
+            peerConnection.onaddstream = (e) => {
+                document.getElementById("remote-video")
+                    .srcObject = e.stream
+            }
             peerConnection.onicecandidate = ((e) => {
-            if (e.candidate == null)
-                return
-            rtcHub.invoke("StoreCandidate", JSON.stringify(e.candidate))
-            rtcHub.invoke("SendCandidate", receiver, JSON.stringify(e.candidate))
+                if (e.candidate == null)
+                    return
+                rtcHub.invoke("ProcessCandidate", receiver, JSON.stringify(e.candidate))
+            })
+
+            createOfferAndJoinCall()
+        }, (error) => {
+            console.log(error)
         })
+    }
 
-        sendOffer()
-        rtcHub.invoke("JoinCall", receiver)
-    }, (error) => {
-        console.log(error)
-    })
-}
-
-function sendOffer() {
+    function createOfferAndJoinCall() {
         peerConnection.createOffer((offer) => {
-        rtcHub.invoke("StoreOffer", JSON.stringify(offer))
-        peerConnection.setLocalDescription(offer)
-    }, (error) => {
-        console.log(error)
-    })
-}
+            rtcHub.invoke("JoinCall", receiver, JSON.stringify(offer))
+            peerConnection.setLocalDescription(offer)
+        }, (error) => {
+            console.log(error)
+        })
+    }
 
-// Call settings
-let isAudio = true
-function muteAudio() {
-    isAudio = !isAudio
-    localStream.getAudioTracks()[0].enabled = isAudio
-}
+    // Call settings
+    let isAudio = true
+    function muteAudio() {
+        isAudio = !isAudio
+        localStream.getAudioTracks()[0].enabled = isAudio
+    }
 
-let isVideo = true
-function muteVideo() {
-    isVideo = !isVideo
-    localStream.getVideoTracks()[0].enabled = isVideo
-}
+    let isVideo = true
+    function muteVideo() {
+        isVideo = !isVideo
+        localStream.getVideoTracks()[0].enabled = isVideo
+    }
 
 </script>

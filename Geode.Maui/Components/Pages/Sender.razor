@@ -18,7 +18,7 @@
 
 <script>
     const rtcHub = new signalR.HubConnectionBuilder()
-        .withUrl("https://localhost:7077/webrtc")
+        .withUrl("https://geode-api.azurewebsites.net/webrtc")
         .build()
 
     rtcHub.on("ReceiveSignallingData", (data) => {

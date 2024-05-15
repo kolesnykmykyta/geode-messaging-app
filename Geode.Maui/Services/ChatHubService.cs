@@ -23,7 +23,7 @@ namespace Geode.Maui.Services
             _localStorage = localStorage;
         }
 
-        public async Task ConnectToChatHubAsync(int chatId)
+        public async Task ConnectToChatHubAsync(int chatId) 
         {
             string token = await _localStorage.GetItemAsStringAsync("BearerToken");
 
