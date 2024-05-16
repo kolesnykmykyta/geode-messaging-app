@@ -6,8 +6,6 @@
     <video muted id="local-video" autoplay></video>
     <video id="remote-video" autoplay></video>
     <div class="actions-div">
-        <button onclick="initializeHubConnection()">Init hub</button>
-        <button onclick="joinCall('@Remote')">Join call</button>
         <button onclick="muteVideo()">Mute video</button>
         <button onclick="muteAudio()">Mute audio</button>
     </div>
@@ -19,6 +17,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        // await JsRuntime.InvokeVoidAsync("joinCall", Remote);
+        await Task.Delay(1000);
+        await JsRuntime.InvokeVoidAsync("joinCall", Remote);
     }
 }

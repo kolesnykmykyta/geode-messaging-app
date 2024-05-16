@@ -3,8 +3,9 @@ let localStream
 let peerConnection
 let receiver
 
-function joinCall(username) {
+async function joinCall(username) {
     receiver = username
+    await initializeHubConnection()
     setupPeerConnection()
 }
 
@@ -40,7 +41,7 @@ function initiateOffer(username) {
     })
 }
 
-function initializeHubConnection() {
+async function initializeHubConnection() {
     accessToken = localStorage.getItem("BearerToken")
     rtcHub = new signalR.HubConnectionBuilder()
         .withUrl("https://geode-api-dev.azurewebsites.net/webrtc", {
@@ -53,7 +54,7 @@ function initializeHubConnection() {
     rtcHub.on("ReceiveCandidate", (data) => handleCandidate(data))
     rtcHub.on("ReceiveOffer", (data) => handleOffer(data))
 
-    rtcHub.start().then(() => console.log("Connection established."))
+    await rtcHub.start().then(() => console.log("Connection established."))
         .catch(err => console.error(err));
 }
 
