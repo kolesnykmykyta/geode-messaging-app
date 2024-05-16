@@ -1,57 +1,57 @@
-const configuration = {
-    iceServers: [
-        {
-            "urls": ["stun:stun.l.google.com:19302",
-                "stun:stun1.l.google.com:19302",
-                "stun:stun2.l.google.com:19302"]
-        }
-    ]
-}
-
 let rtcHub
 let localStream
 let peerConnection
+let receiver
 
-function joinCall(receiver) {
-    initializeHubConnection()
+function joinCall(username) {
+    receiver = username
     setupPeerConnection()
-
-    rtcHub.invoke("JoinCall", receiver)
 }
 
 function handleOffer(data) {
-    console.log("Processing offer: ", data.value)
-
-    peerConn.setRemoteDescription(JSON.parse(data.value))
-    peerConn.createAnswer((answer) => {
-        peerConn.setLocalDescription(answer)
-        connection.invoke("SendAnswer", username, JSON.stringify(answer))
+    console.log("Processing offer: ", data)
+    peerConnection.setRemoteDescription(JSON.parse(data))
+    peerConnection.createAnswer((answer) => {
+        console.log("Sending answer")
+        peerConnection.setLocalDescription(answer)
+        rtcHub.invoke("SendAnswer", receiver, JSON.stringify(answer))
     }, error => {
         console.log(error)
     })
 }
 
 function handleAnswer(data) {
-    console.log("Processing answer: ", data.value)
-    peerConn.setRemoteDescription(JSON.parse(data.value))
+    console.log("Processing answer: ", data)
+    peerConnection.setRemoteDescription(JSON.parse(data))
 }
 
 function handleCandidate(data) {
-    console.log("Processing candidate: ", data.value)
-    peerConn.addIceCandidate(JSON.parse(data.value))
+    console.log("Processing candidate: ", data)
+    peerConnection.addIceCandidate(JSON.parse(data))
+}
+
+function initiateOffer(username) {
+    console.log("Creating offer")
+    peerConnection.createOffer((offer) => {
+        peerConnection.setLocalDescription(offer)
+        rtcHub.invoke("SendOffer", username, JSON.stringify(offer))
+    }, (error) => {
+        console.log(error)
+    })
 }
 
 function initializeHubConnection() {
+    accessToken = localStorage.getItem("BearerToken")
     rtcHub = new signalR.HubConnectionBuilder()
-        .withUrl("https://localhost:7077/webrtc", {
-            accessTokenFactory: () => {
-                return localStorage.getItem("BearerToken");
-            }
+        .withUrl("https://geode-api-dev.azurewebsites.net/webrtc", {
+            accessTokenFactory: () => accessToken
         })
         .build()
 
+    rtcHub.on("InitiateOffer", (username) => initiateOffer(username))
     rtcHub.on("ReceiveAnswer", (data) => handleAnswer(data))
     rtcHub.on("ReceiveCandidate", (data) => handleCandidate(data))
+    rtcHub.on("ReceiveOffer", (data) => handleOffer(data))
 
     rtcHub.start().then(() => console.log("Connection established."))
         .catch(err => console.error(err));
@@ -73,35 +73,35 @@ function setupPeerConnection() {
     }, (stream) => {
         localStream = stream
         document.getElementById("local-video").srcObject = localStream
+        const configuration = {
+            iceServers: [
+                {
+                    "urls": ["stun:stun.l.google.com:19302",
+                        "stun:stun1.l.google.com:19302",
+                        "stun:stun2.l.google.com:19302"]
+                }
+            ]
+        }
 
-        peerConn = new RTCPeerConnection(configuration)
-        peerConn.addStream(localStream)
+        peerConnection = new RTCPeerConnection(configuration)
+        peerConnection.addStream(localStream)
 
-        peerConn.onaddstream = (e) => {
+        peerConnection.onaddstream = (e) => {
             document.getElementById("remote-video")
                 .srcObject = e.stream
         }
-        peerConn.onicecandidate = ((e) => {
+        peerConnection.onicecandidate = ((e) => {
             if (e.candidate == null)
                 return
-            username = document.getElementById("username-input").value
-            rtcHub.invoke("StoreCandidate", JSON.stringify(e.candidate))
+            rtcHub.invoke("ProcessCandidate", receiver, JSON.stringify(e.candidate))
         })
 
-        sendOffer()
+        rtcHub.invoke("JoinCall", receiver)
     }, (error) => {
         console.log(error)
     })
 }
 
-function sendOffer() {
-    peerConn.createOffer((offer) => {
-        rtcHub.invoke("StoreOffer", JSON.stringify(offer))
-        peerConn.setLocalDescription(offer)
-    }, (error) => {
-        console.log(error)
-    })
-}
 
 // Call settings
 let isAudio = true
