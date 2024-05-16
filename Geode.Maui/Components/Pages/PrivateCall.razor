@@ -7,8 +7,8 @@
     <video muted id="local-video" autoplay></video>
     <video id="remote-video" autoplay></video>
     <div class="actions-div">
-        <button onclick="muteVideo()">Mute video</button>
-        <button onclick="muteAudio()">Mute audio</button>
+        <button @onclick="ChangeVideoStatus">Mute video</button>
+        <button @onclick="ChangeAudioStatus">Mute audio</button>
     </div>
 </div>
 
@@ -26,5 +26,15 @@
         await JsRuntime.InvokeVoidAsync("stopHubConnection");
         await JsRuntime.InvokeVoidAsync("closeRtcConnection");
         await JsRuntime.InvokeVoidAsync("stopMediaTracks");
+    }
+
+    private async Task ChangeVideoStatus()
+    {
+        await JsRuntime.InvokeVoidAsync("changeVideoStatus");
+    }
+
+    private async Task ChangeAudioStatus()
+    {
+        await JsRuntime.InvokeVoidAsync("changeAudioStatus");
     }
 }
