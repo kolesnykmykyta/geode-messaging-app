@@ -47,7 +47,6 @@ namespace Geode.API.Hubs
             }
         }
 
-        // LEGACY
         public async Task ProcessCandidate(string receiverName, string candidate)
         {
             RtcUser? userInCall = FindUser(receiverName);
@@ -67,32 +66,6 @@ namespace Geode.API.Hubs
             else
             {
                 await Clients.Client(userInCall.ConnectionId!).SendAsync("ReceiveCandidate", candidate);
-            }
-        }
-
-        [Authorize]
-        public async Task StoreCandidate(string candidate)
-        {
-            string username = Context.User!.FindFirstValue(ClaimTypes.Name)!;
-            RtcUser? existingUser = FindUser(username);
-            if (existingUser != null)
-            {
-                if (existingUser.Candidates == null)
-                {
-                    existingUser.Candidates = new List<string>();
-                }
-
-                existingUser.Candidates.Add(candidate);
-            }
-        }
-
-        [Authorize]
-        public async Task SendCandidate(string username, string candidate)
-        {
-            RtcUser? existingUser = FindUser(username);
-            if (existingUser != null)
-            {
-                await Clients.Client(existingUser.ConnectionId).SendAsync("ReceiveCandidate", candidate);
             }
         }
 
