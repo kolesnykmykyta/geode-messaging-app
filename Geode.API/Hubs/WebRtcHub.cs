@@ -11,36 +11,43 @@ namespace Geode.API.Hubs
     {
         private static readonly List<RtcUser> _users = new List<RtcUser>();
 
-        public async Task JoinCall(string receiverName, string offer)
+        public async Task JoinCall(string receiverName)
         {
+            RtcUser newUser = new RtcUser()
+            {
+                Username = Context.User!.FindFirstValue(ClaimTypes.Name)!,
+                ConnectionId = Context.ConnectionId,
+            };
+            _users.Add(newUser);
+
             RtcUser? userInCall = FindUser(receiverName);
 
-            if (userInCall == null)
+            if (userInCall != null)
             {
-                string username = Context.User!.FindFirstValue(ClaimTypes.Name)!;
-                RtcUser newUser = new RtcUser()
-                {
-                    Username = username,
-                    ConnectionId = Context.ConnectionId,
-                    Offer = offer,
-                };
-
-                _users.Add(newUser);
-            }
-            else
-            {
-                await Clients.Client(Context.ConnectionId).SendAsync("ReceiveOffer", userInCall.Offer);
-
-                if (userInCall.Candidates != null)
-                {
-                    foreach (string candidate in userInCall.Candidates)
-                    {
-                        await Clients.Client(Context.ConnectionId).SendAsync("ReceiveCandidate", candidate);
-                    }
-                }
+                await Clients.Client(Context.ConnectionId).SendAsync("InitiateOffer", userInCall.Username);
             }
         }
 
+        public async Task SendOffer(string receiver, string offer)
+        {
+            RtcUser? existingUser = FindUser(receiver);
+            if (existingUser != null)
+            {
+                await Clients.Client(existingUser.ConnectionId!).SendAsync("ReceiveOffer", offer);
+            }
+        }
+
+        [Authorize]
+        public async Task SendAnswer(string username, string answer)
+        {
+            RtcUser? existingUser = FindUser(username);
+            if (existingUser != null)
+            {
+                await Clients.Client(existingUser.ConnectionId!).SendAsync("ReceiveAnswer", answer);
+            }
+        }
+
+        // LEGACY
         public async Task ProcessCandidate(string receiverName, string candidate)
         {
             RtcUser? userInCall = FindUser(receiverName);
@@ -61,32 +68,6 @@ namespace Geode.API.Hubs
             {
                 await Clients.Client(userInCall.ConnectionId!).SendAsync("ReceiveCandidate", candidate);
             }
-        }
-
-        [Authorize]
-        public async Task SendAnswer(string username, string answer)
-        {
-            RtcUser? existingUser = FindUser(username);
-            if (existingUser != null)
-            {
-                await Clients.Client(existingUser.ConnectionId!).SendAsync("ReceiveAnswer", answer);
-            }
-        }
-
-        // LEGACY
-        [Authorize]
-        public async Task StoreOffer(string offer)
-        {
-            string username = Context.User!.FindFirstValue(ClaimTypes.Name)!;
-            RtcUser? existingUser = FindUser(username);
-            if (existingUser == null)
-            {
-                RtcUser newUser = new RtcUser() { Username = username, ConnectionId = Context.ConnectionId };
-                _users.Add(newUser);
-                existingUser = newUser;
-            }
-
-            existingUser.Offer = offer;
         }
 
         [Authorize]
@@ -130,7 +111,6 @@ namespace Geode.API.Hubs
                 {
                     Username = currentUserName,
                     ConnectionId = Context.ConnectionId,
-                    Candidates = new List<string>(),
                 };
             }
         }

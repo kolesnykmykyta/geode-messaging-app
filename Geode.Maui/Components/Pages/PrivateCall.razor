@@ -36,12 +36,11 @@
 
     function handleOffer(data) {
         console.log("Processing offer: ", data)
-
-        peerConn.setRemoteDescription(JSON.parse(data))
-        peerConn.createAnswer((answer) => {
-            peerConn.setLocalDescription(answer)
-            console.log("Sending answer: ", data)
-            connection.invoke("SendAnswer", receiver, JSON.stringify(answer))
+        peerConnection.setRemoteDescription(JSON.parse(data))
+        peerConnection.createAnswer((answer) => {
+            console.log("Sending answer")
+            peerConnection.setLocalDescription(answer)
+            rtcHub.invoke("SendAnswer", receiver, JSON.stringify(answer))
         }, error => {
             console.log(error)
         })
@@ -57,15 +56,25 @@
         peerConnection.addIceCandidate(JSON.parse(data))
     }
 
+    function initiateOffer(username){
+        console.log("Creating offer")
+        peerConnection.createOffer((offer) => {
+            peerConnection.setLocalDescription(offer)
+            rtcHub.invoke("SendOffer", username, JSON.stringify(offer))
+        }, (error) => {
+            console.log(error)
+        })
+    }
+
     function initializeHubConnection() {
         accessToken = localStorage.getItem("BearerToken")
-        console.log("Bearer token: ", accessToken)
         rtcHub = new signalR.HubConnectionBuilder()
             .withUrl("https://geode-api-dev.azurewebsites.net/webrtc", {
                 accessTokenFactory: () => accessToken
             })
             .build()
 
+        rtcHub.on("InitiateOffer", (username) => initiateOffer(username))
         rtcHub.on("ReceiveAnswer", (data) => handleAnswer(data))
         rtcHub.on("ReceiveCandidate", (data) => handleCandidate(data))
         rtcHub.on("ReceiveOffer", (data) => handleOffer(data))
@@ -113,20 +122,12 @@
                 rtcHub.invoke("ProcessCandidate", receiver, JSON.stringify(e.candidate))
             })
 
-            createOfferAndJoinCall()
+            rtcHub.invoke("JoinCall", receiver)
         }, (error) => {
             console.log(error)
         })
     }
 
-    function createOfferAndJoinCall() {
-        peerConnection.createOffer((offer) => {
-            rtcHub.invoke("JoinCall", receiver, JSON.stringify(offer))
-            peerConnection.setLocalDescription(offer)
-        }, (error) => {
-            console.log(error)
-        })
-    }
 
     // Call settings
     let isAudio = true
