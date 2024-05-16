@@ -58,6 +58,29 @@ async function initializeHubConnection() {
         .catch(err => console.error(err));
 }
 
+function stopHubConnection() {
+    rtcHub.invoke("CleanUserData")
+    rtcHub.stop()
+        .then(() => console.log("Connection closed."))
+        .catch(err => console.error(err));
+}
+
+function closeRtcConnection() {
+    if (peerConnection) {
+        peerConnection.close();
+        peerConnection = null;
+    }
+}
+
+function stopMediaTracks() {
+    if (localStream) {
+        localStream.getTracks().forEach(track => {
+            track.stop();
+        });
+        localStream = null;
+    }
+}
+
 function setupPeerConnection() {
     document.getElementById("video-call-div")
         .style.display = "inline"

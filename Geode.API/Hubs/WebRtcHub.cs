@@ -69,6 +69,15 @@ namespace Geode.API.Hubs
             }
         }
 
+        public async Task CleanUserData()
+        {
+            RtcUser? currentUser = FindUser(Context.User!.FindFirstValue(ClaimTypes.Name)!);
+            if (currentUser != null)
+            {
+                _users.Remove(currentUser);
+            }
+        }
+
         private RtcUser? FindUser(string username)
         {
             return _users.FirstOrDefault(u => u.Username == username);

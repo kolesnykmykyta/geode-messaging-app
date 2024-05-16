@@ -1,5 +1,6 @@
 ﻿@page "/call/{Remote}"
 
+@implements IAsyncDisposable
 @inject IJSRuntime JsRuntime
 
 <div id="video-call-div">
@@ -17,7 +18,13 @@
 
     protected override async Task OnInitializedAsync()
     {
-        await Task.Delay(1000);
         await JsRuntime.InvokeVoidAsync("joinCall", Remote);
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        await JsRuntime.InvokeVoidAsync("stopHubConnection");
+        await JsRuntime.InvokeVoidAsync("closeRtcConnection");
+        await JsRuntime.InvokeVoidAsync("stopMediaTracks");
     }
 }
