@@ -12,47 +12,112 @@ const configuration = {
 // Common variables
 let rtcHub
 let localStream
-let peerConnection
-let receiver
+let peerConnections = []
+let groupName
 
 // Main function to start the call
-async function joinCall(username) {
-    receiver = username
+async function joinCall(group) {
+    groupName = group
     await initializeHubConnection()
-    setupPeerConnection()
+    setupLocalStream()
+    rtcHub.invoke("JoinCall", groupName)
 }
 
 // SignalR messages handlers
 
 function initiateOffer(username) {
-    peerConnection.createOffer((offer) => {
-        peerConnection.setLocalDescription(offer)
+    let newConnection = new RTCPeerConnection(configuration)
+    newConnection.peerUsername = username
+    newConnection.addStream(localStream)
+
+    newConnection.onaddstream = (e) => {
+        console.log("Creating new video")
+        newVideo = document.createElement("video")
+        newVideo.id = newConnection.peerUsername
+        newVideo.srcObject = e.stream
+        newVideo.autoplay = true
+        newVideo.controls = false
+        newVideo.muted = false
+        document.getElementById("videos-div").appendChild(newVideo)
+    }
+    newConnection.onicecandidate = ((e) => {
+        if (e.candidate == null)
+            return
+        rtcHub.invoke("ProcessCandidate", newConnection.peerUsername, JSON.stringify(e.candidate))
+    })
+
+    peerConnections.push(newConnection)
+
+    newConnection.createOffer((offer) => {
+        console.log("Creating offer")
+        newConnection.setLocalDescription(offer)
         rtcHub.invoke("SendOffer", username, JSON.stringify(offer))
     }, (error) => {
         console.log(error)
     })
 }
 
-function handleOffer(data) {
-    peerConnection.setRemoteDescription(JSON.parse(data))
-    peerConnection.createAnswer((answer) => {
-        peerConnection.setLocalDescription(answer)
-        rtcHub.invoke("SendAnswer", receiver, JSON.stringify(answer))
+function handleOffer(sender, data) {
+    console.log("Handling offer: ", data)
+    let newConnection = new RTCPeerConnection(configuration)
+    newConnection.peerUsername = sender
+    newConnection.addStream(localStream)
+
+    newConnection.onaddstream = (e) => {
+        console.log("Creating new video")
+        let newVideo = document.createElement("video")
+        newVideo.id = newConnection.peerUsername
+        newVideo.autoplay = true;
+        newVideo.muted = false;
+        newVideo.controls = false;
+        newVideo.srcObject = e.stream
+        document.getElementById("videos-div").appendChild(newVideo)
+    }
+    newConnection.onicecandidate = ((e) => {
+        if (e.candidate == null)
+            return
+        rtcHub.invoke("ProcessCandidate", newConnection.peerUsername, JSON.stringify(e.candidate))
+    })
+
+    newConnection.setRemoteDescription(JSON.parse(data))
+    peerConnections.push(newConnection)
+
+    newConnection.createAnswer((answer) => {
+        newConnection.setLocalDescription(answer)
+        rtcHub.invoke("SendAnswer", sender, JSON.stringify(answer))
     }, error => {
         console.log(error)
     })
 }
 
-function handleAnswer(data) {
-    peerConnection.setRemoteDescription(JSON.parse(data))
+function handleAnswer(sender, data) {
+    let targetedConnection
+    peerConnections.some(function (obj) {
+        if (obj.peerUsername == sender) {
+            console.log("Handling answer: ", data)
+            targetedConnection = obj;
+            return true;
+        }
+    });
+
+    targetedConnection.setRemoteDescription(JSON.parse(data))
 }
 
-function handleCandidate(data) {
-    peerConnection.addIceCandidate(JSON.parse(data))
+function handleCandidate(sender, data) {
+    let targetedConnection
+    peerConnections.some(function (obj) {
+        if (obj.peerUsername == sender) {
+            console.log("Handling candidate: ", data)
+            targetedConnection = obj;
+            return true;
+        }
+    });
+
+    targetedConnection.addIceCandidate(JSON.parse(data))
 }
 
-// RTC and SignalR setups
-function setupPeerConnection() {
+// Setups
+function setupLocalStream() {
     navigator.getUserMedia({
         video: {
             frameRate: 24,
@@ -65,35 +130,20 @@ function setupPeerConnection() {
     }, (stream) => {
         localStream = stream
         document.getElementById("local-video").srcObject = localStream
-
-        peerConnection = new RTCPeerConnection(configuration)
-        peerConnection.addStream(localStream)
-
-        peerConnection.onaddstream = (e) => {
-            document.getElementById("remote-video")
-                .srcObject = e.stream
-        }
-        peerConnection.onicecandidate = ((e) => {
-            if (e.candidate == null)
-                return
-            rtcHub.invoke("ProcessCandidate", receiver, JSON.stringify(e.candidate))
-        })
-
-        rtcHub.invoke("JoinCall", receiver)
-    }, (error) => console.log(error))
+    }, error => console.log(error))
 }
 async function initializeHubConnection() {
     accessToken = localStorage.getItem("BearerToken")
     rtcHub = new signalR.HubConnectionBuilder()
-        .withUrl("https://geode-api-dev.azurewebsites.net/webrtc", {
+        .withUrl("https://geode-api.azurewebsites.net/webrtc", {
             accessTokenFactory: () => accessToken
         })
         .build()
 
     rtcHub.on("InitiateOffer", (username) => initiateOffer(username))
-    rtcHub.on("ReceiveAnswer", (data) => handleAnswer(data))
-    rtcHub.on("ReceiveCandidate", (data) => handleCandidate(data))
-    rtcHub.on("ReceiveOffer", (data) => handleOffer(data))
+    rtcHub.on("ReceiveAnswer", (sender, data) => handleAnswer(sender, data))
+    rtcHub.on("ReceiveCandidate", (sender, data) => handleCandidate(sender, data))
+    rtcHub.on("ReceiveOffer", (sender, data) => handleOffer(sender, data))
 
     await rtcHub.start()
         .then(() => console.log("Connection established."))
@@ -109,9 +159,15 @@ function stopHubConnection() {
 }
 
 function closeRtcConnection() {
-    if (peerConnection) {
-        peerConnection.close();
-        peerConnection = null;
+    if (peerConnections) {
+        peerConnections.forEach(conn => {
+            if (conn) {
+                conn.close();
+                conn = null;
+            }
+        })
+
+        peerConnections = []
     }
 }
 

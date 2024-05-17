@@ -11,21 +11,24 @@ namespace Geode.API.Hubs
     {
         private static readonly List<RtcUser> _users = new List<RtcUser>();
 
-        public async Task JoinCall(string receiverName)
+        public async Task JoinCall(string groupName)
         {
+            IEnumerable<RtcUser> usersInCall = _users.Where(x => x.GroupName == groupName);
+            if (usersInCall.Any())
+            {
+                foreach(RtcUser user in usersInCall)
+                {
+                    await Clients.Client(Context.ConnectionId).SendAsync("InitiateOffer", user.Username);
+                }
+            }
+
             RtcUser newUser = new RtcUser()
             {
                 Username = Context.User!.FindFirstValue(ClaimTypes.Name)!,
                 ConnectionId = Context.ConnectionId,
+                GroupName = groupName,
             };
             _users.Add(newUser);
-
-            RtcUser? userInCall = FindUser(receiverName);
-
-            if (userInCall != null)
-            {
-                await Clients.Client(Context.ConnectionId).SendAsync("InitiateOffer", userInCall.Username);
-            }
         }
 
         public async Task SendOffer(string receiver, string offer)
@@ -33,7 +36,8 @@ namespace Geode.API.Hubs
             RtcUser? existingUser = FindUser(receiver);
             if (existingUser != null)
             {
-                await Clients.Client(existingUser.ConnectionId!).SendAsync("ReceiveOffer", offer);
+                string senderName = Context.User!.FindFirstValue(ClaimTypes.Name)!;
+                await Clients.Client(existingUser.ConnectionId!).SendAsync("ReceiveOffer", senderName, offer);
             }
         }
 
@@ -43,7 +47,8 @@ namespace Geode.API.Hubs
             RtcUser? existingUser = FindUser(username);
             if (existingUser != null)
             {
-                await Clients.Client(existingUser.ConnectionId!).SendAsync("ReceiveAnswer", answer);
+                string senderName = Context.User!.FindFirstValue(ClaimTypes.Name)!;
+                await Clients.Client(existingUser.ConnectionId!).SendAsync("ReceiveAnswer", senderName, answer);
             }
         }
 
@@ -53,7 +58,8 @@ namespace Geode.API.Hubs
 
             if (userInCall != null)
             {
-                await Clients.Client(userInCall.ConnectionId!).SendAsync("ReceiveCandidate", candidate);
+                string senderName = Context.User!.FindFirstValue(ClaimTypes.Name)!;
+                await Clients.Client(userInCall.ConnectionId!).SendAsync("ReceiveCandidate", senderName, candidate);
             }
         }
 
@@ -87,5 +93,7 @@ namespace Geode.API.Hubs
     {
         public string? ConnectionId { get; set; }
         public string? Username { get; set; }
+
+        public string? GroupName { get; set; }
     }
 }

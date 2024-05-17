@@ -2,6 +2,8 @@
 @inject IMessagesService messagesService
 @inject IChatHubService hubService
 
+<MudLink Href="@($"call/{ChatId}")">Call</MudLink>
+
 <InputText @bind-Value="@messageInput" class="form-control"></InputText>
 <MudButton OnClick="SendMessage" class="btn btn-primary">Send message</MudButton>
 

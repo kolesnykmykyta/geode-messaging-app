@@ -8,8 +8,9 @@
         <button class="btn btn-@VideoButtonColor" @onclick="ChangeVideoStatus">@VideoButtonText</button>
         <button class="btn btn-@AudioButtonColor" @onclick="ChangeAudioStatus">@AudioButtonText</button>
     </div>
-    <video muted id="local-video" autoplay></video>
-    <video id="remote-video" autoplay></video>
+    <div id="videos-div">
+        <video muted id="local-video" autoplay></video>
+    </div>
 </div>
 
 @code {
