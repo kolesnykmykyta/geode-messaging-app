@@ -57,7 +57,7 @@ function setupPeerConnection() {
         video: {
             frameRate: 24,
             width: {
-                min: 480, ideal: 720, max: 1280
+                min: 240, ideal: 360, max: 480
             },
             aspectRatio: 1.33333
         },
@@ -131,8 +131,16 @@ function changeAudioStatus() {
     localStream.getAudioTracks()[0].enabled = isAudio
 }
 
+function getAudioStatus() {
+    return isAudio
+}
+
 let isVideo = true
 function changeVideoStatus() {
     isVideo = !isVideo
     localStream.getVideoTracks()[0].enabled = isVideo
+}
+
+function getVideoStatus() {
+    return isVideo
 }

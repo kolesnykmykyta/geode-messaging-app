@@ -4,21 +4,30 @@
 @inject IJSRuntime JsRuntime
 
 <div id="video-call-div">
+    <div class="actions-div">
+        <button class="btn btn-@VideoButtonColor" @onclick="ChangeVideoStatus">@VideoButtonText</button>
+        <button class="btn btn-@AudioButtonColor" @onclick="ChangeAudioStatus">@AudioButtonText</button>
+    </div>
     <video muted id="local-video" autoplay></video>
     <video id="remote-video" autoplay></video>
-    <div class="actions-div">
-        <button @onclick="ChangeVideoStatus">Mute video</button>
-        <button @onclick="ChangeAudioStatus">Mute audio</button>
-    </div>
 </div>
 
 @code {
     [Parameter]
     public string? Remote { get; set; }
 
+    private string? VideoButtonText { get; set; }
+    private string? AudioButtonText { get; set; }
+
+    private string? VideoButtonColor { get; set; }
+    private string? AudioButtonColor { get; set; }
+
     protected override async Task OnInitializedAsync()
     {
         await JsRuntime.InvokeVoidAsync("joinCall", Remote);
+
+        await UpdateVideoButton();
+        await UpdateAudioButton();
     }
 
     public async ValueTask DisposeAsync()
@@ -31,10 +40,26 @@
     private async Task ChangeVideoStatus()
     {
         await JsRuntime.InvokeVoidAsync("changeVideoStatus");
+        await UpdateVideoButton();
     }
 
     private async Task ChangeAudioStatus()
     {
         await JsRuntime.InvokeVoidAsync("changeAudioStatus");
+        await UpdateAudioButton();
+    }
+
+    private async Task UpdateVideoButton()
+    {
+        bool videoStatus = await JsRuntime.InvokeAsync<bool>("getVideoStatus");
+        VideoButtonText = videoStatus ? "Video: On" : "Video: Off";
+        VideoButtonColor = videoStatus ? "success" : "danger";
+    }
+
+    private async Task UpdateAudioButton()
+    {
+        bool audioStatus = await JsRuntime.InvokeAsync<bool>("getAudioStatus");
+        AudioButtonText = audioStatus ? "Audio: On" : "Audio: Off";
+        AudioButtonColor = audioStatus ? "success" : "danger";
     }
 }
