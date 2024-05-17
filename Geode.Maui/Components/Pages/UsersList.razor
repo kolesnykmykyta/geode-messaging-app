@@ -39,7 +39,7 @@
         <PropertyColumn Property="x => x.PhoneNumber" />
         <TemplateColumn>
             <CellTemplate>
-                <MudLink Href="@($"call/{context.Item.UserName}")">Call</MudLink>
+                <MudLink Href="@($"privatecall/{context.Item.UserName}")">Call</MudLink>
             </CellTemplate>
         </TemplateColumn>
     </Columns>

@@ -13,14 +13,18 @@ const configuration = {
 let rtcHub
 let localStream
 let peerConnections = []
-let groupName
 
 // Main function to start the call
 async function joinCall(group) {
-    groupName = group
     await initializeHubConnection()
     setupLocalStream()
-    rtcHub.invoke("JoinCall", groupName)
+    rtcHub.invoke("JoinCall", group)
+}
+
+async function joinPrivateCall(receiver) {
+    await initializeHubConnection()
+    setupLocalStream()
+    rtcHub.invoke("JoinPrivateCall", receiver)
 }
 
 // SignalR messages handlers

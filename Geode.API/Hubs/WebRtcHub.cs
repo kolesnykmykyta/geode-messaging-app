@@ -11,6 +11,25 @@ namespace Geode.API.Hubs
     {
         private static readonly List<RtcUser> _users = new List<RtcUser>();
 
+        public async Task JoinPrivateCall(string receiver)
+        {
+            string currentUserName = Context.User!.FindFirstValue(ClaimTypes.Name)!;
+            RtcUser newUser = new RtcUser()
+            {
+                Username = currentUserName,
+                ConnectionId = Context.ConnectionId,
+                GroupName = receiver,
+            };
+            _users.Add(newUser);
+
+            RtcUser? userInCall = _users.FirstOrDefault(x => x.Username == receiver && x.GroupName == currentUserName);
+
+            if (userInCall != null)
+            {
+                await Clients.Client(Context.ConnectionId).SendAsync("InitiateOffer", userInCall.Username);
+            }
+        }
+
         public async Task JoinCall(string groupName)
         {
             IEnumerable<RtcUser> usersInCall = _users.Where(x => x.GroupName == groupName);

@@ -1,4 +1,4 @@
-﻿@page "/privatecall/{Remote}"
+﻿@page "/call/{Remote}"
 
 @implements IAsyncDisposable
 @inject IJSRuntime JsRuntime
@@ -25,7 +25,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        await JsRuntime.InvokeVoidAsync("joinPrivateCall", Remote);
+        await JsRuntime.InvokeVoidAsync("joinCall", Remote);
 
         await UpdateVideoButton();
         await UpdateAudioButton();
