@@ -51,19 +51,7 @@ namespace Geode.API.Hubs
         {
             RtcUser? userInCall = FindUser(receiverName);
 
-            if (userInCall == null)
-            {
-                EnsureUserIsInList();
-                RtcUser currentUser = FindUser(Context.User!.FindFirstValue(ClaimTypes.Name)!)!;
-
-                if (currentUser.Candidates == null)
-                {
-                    currentUser.Candidates = new List<string>();
-                }
-
-                currentUser.Candidates.Add(candidate);
-            }
-            else
+            if (userInCall != null)
             {
                 await Clients.Client(userInCall.ConnectionId!).SendAsync("ReceiveCandidate", candidate);
             }
@@ -83,20 +71,6 @@ namespace Geode.API.Hubs
             return _users.FirstOrDefault(u => u.Username == username);
         }
 
-        private void EnsureUserIsInList()
-        {
-            string currentUserName = Context.User!.FindFirstValue(ClaimTypes.Name)!;
-
-            if (FindUser(currentUserName) == null)
-            {
-                RtcUser newUser = new RtcUser()
-                {
-                    Username = currentUserName,
-                    ConnectionId = Context.ConnectionId,
-                };
-            }
-        }
-
         public override async Task OnDisconnectedAsync(Exception exception)
         {
             var existingUser = _users.Find(u => u.ConnectionId == Context.ConnectionId);
@@ -113,7 +87,5 @@ namespace Geode.API.Hubs
     {
         public string? ConnectionId { get; set; }
         public string? Username { get; set; }
-        public string? Offer { get; set; }
-        public List<string>? Candidates { get; set; }
     }
 }
