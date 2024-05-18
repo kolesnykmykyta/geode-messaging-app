@@ -14,7 +14,7 @@ let rtcHub
 let localStream
 let peerConnections = []
 
-// Main function to start the call
+// Main functions to start the call
 async function joinCall(group) {
     await initializeHubConnection()
     setupLocalStream()
@@ -28,32 +28,9 @@ async function joinPrivateCall(receiver) {
 }
 
 // SignalR messages handlers
-
 function initiateOffer(username) {
-    let newConnection = new RTCPeerConnection(configuration)
-    newConnection.peerUsername = username
-    newConnection.addStream(localStream)
-
-    newConnection.onaddstream = (e) => {
-        console.log("Creating new video")
-        newVideo = document.createElement("video")
-        newVideo.id = newConnection.peerUsername
-        newVideo.srcObject = e.stream
-        newVideo.autoplay = true
-        newVideo.controls = false
-        newVideo.muted = false
-        document.getElementById("videos-div").appendChild(newVideo)
-    }
-    newConnection.onicecandidate = ((e) => {
-        if (e.candidate == null)
-            return
-        rtcHub.invoke("ProcessCandidate", newConnection.peerUsername, JSON.stringify(e.candidate))
-    })
-
-    peerConnections.push(newConnection)
-
+    newConnection = createPeerConnection(username)
     newConnection.createOffer((offer) => {
-        console.log("Creating offer")
         newConnection.setLocalDescription(offer)
         rtcHub.invoke("SendOffer", username, JSON.stringify(offer))
     }, (error) => {
@@ -62,30 +39,8 @@ function initiateOffer(username) {
 }
 
 function handleOffer(sender, data) {
-    console.log("Handling offer: ", data)
-    let newConnection = new RTCPeerConnection(configuration)
-    newConnection.peerUsername = sender
-    newConnection.addStream(localStream)
-
-    newConnection.onaddstream = (e) => {
-        console.log("Creating new video")
-        let newVideo = document.createElement("video")
-        newVideo.id = newConnection.peerUsername
-        newVideo.autoplay = true;
-        newVideo.muted = false;
-        newVideo.controls = false;
-        newVideo.srcObject = e.stream
-        document.getElementById("videos-div").appendChild(newVideo)
-    }
-    newConnection.onicecandidate = ((e) => {
-        if (e.candidate == null)
-            return
-        rtcHub.invoke("ProcessCandidate", newConnection.peerUsername, JSON.stringify(e.candidate))
-    })
-
+    newConnection = createPeerConnection(sender)
     newConnection.setRemoteDescription(JSON.parse(data))
-    peerConnections.push(newConnection)
-
     newConnection.createAnswer((answer) => {
         newConnection.setLocalDescription(answer)
         rtcHub.invoke("SendAnswer", sender, JSON.stringify(answer))
@@ -98,7 +53,6 @@ function handleAnswer(sender, data) {
     let targetedConnection
     peerConnections.some(function (obj) {
         if (obj.peerUsername == sender) {
-            console.log("Handling answer: ", data)
             targetedConnection = obj;
             return true;
         }
@@ -111,7 +65,6 @@ function handleCandidate(sender, data) {
     let targetedConnection
     peerConnections.some(function (obj) {
         if (obj.peerUsername == sender) {
-            console.log("Handling candidate: ", data)
             targetedConnection = obj;
             return true;
         }
@@ -119,8 +72,8 @@ function handleCandidate(sender, data) {
 
     targetedConnection.addIceCandidate(JSON.parse(data))
 }
-function removePeerVideo(username) {
-    let videoToRemove = document.getElementById(username)
+function removePeerVideo(peerVideoId) {
+    let videoToRemove = document.getElementById(peerVideoId)
     if (videoToRemove) {
         let parent = videoToRemove.parentNode
         parent.removeChild(videoToRemove)
@@ -152,9 +105,9 @@ async function initializeHubConnection() {
         .build()
 
     rtcHub.on("InitiateOffer", (username) => initiateOffer(username))
+    rtcHub.on("ReceiveOffer", (sender, data) => handleOffer(sender, data))
     rtcHub.on("ReceiveAnswer", (sender, data) => handleAnswer(sender, data))
     rtcHub.on("ReceiveCandidate", (sender, data) => handleCandidate(sender, data))
-    rtcHub.on("ReceiveOffer", (sender, data) => handleOffer(sender, data))
     rtcHub.on("RemovePeerVideo", (username) => removePeerVideo(username))
 
     await rtcHub.start()
@@ -162,7 +115,38 @@ async function initializeHubConnection() {
         .catch(err => console.error(err));
 }
 
+function createPeerConnection(peer) {
+    let newConnection = new RTCPeerConnection(configuration)
+    newConnection.peerUsername = peer
+    newConnection.addStream(localStream)
+
+    newConnection.onaddstream = (e) => {
+        console.log("Creating new video")
+        newVideo = document.createElement("video")
+        newVideo.id = newConnection.peerUsername
+        newVideo.srcObject = e.stream
+        newVideo.autoplay = true
+        newVideo.controls = false
+        newVideo.muted = false
+        document.getElementById("videos-div").appendChild(newVideo)
+    }
+    newConnection.onicecandidate = ((e) => {
+        if (e.candidate == null)
+            return
+        rtcHub.invoke("ProcessCandidate", newConnection.peerUsername, JSON.stringify(e.candidate))
+    })
+
+    peerConnections.push(newConnection)
+    return newConnection
+}
+
 // Cleanups
+function disposeCleanup() {
+    stopRtcConnections()
+    stopHubConnection()
+    stopMediaTracks()
+}
+
 function stopHubConnection() {
     rtcHub.invoke("CleanUserData")
         .then(() => rtcHub.stop())
@@ -170,7 +154,7 @@ function stopHubConnection() {
         .catch(err => console.error(err));
 }
 
-function closeRtcConnection() {
+function stopRtcConnections() {
     if (peerConnections) {
         peerConnections.forEach(conn => {
             if (conn) {

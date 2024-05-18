@@ -33,9 +33,7 @@
 
     public async ValueTask DisposeAsync()
     {
-        await JsRuntime.InvokeVoidAsync("closeRtcConnection");
-        await JsRuntime.InvokeVoidAsync("stopHubConnection");
-        await JsRuntime.InvokeVoidAsync("stopMediaTracks");
+        await JsRuntime.InvokeVoidAsync("disposeCleanup");
     }
 
     private async Task ChangeVideoStatus()
