@@ -1,4 +1,5 @@
-﻿using DataAccess.Entities;
+﻿using Application.Utils.Helpers.Interfaces;
+using DataAccess.Entities;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
@@ -10,23 +11,29 @@ namespace Geode.API.Hubs
     public class WebRtcHub : Hub
     {
         private static readonly List<RtcUser> _users = new List<RtcUser>();
+        private readonly IApiUserHelper _userHelper;
 
-        public async Task JoinPrivateCall(string receiver)
+        public WebRtcHub(IApiUserHelper userHelper)
         {
-            string currentUserName = Context.User!.FindFirstValue(ClaimTypes.Name)!;
+            _userHelper = userHelper;
+        }
+
+        public async Task JoinPrivateCall(string receiverName)
+        {
+            string currentUserName = _userHelper.ExtractNameFromUser(Context.User!);
             RtcUser newUser = new RtcUser()
             {
                 Username = currentUserName,
-                ConnectionId = Context.ConnectionId,
-                GroupName = receiver,
+                ConnectionId = Context.ConnectionId,    
+                GroupName = receiverName,
             };
             _users.Add(newUser);
 
-            RtcUser? userInCall = _users.FirstOrDefault(x => x.Username == receiver && x.GroupName == currentUserName);
+            RtcUser? receiver = _users.FirstOrDefault(x => x.Username == receiverName && x.GroupName == currentUserName);
 
-            if (userInCall != null)
+            if (receiver != null)
             {
-                await Clients.Client(Context.ConnectionId).SendAsync("InitiateOffer", userInCall.Username);
+                await Clients.Client(Context.ConnectionId).SendAsync("InitiateOffer", receiver.Username);
             }
         }
 
@@ -43,60 +50,60 @@ namespace Geode.API.Hubs
 
             RtcUser newUser = new RtcUser()
             {
-                Username = Context.User!.FindFirstValue(ClaimTypes.Name)!,
+                Username = _userHelper.ExtractNameFromUser(Context.User!),
                 ConnectionId = Context.ConnectionId,
                 GroupName = groupName,
             };
             _users.Add(newUser);
         }
 
-        public async Task SendOffer(string receiver, string offer)
+        public async Task SendOffer(string receiverName, string offer)
         {
-            RtcUser? existingUser = FindUser(receiver);
-            if (existingUser != null)
+            RtcUser? receiver = FindUser(receiverName);
+            if (receiver != null)
             {
-                string senderName = Context.User!.FindFirstValue(ClaimTypes.Name)!;
-                await Clients.Client(existingUser.ConnectionId!).SendAsync("ReceiveOffer", senderName, offer);
+                string senderName = _userHelper.ExtractNameFromUser(Context.User!);
+                await Clients.Client(receiver.ConnectionId!).SendAsync("ReceiveOffer", senderName, offer);
             }
         }
 
-        public async Task SendAnswer(string username, string answer)
+        public async Task SendAnswer(string receiverName, string answer)
         {
-            RtcUser? existingUser = FindUser(username);
-            if (existingUser != null)
+            RtcUser? receiver = FindUser(receiverName);
+            if (receiver != null)
             {
-                string senderName = Context.User!.FindFirstValue(ClaimTypes.Name)!;
-                await Clients.Client(existingUser.ConnectionId!).SendAsync("ReceiveAnswer", senderName, answer);
+                string senderName = _userHelper.ExtractNameFromUser(Context.User!);
+                await Clients.Client(receiver.ConnectionId!).SendAsync("ReceiveAnswer", senderName, answer);
             }
         }
 
         public async Task ProcessCandidate(string receiverName, string candidate)
         {
-            RtcUser? userInCall = FindUser(receiverName);
+            RtcUser? receiver = FindUser(receiverName);
 
-            if (userInCall != null)
+            if (receiver != null)
             {
-                string senderName = Context.User!.FindFirstValue(ClaimTypes.Name)!;
-                await Clients.Client(userInCall.ConnectionId!).SendAsync("ReceiveCandidate", senderName, candidate);
+                string senderName = _userHelper.ExtractNameFromUser(Context.User!);
+                await Clients.Client(receiver.ConnectionId!).SendAsync("ReceiveCandidate", senderName, candidate);
             }
         }
 
-        public async Task CleanUserData()
+        public void CleanUserData()
         {
-            RtcUser? currentUser = FindUser(Context.User!.FindFirstValue(ClaimTypes.Name)!);
+            RtcUser? currentUser = FindUser(_userHelper.ExtractNameFromUser(Context.User!));
             if (currentUser != null)
             {
                 _users.Remove(currentUser);
             }
         }
 
-        public async Task RemoveUserVideo(string username)
+        public async Task RemoveUserVideo(string receiverName)
         {
-            RtcUser? userInCall = FindUser(username);
-            if (userInCall != null)
+            RtcUser? receiver = FindUser(receiverName);
+            if (receiver != null)
             {
-                string currentUserName = Context.User!.FindFirstValue(ClaimTypes.Name)!;
-                await Clients.Client(userInCall.ConnectionId!).SendAsync("RemovePeerVideo", currentUserName);
+                string senderName = _userHelper.ExtractNameFromUser(Context.User!);
+                await Clients.Client(receiver.ConnectionId!).SendAsync("RemovePeerVideo", senderName);
             }
         }
 
@@ -120,6 +127,7 @@ namespace Geode.API.Hubs
     public class RtcUser
     {
         public string? ConnectionId { get; set; }
+
         public string? Username { get; set; }
 
         public string? GroupName { get; set; }
