@@ -14,6 +14,10 @@ let rtcHub
 let localStream
 let peerConnections = []
 
+// Local stream settings
+let isAudio = true
+let isVideo = true
+
 // Main functions to start the call
 async function joinCall(group) {
     await initializeHubConnection()
@@ -82,6 +86,8 @@ function removePeerVideo(peerVideoId) {
 
 // Setups
 function setupLocalStream() {
+    isVideo = true
+    isAudio = true
     navigator.getUserMedia({
         video: {
             frameRate: 24,
@@ -178,7 +184,6 @@ function stopMediaTracks() {
 }
 
 // Local media settings
-let isAudio = true
 function changeAudioStatus() {
     isAudio = !isAudio
     localStream.getAudioTracks()[0].enabled = isAudio
@@ -188,7 +193,6 @@ function getAudioStatus() {
     return isAudio
 }
 
-let isVideo = true
 function changeVideoStatus() {
     isVideo = !isVideo
     localStream.getVideoTracks()[0].enabled = isVideo
