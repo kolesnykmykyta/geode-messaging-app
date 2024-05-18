@@ -19,24 +19,26 @@ let isAudio = true
 let isVideo = true
 
 // Main functions to start the call
-async function joinCall(group) {
-    await initializeHubConnection()
-    setupLocalStream()
-    rtcHub.invoke("JoinCall", group)
+async function joinGroupCall(group) {
+    await joinCall("JoinCall", group)
 }
 
 async function joinPrivateCall(receiver) {
+    await joinCall("JoinPrivateCall", receiver)
+}
+
+async function joinCall(hubMethod, callId) {
     await initializeHubConnection()
     setupLocalStream()
-    rtcHub.invoke("JoinPrivateCall", receiver)
+    rtcHub.invoke(hubMethod, callId)
 }
 
 // SignalR messages handlers
-function initiateOffer(username) {
-    newConnection = createPeerConnection(username)
+function initiateOffer(peerName) {
+    newConnection = createPeerConnection(peerName)
     newConnection.createOffer((offer) => {
         newConnection.setLocalDescription(offer)
-        rtcHub.invoke("SendOffer", username, JSON.stringify(offer))
+        rtcHub.invoke("SendOffer", peerName, JSON.stringify(offer))
     }, (error) => {
         console.log(error)
     })
@@ -54,27 +56,17 @@ function handleOffer(sender, data) {
 }
 
 function handleAnswer(sender, data) {
-    let targetedConnection
-    peerConnections.some(function (obj) {
-        if (obj.peerUsername == sender) {
-            targetedConnection = obj;
-            return true;
-        }
-    });
-
-    targetedConnection.setRemoteDescription(JSON.parse(data))
+    let targetedConnection = findConnectionByPeerName(sender)
+    if (targetedConnection) {
+        targetedConnection.setRemoteDescription(JSON.parse(data))
+    }
 }
 
 function handleCandidate(sender, data) {
-    let targetedConnection
-    peerConnections.some(function (obj) {
-        if (obj.peerUsername == sender) {
-            targetedConnection = obj;
-            return true;
-        }
-    });
-
-    targetedConnection.addIceCandidate(JSON.parse(data))
+    let targetedConnection = findConnectionByPeerName(sender)
+    if (targetedConnection) {
+        targetedConnection.addIceCandidate(JSON.parse(data))
+    }
 }
 function removePeerVideo(peerVideoId) {
     let videoToRemove = document.getElementById(peerVideoId)
@@ -200,4 +192,17 @@ function changeVideoStatus() {
 
 function getVideoStatus() {
     return isVideo
+}
+
+// Helpers
+function findConnectionByPeerName(peerName) {
+    let targetedConnection
+    peerConnections.some(function (obj) {
+        if (obj.peerUsername == peerName) {
+            targetedConnection = obj;
+            return true;
+        }
+    });
+
+    return targetedConnection
 }
