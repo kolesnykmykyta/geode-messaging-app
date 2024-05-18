@@ -119,6 +119,13 @@ function handleCandidate(sender, data) {
 
     targetedConnection.addIceCandidate(JSON.parse(data))
 }
+function removePeerVideo(username) {
+    let videoToRemove = document.getElementById(username)
+    if (videoToRemove) {
+        let parent = videoToRemove.parentNode
+        parent.removeChild(videoToRemove)
+    }
+}
 
 // Setups
 function setupLocalStream() {
@@ -148,6 +155,7 @@ async function initializeHubConnection() {
     rtcHub.on("ReceiveAnswer", (sender, data) => handleAnswer(sender, data))
     rtcHub.on("ReceiveCandidate", (sender, data) => handleCandidate(sender, data))
     rtcHub.on("ReceiveOffer", (sender, data) => handleOffer(sender, data))
+    rtcHub.on("RemovePeerVideo", (username) => removePeerVideo(username))
 
     await rtcHub.start()
         .then(() => console.log("Connection established."))
@@ -166,6 +174,7 @@ function closeRtcConnection() {
     if (peerConnections) {
         peerConnections.forEach(conn => {
             if (conn) {
+                rtcHub.invoke("RemoveUserVideo", conn.peerUsername)
                 conn.close();
                 conn = null;
             }

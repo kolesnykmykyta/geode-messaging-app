@@ -60,7 +60,6 @@ namespace Geode.API.Hubs
             }
         }
 
-        [Authorize]
         public async Task SendAnswer(string username, string answer)
         {
             RtcUser? existingUser = FindUser(username);
@@ -88,6 +87,16 @@ namespace Geode.API.Hubs
             if (currentUser != null)
             {
                 _users.Remove(currentUser);
+            }
+        }
+
+        public async Task RemoveUserVideo(string username)
+        {
+            RtcUser? userInCall = FindUser(username);
+            if (userInCall != null)
+            {
+                string currentUserName = Context.User!.FindFirstValue(ClaimTypes.Name)!;
+                await Clients.Client(userInCall.ConnectionId!).SendAsync("RemovePeerVideo", currentUserName);
             }
         }
 
