@@ -20,10 +20,12 @@ let isVideo = true
 
 // Main functions to start the call
 async function joinGroupCall(group) {
+    console.log("Joining group call: ", group)
     await joinCall("JoinCall", group)
 }
 
 async function joinPrivateCall(receiver) {
+    console.log("Joining private call: ", receiver)
     await joinCall("JoinPrivateCall", receiver)
 }
 
@@ -37,6 +39,7 @@ async function joinCall(hubMethod, callId) {
 function initiateOffer(peerName) {
     newConnection = createPeerConnection(peerName)
     newConnection.createOffer((offer) => {
+        console.log("Creating offer for: ", peerName)
         newConnection.setLocalDescription(offer)
         rtcHub.invoke("SendOffer", peerName, JSON.stringify(offer))
     }, (error) => {
@@ -45,9 +48,11 @@ function initiateOffer(peerName) {
 }
 
 function handleOffer(sender, data) {
+    console.log("Handling offer from: ", sender)
     newConnection = createPeerConnection(sender)
     newConnection.setRemoteDescription(JSON.parse(data))
     newConnection.createAnswer((answer) => {
+        console.log("Creating answer for: ", sender)
         newConnection.setLocalDescription(answer)
         rtcHub.invoke("SendAnswer", sender, JSON.stringify(answer))
     }, error => {
@@ -56,6 +61,7 @@ function handleOffer(sender, data) {
 }
 
 function handleAnswer(sender, data) {
+    console.log("Handling answer from: ", sender)
     let targetedConnection = findConnectionByPeerName(sender)
     if (targetedConnection) {
         targetedConnection.setRemoteDescription(JSON.parse(data))
@@ -63,12 +69,14 @@ function handleAnswer(sender, data) {
 }
 
 function handleCandidate(sender, data) {
+    console.log("Handling candidate from: ", sender)
     let targetedConnection = findConnectionByPeerName(sender)
     if (targetedConnection) {
         targetedConnection.addIceCandidate(JSON.parse(data))
     }
 }
 function removePeerVideo(peerVideoId) {
+    console.log("Deleting video with id: ", peerVideoId)
     let videoToRemove = document.getElementById(peerVideoId)
     if (videoToRemove) {
         let parent = videoToRemove.parentNode
@@ -114,6 +122,7 @@ async function initializeHubConnection() {
 }
 
 function createPeerConnection(peer) {
+    console.log("Creating new connection with: ", peer)
     let newConnection = new RTCPeerConnection(configuration)
     newConnection.peerUsername = peer
     newConnection.addStream(localStream)
