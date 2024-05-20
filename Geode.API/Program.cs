@@ -20,18 +20,14 @@ namespace Geode.API
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            // Add services to the container.
+            builder.ConfigureAzureKeyVault();
+
+            // Services
             builder.Services.AddHealthChecks();
 
             builder.Services.AddSignalR();
 
-            //builder.Services.AddCors(options =>
-            //{
-            //    options.AddDefaultPolicy(builder => builder.WithOrigins("https://0.0.0.0").AllowCredentials().AllowAnyMethod().AllowAnyHeader());
-            //});
-
             builder.Services.AddControllers();
-            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
@@ -77,7 +73,7 @@ namespace Geode.API
 
             var app = builder.Build();
 
-            // Configure the HTTP request pipeline.
+            // Pipeline
             if (app.Environment.IsDevelopment())
             {
                 app.UseSwagger();
@@ -91,8 +87,6 @@ namespace Geode.API
             app.MapHealthChecks("/health");
 
             app.MapControllers();
-
-            // app.UseCors((builder => builder.WithOrigins("https://0.0.0.0").AllowCredentials().AllowAnyMethod().AllowAnyHeader()));
 
             app.MapHub<ChatHub>("/chathub");
             app.MapHub<WebRtcHub>("/webrtc");
