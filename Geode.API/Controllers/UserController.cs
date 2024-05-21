@@ -1,6 +1,8 @@
-﻿using Application.Dtos;
+﻿using Application.CqrsMessages.Users;
+using Application.Dtos;
 using Application.Services;
 using Application.Services.Users;
+using Application.Utils.Helpers.Interfaces;
 using Auth.Dtos;
 using AutoMapper;
 using MediatR;
@@ -15,11 +17,13 @@ namespace Geode.API.Controllers
     {
         private readonly IMediator _mediator;
         private readonly IMapper _mapper;
+        private readonly IApiUserHelper _userHelper;
 
-        public UserController(IMediator mediator, IMapper mapper)
+        public UserController(IMediator mediator, IMapper mapper, IApiUserHelper userHelper)
         {
             _mediator = mediator;
             _mapper = mapper;
+            _userHelper = userHelper;
         }
 
         [HttpPost("register")]
@@ -49,6 +53,18 @@ namespace Geode.API.Controllers
         {
             IEnumerable<UserInfoDto> usersList = await _mediator.Send(_mapper.Map<GetUsersListQuery>(dto));
             return Ok(usersList);
+        }
+
+        [Authorize]
+        [HttpPut]
+        public async Task<IActionResult> UpdateUserData(UpdatedUserDataDto dto)
+        {
+            UpdateUserDataCommand command = _mapper.Map<UpdateUserDataCommand>(dto);
+            command.Id = _userHelper.ExtractIdFromUser(User);
+
+            bool isSuccess = await _mediator.Send(command);
+
+            return isSuccess ? Ok() : BadRequest();
         }
     }
 }

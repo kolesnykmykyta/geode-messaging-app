@@ -1,4 +1,5 @@
-﻿using Application.Dtos;
+﻿using Application.CqrsMessages.Users;
+using Application.Dtos;
 using Application.Services.Chats;
 using Application.Services.Messages;
 using Application.Services.Users;
@@ -20,6 +21,8 @@ namespace Application.Utils.Automapper
             CreateMap<ChangeChatNameCommand, Chat>().ReverseMap();
             CreateMap<ChangeChatNameCommand, ChatDto>().ReverseMap();
             CreateMap<SendMessageCommand, Message>().ReverseMap();
+            CreateMap<UpdateUserDataCommand, UpdatedUserDataDto>().ReverseMap();
+            CreateMap<UpdateUserDataCommand, User>().ReverseMap();
 
             // Entities to Dtos
             CreateMap<UserInfoDto, User>().ReverseMap();

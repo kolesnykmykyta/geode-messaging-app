@@ -1,4 +1,5 @@
-﻿using Application.Dtos;
+﻿using Application.CqrsMessages.Users;
+using Application.Dtos;
 using Application.Handlers.Chats;
 using Application.Handlers.Messages;
 using Application.Handlers.Users;
@@ -27,6 +28,7 @@ namespace Geode.API.Extensions
             services.AddScoped<IRequestHandler<SendMessageCommand>, SendMessageCommandHandler>();
             services.AddScoped<IRequestHandler<RegisterNewUserCommand, RegisterResultDto>, RegisterNewUserCommandHandler>();
             services.AddScoped<IRequestHandler<DeleteChatCommand, bool>, DeleteChatCommandHandler>();
+            services.AddScoped<IRequestHandler<UpdateUserDataCommand, bool>, UpdateUserDataCommandHandler>();
 
             // CQRS Queries
             services.AddScoped<IRequestHandler<LoginQuery, TokenDto?>, LoginQueryHandler>();
