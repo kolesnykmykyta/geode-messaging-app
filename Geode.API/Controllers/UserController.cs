@@ -56,8 +56,8 @@ namespace Geode.API.Controllers
         }
 
         [Authorize]
-        [HttpPut]
-        public async Task<IActionResult> UpdateUserData(UserProfileDto dto)
+        [HttpPut("profile")]
+        public async Task<IActionResult> UpdateUserProfile(UserProfileDto dto)
         {
             UpdateUserDataCommand command = _mapper.Map<UpdateUserDataCommand>(dto);
             command.Id = _userHelper.ExtractIdFromUser(User);
@@ -65,6 +65,17 @@ namespace Geode.API.Controllers
             bool isSuccess = await _mediator.Send(command);
 
             return isSuccess ? Ok() : BadRequest();
+        }
+
+        [Authorize]
+        [HttpGet("profile")]
+        public async Task<IActionResult> GetUserProfile()
+        {
+            GetUserProfileQuery query = new GetUserProfileQuery(_userHelper.ExtractIdFromUser(User));
+
+            UserProfileDto? result = await _mediator.Send(query);
+
+            return result != null ? Ok(result) : BadRequest();
         }
     }
 }

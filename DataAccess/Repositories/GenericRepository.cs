@@ -173,7 +173,7 @@ namespace DataAccess.Repositories
             return _context.Set<TEntity>().Find(id);
         }
 
-        private void UpdateWithObjectId(object id, TEntity entity)
+      private void UpdateWithObjectId(object id, TEntity entity)
         {
             TEntity? entityToUpdate = _context.Set<TEntity>().Find(id);
             if (entity != null && entityToUpdate != null)

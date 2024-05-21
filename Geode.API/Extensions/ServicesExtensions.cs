@@ -37,6 +37,7 @@ namespace Geode.API.Extensions
             services.AddScoped<IRequestHandler<GetUserChatsQuery, IEnumerable<ChatDto>>, GetUserChatsQueryHandler>();
             services.AddScoped<IRequestHandler<GetUsersListQuery, IEnumerable<UserInfoDto>>, GetUsersListQueryHandler>();
             services.AddScoped<IRequestHandler<GetUserMessagesQuery, IEnumerable<MessageDto>>, GetUserMessagesQueryHandler>();
+            services.AddScoped<IRequestHandler<GetUserProfileQuery, UserProfileDto>, GetUserProfileQueryHandler>();
         }
 
         public static void AddHelpers(this IServiceCollection services)
