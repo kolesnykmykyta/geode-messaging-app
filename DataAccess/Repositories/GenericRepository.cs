@@ -176,9 +176,19 @@ namespace DataAccess.Repositories
         private void UpdateWithObjectId(object id, TEntity entity)
         {
             TEntity? entityToUpdate = _context.Set<TEntity>().Find(id);
-            if (entity != null)
+            if (entity != null && entityToUpdate != null)
             {
-                _context.Entry(entityToUpdate).CurrentValues.SetValues(entity);
+                PropertyInfo[] properties = typeof(TEntity).GetProperties();
+
+                foreach (PropertyInfo property in properties)
+                {
+                    var newValue = property.GetValue(entity);
+                    if (newValue != null)
+                    {
+                        property.SetValue(entityToUpdate, newValue);
+                    }
+                }
+
                 _context.Entry(entityToUpdate).State = EntityState.Modified;
             }
         }
