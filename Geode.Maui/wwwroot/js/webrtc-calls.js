@@ -186,8 +186,13 @@ function stopMediaTracks() {
 
 // Local media settings
 function changeAudioStatus() {
-    isAudio = !isAudio
-    localStream.getAudioTracks()[0].enabled = isAudio
+    if (localStream) {
+        let localAudio = localStream.getAudioTracks()[0]
+        if (localAudio) {
+            isAudio = !isAudio
+            localAudio.enabled = isAudio
+        }
+    }
 }
 
 function getAudioStatus() {
@@ -195,8 +200,13 @@ function getAudioStatus() {
 }
 
 function changeVideoStatus() {
-    isVideo = !isVideo
-    localStream.getVideoTracks()[0].enabled = isVideo
+    if (localStream) {
+        let localVideo = localStream.getVideoTracks()[0]
+        if (localVideo) {
+            isVideo = !isVideo
+            localVideo.enabled = isVideo
+        }
+    }
 }
 
 function getVideoStatus() {
