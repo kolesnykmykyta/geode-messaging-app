@@ -21,7 +21,7 @@ namespace Application.Utils.Automapper
             CreateMap<ChangeChatNameCommand, Chat>().ReverseMap();
             CreateMap<ChangeChatNameCommand, ChatDto>().ReverseMap();
             CreateMap<SendMessageCommand, Message>().ReverseMap();
-            CreateMap<UpdateUserDataCommand, UpdatedUserDataDto>().ReverseMap();
+            CreateMap<UpdateUserDataCommand, UserProfileDto>().ReverseMap();
             CreateMap<UpdateUserDataCommand, User>().ReverseMap();
 
             // Entities to Dtos

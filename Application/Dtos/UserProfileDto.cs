@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Application.Dtos
 {
-    public class UpdatedUserDataDto
+    public class UserProfileDto
     {
         [JsonPropertyName("userName")]
         public string? UserName { get; set; }

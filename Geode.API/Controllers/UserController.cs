@@ -57,7 +57,7 @@ namespace Geode.API.Controllers
 
         [Authorize]
         [HttpPut]
-        public async Task<IActionResult> UpdateUserData(UpdatedUserDataDto dto)
+        public async Task<IActionResult> UpdateUserData(UserProfileDto dto)
         {
             UpdateUserDataCommand command = _mapper.Map<UpdateUserDataCommand>(dto);
             command.Id = _userHelper.ExtractIdFromUser(User);
