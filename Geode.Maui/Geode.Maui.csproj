@@ -69,6 +69,7 @@
       <Content Remove="Components\Pages\GroupCall.razor" />
       <Content Remove="Components\Pages\PrivateCall.razor" />
       <Content Remove="Components\Pages\UserChats.razor" />
+      <Content Remove="Components\Pages\UserProfile.razor" />
       <Content Remove="Components\Pages\UsersList.razor" />
     </ItemGroup>
 
@@ -99,6 +100,7 @@
       <_ContentIncludedByDefault Remove="Components\Pages\Login.razor" />
       <_ContentIncludedByDefault Remove="Components\Pages\PrivateCall.razor" />
       <_ContentIncludedByDefault Remove="Components\Pages\UserChats.razor" />
+      <_ContentIncludedByDefault Remove="Components\Pages\UserProfile.razor" />
       <_ContentIncludedByDefault Remove="Components\Pages\UsersList.razor" />
     </ItemGroup>
 
@@ -108,6 +110,7 @@
       <None Include="Components\Pages\Login.razor" />
       <None Include="Components\Pages\PrivateCall.razor" />
       <None Include="Components\Pages\UserChats.razor" />
+      <None Include="Components\Pages\UserProfile.razor" />
       <None Include="Components\Pages\UsersList.razor" />
     </ItemGroup>
 
@@ -133,6 +136,10 @@
 
     <ItemGroup>
       <UpToDateCheckInput Remove="Components\Pages\GroupCall.razor" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <UpToDateCheckInput Remove="Components\Pages\UserProfile.razor" />
     </ItemGroup>
 
 </Project>
