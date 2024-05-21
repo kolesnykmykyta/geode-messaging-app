@@ -26,11 +26,12 @@ namespace DataAccess.Repositories
 
         public void Delete(int id)
         {
-            TEntity? entityToDelete = _context.Set<TEntity>().Find(id);
-            if (entityToDelete != null)
-            {
-                _context.Set<TEntity>().Remove(entityToDelete);
-            }
+            DeleteWithObjectId(id);
+        }
+
+        public void Delete(string id)
+        {
+            DeleteWithObjectId(id);
         }
 
         public IQueryable<TEntity> GetList
@@ -85,7 +86,12 @@ namespace DataAccess.Repositories
 
         public TEntity? GetById(int id)
         {
-            return _context.Set<TEntity>().Find(id);
+            return GetByObjectId(id);
+        }
+
+        public TEntity? GetById(string id)
+        {
+            return GetByObjectId(id);
         }
 
         public void Insert(TEntity entity)
@@ -95,12 +101,12 @@ namespace DataAccess.Repositories
 
         public void Update(int id, TEntity entity)
         {
-            TEntity? entityToUpdate = _context.Set<TEntity>().Find(id);
-            if (entity != null)
-            {
-                _context.Entry(entityToUpdate).CurrentValues.SetValues(entity);
-                _context.Entry(entityToUpdate).State = EntityState.Modified;
-            }
+            UpdateWithObjectId(id, entity);
+        }
+
+        public void Update(string id, TEntity entity)
+        {
+            UpdateWithObjectId(id, entity);
         }
 
         private Expression<Func<TEntity, bool>> SpecificContainsExpression(PropertyInfo property, string searchParam)
@@ -160,6 +166,30 @@ namespace DataAccess.Repositories
             }
 
             return resultEntity;
+        }
+
+        private TEntity? GetByObjectId(object id)
+        {
+            return _context.Set<TEntity>().Find(id);
+        }
+
+        private void UpdateWithObjectId(object id, TEntity entity)
+        {
+            TEntity? entityToUpdate = _context.Set<TEntity>().Find(id);
+            if (entity != null)
+            {
+                _context.Entry(entityToUpdate).CurrentValues.SetValues(entity);
+                _context.Entry(entityToUpdate).State = EntityState.Modified;
+            }
+        }
+
+        private void DeleteWithObjectId(object id)
+        {
+            TEntity? entityToDelete = _context.Set<TEntity>().Find(id);
+            if (entityToDelete != null)
+            {
+                _context.Set<TEntity>().Remove(entityToDelete);
+            }
         }
     }
 }

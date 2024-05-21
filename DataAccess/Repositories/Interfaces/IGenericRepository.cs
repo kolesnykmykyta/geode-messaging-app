@@ -18,8 +18,11 @@ namespace DataAccess.Repositories.Interfaces
             IEnumerable<string>? selectProps = null);
 
         public TEntity? GetById(int id);
+        public TEntity? GetById(string id);
         public void Insert(TEntity entity);
         public void Update(int id, TEntity entity);
+        public void Update(string id, TEntity entity);
         public void Delete(int id);
+        public void Delete(string id);
     }
 }
