@@ -31,8 +31,10 @@ namespace Geode.API
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
+            string? dbConnectionString = builder.Configuration
+                .GetConnectionString(builder.Environment.IsDevelopment() ? "Development" : "Default");
             builder.Services.AddDbContext<DatabaseContext>(options =>
-                options.UseSqlServer(builder.Configuration.GetConnectionString("Default")));
+                options.UseSqlServer(dbConnectionString));
             builder.Services.AddAuthorization();
 
             builder.Services.AddIdentity<User, IdentityRole>(options =>
