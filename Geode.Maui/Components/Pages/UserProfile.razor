@@ -6,28 +6,34 @@
 <div>
     <h4>Profile info</h4>
     <div class="justify-content-center">
-    <EditForm Model="@profileData" OnSubmit="ChangeProfileDataAsync" FormName="profileData" class="form-group w-50" style="margin:auto">
-        <div class="mt-2">
-            <label for="username">Username</label>
-            <InputText id="username" @bind-Value="@profileData.UserName" class="form-control" required></InputText>
-        </div>
-        <div class="mt-2">
-            <label for="phone">Phone number</label>
-            <InputText id="phone" @bind-Value="@profileData.PhoneNumber" class="form-control" required></InputText>
-        </div>
-        <div class="d-flex flex-row-reverse">
-            <button type="submit" class="btn btn-primary mt-4">Submit</button>
-        </div>
-    </EditForm>
-    <p>@Message</p>
-</div>
+        <EditForm Model="@profileData" OnSubmit="ChangeProfileDataAsync" FormName="profileData" class="form-group w-50" style="margin:auto">
+            <div class="mt-2">
+                <label for="username">Username</label>
+                <InputText id="username" @bind-Value="@profileData.UserName" class="form-control" required></InputText>
+            </div>
+            <div class="mt-2">
+                <label for="phone">Phone number</label>
+                <InputText id="phone" @bind-Value="@profileData.PhoneNumber" class="form-control" required></InputText>
+            </div>
+            <div class="d-flex flex-row-reverse">
+                <button type="submit" class="btn btn-primary mt-4">Submit</button>
+            </div>
+        </EditForm>
+        <p>@InfoMessage</p>
+    </div>
 </div>
 <div>
-
+    <h4>Profile picture</h4>
+    <div>
+        <InputFile OnChange="HandlePictureChange">Profile picture</InputFile>
+        <button @onclick="UpdateProfilePicture" class="btn btn-primary mt-4">Update</button>
+    </div>
 </div>
 @code {
     private UserProfileDto profileData { get; set; } = new();
-    private string? Message { get; set; }
+    private string? InfoMessage { get; set; }
+
+    private IBrowserFile? profilePicture { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
@@ -36,9 +42,22 @@
 
     private async Task ChangeProfileDataAsync(EditContext context)
     {
-        Message = "Updating your profile...";
+        InfoMessage = "Updating your profile...";
         UserProfileDto contextDto = (UserProfileDto)context.Model;
         bool result = await usersService.UpdateUserProfileAsync(contextDto);
-        Message = result ? "Successfully updated!" : "Profile update had failed.";
+        InfoMessage = result ? "Successfully updated!" : "Profile update has failed.";
+    }
+
+    private void HandlePictureChange(InputFileChangeEventArgs args)
+    {
+        profilePicture = args.File;
+    }
+
+    private async Task UpdateProfilePicture()
+    {
+        if (profilePicture != null)
+        {
+            bool result = await usersService.UpdateProfilePictureAsync(profilePicture);        
+        }
     }
 }

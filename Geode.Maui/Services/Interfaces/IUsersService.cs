@@ -1,9 +1,5 @@
 ﻿using Application.Dtos;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Microsoft.AspNetCore.Components.Forms;
 
 namespace Geode.Maui.Services.Interfaces
 {
@@ -14,5 +10,7 @@ namespace Geode.Maui.Services.Interfaces
         Task<UserProfileDto?> GetUserProfileAsync();
 
         Task<bool> UpdateUserProfileAsync(UserProfileDto dto);
+
+        Task<bool> UpdateProfilePictureAsync(IBrowserFile picture);
     }
 }

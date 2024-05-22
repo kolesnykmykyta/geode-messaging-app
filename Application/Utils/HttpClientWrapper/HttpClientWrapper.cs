@@ -1,4 +1,6 @@
-﻿using Azure.Core;
+﻿using Azure;
+using Azure.Core;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -60,6 +62,14 @@ namespace Application.Utils.HttpClientWrapper
             StringContent requestContent = new StringContent(jsonContent, Encoding.UTF8, "application/json");
 
             HttpResponseMessage response = await httpClient.PutAsync($"{ApiBase}/{url}", requestContent);
+            return response;
+        }
+
+        public async Task<HttpResponseMessage> PostStreamAsync(string url, StreamContent? content = null, string? accessToken = null)
+        {
+            using HttpClient httpClient = CreateHttpClient(accessToken);
+
+            HttpResponseMessage response = await httpClient.PostAsync($"{ApiBase}/{url}", content);
             return response;
         }
 

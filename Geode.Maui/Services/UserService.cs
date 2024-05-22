@@ -3,9 +3,11 @@ using Application.Utils.HttpClientWrapper;
 using Auth.Dtos;
 using Blazored.LocalStorage;
 using Geode.Maui.Services.Interfaces;
+using Microsoft.AspNetCore.Components.Forms;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http.Headers;
 using System.Reflection;
 using System.Text;
 using System.Text.Json;
@@ -17,6 +19,7 @@ namespace Geode.Maui.Services
     {
         private const string AllUsersEndpoint = "user/all";
         private const string ProfileEndpoint = "user/profile";
+        private const string ProfilePictureEndpoint = "user/profile/picture";
 
         private readonly IHttpClientWrapper _httpClient;
         private readonly IServicesHelper _helper;
@@ -54,6 +57,18 @@ namespace Geode.Maui.Services
             {
                 return default;
             }
+        }
+
+        public async Task<bool> UpdateProfilePictureAsync(IBrowserFile picture)
+        {
+            MultipartFormDataContent content = new MultipartFormDataContent();
+            StreamContent pictureContent = new StreamContent(picture.OpenReadStream());
+            pictureContent.Headers.ContentType = new MediaTypeHeaderValue(picture.ContentType);
+            content.Add(pictureContent, "file", picture.Name);
+
+            HttpResponseMessage response = await _httpClient.PostStreamAsync(ProfilePictureEndpoint, content, await _helper.GetAccessTokenAsync());
+
+            return response.IsSuccessStatusCode;
         }
 
         public async Task<bool> UpdateUserProfileAsync(UserProfileDto dto)
