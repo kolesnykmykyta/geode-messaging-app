@@ -2,6 +2,8 @@ using Application.Utils.Automapper;
 using Auth.Services;
 using Auth.Services.Interfaces;
 using Azure.Storage.Blobs;
+using BlobStorageAccess.Services;
+using BlobStorageAccess.Services.Interfaces;
 using DataAccess.DbContext;
 using DataAccess.Entities;
 using DataAccess.UnitOfWork;
@@ -38,6 +40,7 @@ namespace Geode.API
                 options.UseSqlServer(dbConnectionString));
 
             builder.Services.AddSingleton(x => new BlobServiceClient(builder.Configuration.GetConnectionString("BlobStorage")));
+            builder.Services.AddScoped<IBlobStorageService, BlobStorageService>();
 
             builder.Services.AddAuthorization();
 

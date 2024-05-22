@@ -77,5 +77,21 @@ namespace Geode.API.Controllers
 
             return result != null ? Ok(result) : BadRequest();
         }
+
+        [Authorize]
+        [HttpPost("profile/picture")]
+        public async Task<IActionResult> UpdateUserProfilePicture(IFormFile picture)
+        {
+            using Stream pictureStream = picture.OpenReadStream();
+            ChangeUserPictureCommand command = new ChangeUserPictureCommand()
+            {
+                PictureStream = pictureStream,
+                UserId = _userHelper.ExtractIdFromUser(User),
+            };
+
+            await _mediator.Send(command);
+
+            return Ok();
+        }
     }
 }

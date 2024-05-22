@@ -20,7 +20,6 @@
   <ItemGroup>
     <ProjectReference Include="..\Application\Application.csproj" />
     <ProjectReference Include="..\Auth\Auth.csproj" />
-    <ProjectReference Include="..\BlobStorageAccess\BlobStorageAccess.csproj" />
     <ProjectReference Include="..\DataAccess\DataAccess.csproj" />
   </ItemGroup>
 
