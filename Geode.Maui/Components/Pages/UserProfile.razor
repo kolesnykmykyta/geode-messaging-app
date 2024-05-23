@@ -1,36 +1,51 @@
 ﻿@page "/profile"
 @inject IUsersService usersService
 
-<h3>Your profile</h3>
+<div class="container">
+    <div class="row">
+        <div class="col-lg-6 col-md-12">
+            <div class="profile-picture-container text-center">
+                <img src="@profileData.ProfilePictureUrl" class="img-fluid rounded-circle profile-picture" />
+            </div>
+        </div>
+        <div class="col-lg-6 col-md-12">
+            <div class="justify-content-center">
+                <h4>Profile info</h4>
+                <div>
+                    <EditForm Model="@profileData" OnSubmit="ChangeProfileDataAsync" FormName="profileData" class="form-group" style="margin:auto">
+                        <div class="mt-2">
+                            <label for="username">Username</label>
+                            <InputText id="username" @bind-Value="@profileData.UserName" class="form-control" required></InputText>
+                        </div>
+                        <div class="mt-2">
+                            <label for="phone">Phone number</label>
+                            <InputText id="phone" @bind-Value="@profileData.PhoneNumber" class="form-control" required></InputText>
+                        </div>
+                        <p>@InfoMessage</p>
+                        <div class="d-flex">
+                            <button type="submit" class="btn btn-primary mt-1">Update profile info</button>
+                        </div>
+                    </EditForm>
+                </div>
+            </div>
+            <div class="justify-content-center mt-4">
+                <h4>Profile picture</h4>
+                <div>
+                    <div>
+                        <InputFile accept=".jpg,.png,.jpeg" OnChange="HandlePictureChange" class="form-control">Profile picture</InputFile>
+                    </div>
+                    <div>
+                        <p>@ProfileMessage</p>
+                    </div>
+                    <div class="d-flex">
+                        <button @onclick="UpdateProfilePicture" class="btn btn-primary mt-1">Update profile picture</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
-<div>
-    <img src="@profileData.ProfilePictureUrl"/>
-    <h4>Profile info</h4>
-    <div class="justify-content-center">
-        <EditForm Model="@profileData" OnSubmit="ChangeProfileDataAsync" FormName="profileData" class="form-group w-50" style="margin:auto">
-            <div class="mt-2">
-                <label for="username">Username</label>
-                <InputText id="username" @bind-Value="@profileData.UserName" class="form-control" required></InputText>
-            </div>
-            <div class="mt-2">
-                <label for="phone">Phone number</label>
-                <InputText id="phone" @bind-Value="@profileData.PhoneNumber" class="form-control" required></InputText>
-            </div>
-            <div class="d-flex flex-row-reverse">
-                <button type="submit" class="btn btn-primary mt-4">Submit</button>
-            </div>
-        </EditForm>
-        <p>@InfoMessage</p>
-    </div>
-</div>
-<div>
-    <h4>Profile picture</h4>
-    <div>
-        <InputFile accept=".jpg,.png,.jpeg" OnChange="HandlePictureChange">Profile picture</InputFile>
-        <button @onclick="UpdateProfilePicture" class="btn btn-primary mt-4">Update</button>
-        <p>@ProfileMessage</p>
-    </div>
-</div>
 @code {
     private UserProfileDto profileData { get; set; } = new();
 
