@@ -85,6 +85,7 @@ namespace Geode.API.Controllers
             using Stream pictureStream = picture.OpenReadStream();
             ChangeUserPictureCommand command = new ChangeUserPictureCommand()
             {
+                OriginalName = picture.FileName,
                 PictureStream = pictureStream,
                 UserId = _userHelper.ExtractIdFromUser(User),
             };

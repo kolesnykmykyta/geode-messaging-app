@@ -16,7 +16,8 @@ namespace Application.Handlers.Users
 
         public async Task Handle(ChangeUserPictureCommand request, CancellationToken cancellationToken)
         {
-            await _blobStorage.UploadBlobAsync(request.PictureStream!, request.UserId);
+            string newFileName = $"{request.UserId!}{Path.GetExtension(request.OriginalName)}";
+            await _blobStorage.UploadBlobAsync(request.PictureStream!, newFileName);
         }
     }
 }
