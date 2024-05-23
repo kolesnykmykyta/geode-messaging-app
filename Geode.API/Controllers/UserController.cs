@@ -90,9 +90,9 @@ namespace Geode.API.Controllers
                 UserId = _userHelper.ExtractIdFromUser(User),
             };
 
-            await _mediator.Send(command);
+            ResponseBodyDto result = await _mediator.Send(command);
 
-            return Ok();
+            return result.IsSuccess ? Ok() : BadRequest(result);
         }
     }
 }

@@ -1,8 +1,9 @@
-﻿using MediatR;
+﻿using Application.Dtos;
+using MediatR;
 
 namespace Application.CqrsMessages.Users
 {
-    public class ChangeUserPictureCommand : IRequest
+    public class ChangeUserPictureCommand : IRequest<ResponseBodyDto>
     {
         public Stream? PictureStream { get; set; }
 
