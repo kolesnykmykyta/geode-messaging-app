@@ -15,18 +15,10 @@ namespace BlobStorageAccess.Services
             _containerClient = serviceClient.GetBlobContainerClient("geode");
         }
 
-        public async Task<string?> UploadBlobAsync(Stream blob, string blobName)
+        public async Task UploadBlobAsync(Stream blob, string blobName)
         {
             BlobClient blobClient = _containerClient.GetBlobClient(blobName);
-            try
-            {
-                await blobClient.UploadAsync(blob);
-                return GetUrlForBlob(blobName);
-            }
-            catch
-            {
-                return null;
-            }
+            await blobClient.UploadAsync(blob, overwrite: true);
         }
 
         private string GetUrlForBlob(string blobName)
