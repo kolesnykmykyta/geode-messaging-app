@@ -59,7 +59,7 @@ namespace Geode.Maui.Services
             }
         }
 
-        public async Task<bool> UpdateProfilePictureAsync(IBrowserFile picture)
+        public async Task<ResponseBodyDto> UpdateProfilePictureAsync(IBrowserFile picture)
         {
             MultipartFormDataContent content = new MultipartFormDataContent();
             StreamContent pictureContent = new StreamContent(picture.OpenReadStream());
@@ -68,13 +68,12 @@ namespace Geode.Maui.Services
 
             HttpResponseMessage response = await _httpClient.PostStreamAsync(ProfilePictureEndpoint, content, await _helper.GetAccessTokenAsync());
 
-            return response.IsSuccessStatusCode;
+            return (await _helper.DeserializeJsonAsync<ResponseBodyDto>(response))!;
         }
 
         public async Task<bool> UpdateUserProfileAsync(UserProfileDto dto)
         {
             HttpResponseMessage response = await _httpClient.PutAsync(ProfileEndpoint, dto, await _helper.GetAccessTokenAsync());
-            Console.WriteLine(response.StatusCode);
             return response.IsSuccessStatusCode;
         }
     }

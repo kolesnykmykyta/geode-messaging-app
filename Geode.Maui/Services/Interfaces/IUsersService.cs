@@ -11,6 +11,6 @@ namespace Geode.Maui.Services.Interfaces
 
         Task<bool> UpdateUserProfileAsync(UserProfileDto dto);
 
-        Task<bool> UpdateProfilePictureAsync(IBrowserFile picture);
+        Task<ResponseBodyDto> UpdateProfilePictureAsync(IBrowserFile picture);
     }
 }

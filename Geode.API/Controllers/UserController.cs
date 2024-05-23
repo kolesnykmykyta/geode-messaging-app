@@ -92,7 +92,7 @@ namespace Geode.API.Controllers
 
             ResponseBodyDto result = await _mediator.Send(command);
 
-            return result.IsSuccess ? Ok() : BadRequest(result);
+            return result.IsSuccess ? Ok(result) : BadRequest(result);
         }
     }
 }

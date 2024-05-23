@@ -27,11 +27,14 @@
     <div>
         <InputFile OnChange="HandlePictureChange">Profile picture</InputFile>
         <button @onclick="UpdateProfilePicture" class="btn btn-primary mt-4">Update</button>
+        <p>@ProfileMessage</p>
     </div>
 </div>
 @code {
     private UserProfileDto profileData { get; set; } = new();
+
     private string? InfoMessage { get; set; }
+    private string? ProfileMessage { get; set; }
 
     private IBrowserFile? profilePicture { get; set; }
 
@@ -57,7 +60,9 @@
     {
         if (profilePicture != null)
         {
-            bool result = await usersService.UpdateProfilePictureAsync(profilePicture);        
+            ProfileMessage = "Changing your profile picture...";
+            ResponseBodyDto result = await usersService.UpdateProfilePictureAsync(profilePicture);
+            ProfileMessage = result.IsSuccess ? "Successfully changed!" : result.Error;
         }
     }
 }

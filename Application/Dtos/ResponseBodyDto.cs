@@ -3,14 +3,17 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace Application.Dtos
 {
     public class ResponseBodyDto
     {
+        [JsonPropertyName("isSuccess")]
         public bool IsSuccess { get; set; }
 
+        [JsonPropertyName("error")]
         public string? Error { get; set; }
 
         public static ResponseBodyDto SuccessResponse()
