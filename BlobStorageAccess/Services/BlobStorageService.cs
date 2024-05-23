@@ -1,4 +1,5 @@
 ﻿using Azure.Storage.Blobs;
+using Azure.Storage.Blobs.Models;
 using BlobStorageAccess.Services.Interfaces;
 
 namespace BlobStorageAccess.Services
@@ -14,10 +15,23 @@ namespace BlobStorageAccess.Services
             _containerClient = serviceClient.GetBlobContainerClient("geode");
         }
 
-        public async Task UploadBlobAsync(Stream blob, string blobName)
+        public async Task<string?> UploadBlobAsync(Stream blob, string blobName)
         {
             BlobClient blobClient = _containerClient.GetBlobClient(blobName);
-            await blobClient.UploadAsync(blob);
+            try
+            {
+                await blobClient.UploadAsync(blob);
+                return GetUrlForBlob(blobName);
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
+        private string GetUrlForBlob(string blobName)
+        {
+            return $"https://{_serviceClient.AccountName}.blob.core.windows.net/{_containerClient.Name}/{blobName}";
         }
     }
 }
