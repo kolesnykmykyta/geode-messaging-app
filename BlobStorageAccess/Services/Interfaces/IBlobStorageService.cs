@@ -2,6 +2,6 @@
 {
     public interface IBlobStorageService
     {
-        Task UploadBlobAsync(Stream blob, string blobName);
+        Task<string> UploadBlobAsync(Stream blob, string blobName);
     }
 }
