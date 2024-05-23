@@ -17,6 +17,8 @@ namespace Geode.Maui.Services
 {
     internal class UserService : IUsersService
     {
+        private static List<string> AllowedExtensions = new List<string>() { ".png", ".jpeg", ".jpg" };
+
         private const string AllUsersEndpoint = "user/all";
         private const string ProfileEndpoint = "user/profile";
         private const string ProfilePictureEndpoint = "user/profile/picture";
@@ -61,14 +63,25 @@ namespace Geode.Maui.Services
 
         public async Task<ResponseBodyDto> UpdateProfilePictureAsync(IBrowserFile picture)
         {
-            MultipartFormDataContent content = new MultipartFormDataContent();
-            StreamContent pictureContent = new StreamContent(picture.OpenReadStream());
-            pictureContent.Headers.ContentType = new MediaTypeHeaderValue(picture.ContentType);
-            content.Add(pictureContent, "picture", picture.Name);
+            try
+            {
+                if (!AllowedExtensions.Contains(Path.GetExtension(picture.Name)))
+                {
+                    return ResponseBodyDto.FailureResponse("Only images are allowed");
+                }
 
-            HttpResponseMessage response = await _httpClient.PostStreamAsync(ProfilePictureEndpoint, content, await _helper.GetAccessTokenAsync());
+                MultipartFormDataContent content = new MultipartFormDataContent();
+                StreamContent pictureContent = new StreamContent(picture.OpenReadStream());
+                pictureContent.Headers.ContentType = new MediaTypeHeaderValue(picture.ContentType);
+                content.Add(pictureContent, "picture", picture.Name);
 
-            return (await _helper.DeserializeJsonAsync<ResponseBodyDto>(response))!;
+                HttpResponseMessage response = await _httpClient.PostStreamAsync(ProfilePictureEndpoint, content, await _helper.GetAccessTokenAsync());
+
+                return (await _helper.DeserializeJsonAsync<ResponseBodyDto>(response))!;
+            }
+            catch (Exception e){
+                return ResponseBodyDto.FailureResponse($"Error: {e.Message}");
+            }
         }
 
         public async Task<bool> UpdateUserProfileAsync(UserProfileDto dto)

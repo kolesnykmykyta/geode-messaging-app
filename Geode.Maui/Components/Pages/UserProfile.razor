@@ -25,7 +25,7 @@
 <div>
     <h4>Profile picture</h4>
     <div>
-        <InputFile OnChange="HandlePictureChange">Profile picture</InputFile>
+        <InputFile accept=".jpg,.png,.jpeg" OnChange="HandlePictureChange">Profile picture</InputFile>
         <button @onclick="UpdateProfilePicture" class="btn btn-primary mt-4">Update</button>
         <p>@ProfileMessage</p>
     </div>
