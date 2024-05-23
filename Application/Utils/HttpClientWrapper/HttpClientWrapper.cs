@@ -65,7 +65,7 @@ namespace Application.Utils.HttpClientWrapper
             return response;
         }
 
-        public async Task<HttpResponseMessage> PostStreamAsync(string url, StreamContent? content = null, string? accessToken = null)
+        public async Task<HttpResponseMessage> PostStreamAsync(string url, MultipartFormDataContent? content = null, string? accessToken = null)
         {
             using HttpClient httpClient = CreateHttpClient(accessToken);
 

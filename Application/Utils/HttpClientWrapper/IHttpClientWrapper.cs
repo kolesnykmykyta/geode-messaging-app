@@ -10,7 +10,7 @@ namespace Application.Utils.HttpClientWrapper
     {
         Task<HttpResponseMessage> PostAsync(string url, object? content = null, string? accessToken = null);
 
-        Task<HttpResponseMessage> PostStreamAsync(string url, StreamContent? content = null, string? accessToken = null);
+        Task<HttpResponseMessage> PostStreamAsync(string url, MultipartFormDataContent? content = null, string? accessToken = null);
 
         Task<HttpResponseMessage> PutAsync(string url, object? content = null, string? accessToken = null);
 

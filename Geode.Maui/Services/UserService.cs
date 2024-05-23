@@ -64,7 +64,7 @@ namespace Geode.Maui.Services
             MultipartFormDataContent content = new MultipartFormDataContent();
             StreamContent pictureContent = new StreamContent(picture.OpenReadStream());
             pictureContent.Headers.ContentType = new MediaTypeHeaderValue(picture.ContentType);
-            content.Add(pictureContent, "file", picture.Name);
+            content.Add(pictureContent, "picture", picture.Name);
 
             HttpResponseMessage response = await _httpClient.PostStreamAsync(ProfilePictureEndpoint, content, await _helper.GetAccessTokenAsync());
 
@@ -74,6 +74,7 @@ namespace Geode.Maui.Services
         public async Task<bool> UpdateUserProfileAsync(UserProfileDto dto)
         {
             HttpResponseMessage response = await _httpClient.PutAsync(ProfileEndpoint, dto, await _helper.GetAccessTokenAsync());
+            Console.WriteLine(response.StatusCode);
             return response.IsSuccessStatusCode;
         }
     }
