@@ -11,7 +11,7 @@ namespace Application.Handlers.Users
 {
     public class ChangeUserPictureCommandHandler : IRequestHandler<ChangeUserPictureCommand, ResponseBodyDto>
     {
-        private static List<string> AllowedExtensions = new List<string>(){ ".png", ".jpeg", ".jpg" };
+        private static List<string> AllowedExtensions = new List<string>() { ".png", ".jpeg", ".jpg" };
 
         private readonly IBlobStorageService _blobStorage;
         private readonly IUnitOfWork _unitOfWork;
@@ -33,7 +33,7 @@ namespace Application.Handlers.Users
             string newFileName = $"{request.UserId!}{Path.GetExtension(request.OriginalName)}";
             string newPictureUrl = await _blobStorage.UploadBlobAsync(request.PictureStream!, newFileName);
 
-            if (!string.IsNullOrEmpty(newPictureUrl))
+            try
             {
                 User userWithUpdatedPicture = new User()
                 {
@@ -43,6 +43,10 @@ namespace Application.Handlers.Users
 
                 _unitOfWork.GenericRepository<User>().Update(request.UserId!, userWithUpdatedPicture);
                 _unitOfWork.SaveChanges();
+            }
+            catch (Exception e)
+            {
+                return ResponseBodyDto.FailureResponse($"Error happened while changing picture URL: {e.Message}");
             }
 
             return ResponseBodyDto.SuccessResponse();
