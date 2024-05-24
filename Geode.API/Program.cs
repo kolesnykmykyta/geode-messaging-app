@@ -31,23 +31,21 @@ namespace Geode.API
             builder.Services.AddSignalR();
 
             builder.Services.AddControllers();
+
             builder.Services.AddEndpointsApiExplorer();
+
             builder.Services.AddSwaggerGen();
 
             string? dbConnectionString = builder.Configuration
                 .GetConnectionString(builder.Environment.IsDevelopment() ? "Development" : "Default");
-            builder.Services.AddDbContext<DatabaseContext>(options =>
-                options.UseSqlServer(dbConnectionString));
+            builder.Services.AddDbContext<DatabaseContext>(options => options.UseSqlServer(dbConnectionString));
 
             builder.Services.AddSingleton(x => new BlobServiceClient(builder.Configuration.GetConnectionString("BlobStorage")));
             builder.Services.AddScoped<IBlobStorageService, BlobStorageService>();
 
             builder.Services.AddAuthorization();
 
-            builder.Services.AddIdentity<User, IdentityRole>(options =>
-            {
-                options.User.RequireUniqueEmail = true;
-            })
+            builder.Services.AddIdentity<User, IdentityRole>(options => options.User.RequireUniqueEmail = true)
                 .AddEntityFrameworkStores<DatabaseContext>()
                 .AddDefaultTokenProviders();
 
@@ -97,6 +95,7 @@ namespace Geode.API
 
             app.MapControllers();
 
+            // SignalR hubs mapping
             app.MapHub<ChatHub>("/chathub");
             app.MapHub<WebRtcHub>("/webrtc");
 
