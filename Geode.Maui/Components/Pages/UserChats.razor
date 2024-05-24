@@ -47,7 +47,7 @@
             <CellTemplate>
                 <MudLink Href="@($"chats/{context.Item.Id}")">Go to chat</MudLink>
                 @if (context.Item.IsUserOwner){
-                    <MudLink Href="@($"chats/{context.Item.Id}/settings")"> Settings</MudLink>
+                    <MudLink Href="@($"chats/{context.Item.Id}/settings")" class="ml-2">Settings</MudLink>
                 }
             </CellTemplate>
         </TemplateColumn>

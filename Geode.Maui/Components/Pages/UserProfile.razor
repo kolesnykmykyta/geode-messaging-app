@@ -35,7 +35,7 @@
                         <InputFile accept=".jpg,.png,.jpeg" OnChange="HandlePictureChange" class="form-control">Profile picture</InputFile>
                     </div>
                     <div>
-                        <p>@ProfileMessage</p>
+                        <p>@PictureMessage</p>
                     </div>
                     <div class="d-flex">
                         <button @onclick="UpdateProfilePicture" class="btn btn-primary mt-1">Update profile picture</button>
@@ -50,13 +50,13 @@
     private UserProfileDto profileData { get; set; } = new();
 
     private string? InfoMessage { get; set; }
-    private string? ProfileMessage { get; set; }
+    private string? PictureMessage { get; set; }
 
     private IBrowserFile? profilePicture { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
-        profileData = await usersService.GetUserProfileAsync() ?? new();
+        await UpdateProfileInfo();
     }
 
     private async Task ChangeProfileDataAsync(EditContext context)
@@ -76,9 +76,23 @@
     {
         if (profilePicture != null)
         {
-            ProfileMessage = "Changing your profile picture...";
+            PictureMessage = "Changing your profile picture...";
+
             ResponseBodyDto result = await usersService.UpdateProfilePictureAsync(profilePicture);
-            ProfileMessage = result.IsSuccess ? "Successfully changed!" : result.Error;
+            if (result.IsSuccess){
+                await UpdateProfileInfo();
+                StateHasChanged();
+                PictureMessage = "Successfully changed!";
+            }
+            else{
+                PictureMessage = result.Error;
+            }
         }
+    }
+
+    private async Task UpdateProfileInfo()
+    {
+        profileData = await usersService.GetUserProfileAsync() ?? new();
+        profileData.ProfilePictureUrl += $"?v{DateTime.Now.Ticks}";
     }
 }

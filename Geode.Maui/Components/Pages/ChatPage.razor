@@ -2,10 +2,16 @@
 @inject IMessagesService messagesService
 @inject IChatHubService hubService
 
-<MudLink Href="@($"call/{ChatId}")">Call</MudLink>
+<MudLink Href="@($"call/{ChatId}")" class="btn btn-primary">Join call</MudLink>
 
-<InputText @bind-Value="@messageInput" class="form-control"></InputText>
-<MudButton OnClick="SendMessage" class="btn btn-primary">Send message</MudButton>
+<div class="d-flex gap-2 mt-3">
+    <div>
+        <InputText @bind-Value="@messageInput" class="form-control w-100"></InputText>
+    </div>
+    <div>
+        <MudButton OnClick="SendMessage" class="btn btn-primary w-100">Send message</MudButton>
+    </div>
+</div>
 
 @foreach (ChatMessageDto message in messages)
 {

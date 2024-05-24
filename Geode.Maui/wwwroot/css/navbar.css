@@ -1,0 +1,13 @@
+﻿.nav-container {
+    display: flex;
+    flex-direction: column;
+    height: 100%
+}
+
+.top-nav-part {
+    flex: 1;
+}
+
+.bottom-nav-part {
+    margin-top: auto;
+}
