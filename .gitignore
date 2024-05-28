@@ -3,6 +3,9 @@
 ##
 ## Get latest from https://github.com/github/gitignore/blob/main/VisualStudio.gitignore
 
+# Bicep deployment parameters
+Geode.Bicep/configs/deployparams.json
+
 # Deployment files
 Geode.API/Properties/ServiceDependencies/
 
