@@ -1,11 +1,17 @@
 param location string
 
+@secure()
+param adminName string
+
+@secure()
+param adminPassword string
+
 resource sqlServer 'Microsoft.Sql/servers@2023-08-01-preview' = {
-  name: 'geode-sql-server'
+  name: 'geode-db-server'
   location: location
   properties: {
-    administratorLogin: 'temp'
-    administratorLoginPassword: 'temp'
+    administratorLogin: adminName
+    administratorLoginPassword: adminPassword
   }
 }
 
@@ -33,3 +39,5 @@ resource sqlDB 'Microsoft.Sql/servers/databases@2023-08-01-preview' = {
     availabilityZone: 'NoPreference'
   }
 }
+
+output connectionString string = 'Server=tcp:${sqlServer.name}.database.windows.net,1433;Initial Catalog=${sqlDB.name};Persist Security Info=False;User ID=${sqlServer.properties.administratorLogin};Password=${adminPassword};MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;'

@@ -25,6 +25,10 @@
   <ItemGroup>
     <Content Include="azuredeploy.json" />
     <Content Include="azuredeploy.parameters.json" />
+    <None Include="BicepFiles\app-service-plan.bicep" />
+    <None Include="BicepFiles\database.bicep" />
+    <None Include="BicepFiles\key-vault.bicep" />
+    <None Include="BicepFiles\main.bicep" />
     <None Include="BicepFiles\storage.bicep" />
     <None Include="BicepFiles\web-app.bicep" />
     <None Include="Deployment.targets">

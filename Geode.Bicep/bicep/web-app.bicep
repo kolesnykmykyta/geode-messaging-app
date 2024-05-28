@@ -4,7 +4,7 @@ param appServicePlanId string
 param keyVaultUrl string
 
 resource webApplication 'Microsoft.Web/sites@2023-12-01' = {
-  name: 'geode-api'
+  name: 'geode-web-app'
   location: location
   tags: {
     'hidden-related:${resourceGroup().id}/providers/Microsoft.Web/serverfarms/appServicePlan': 'Resource'

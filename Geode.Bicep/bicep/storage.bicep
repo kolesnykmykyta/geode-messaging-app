@@ -1,7 +1,7 @@
 ﻿param location string
 
 resource storageaccount 'Microsoft.Storage/storageAccounts@2023-04-01' = {
-  name: 'geode-storage-account'
+  name: 'geodestorageaccount'
   location: location
   kind: 'StorageV2'
   sku: {

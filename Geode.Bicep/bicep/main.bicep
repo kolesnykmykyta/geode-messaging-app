@@ -1,4 +1,12 @@
 ﻿param location string = deployment().location
+
+@secure()
+param dbAdminSettings object
+@secure()
+param jwtSettings object
+@secure()
+param objectId string
+
 targetScope = 'subscription'
 
 resource resourceGroup 'Microsoft.Resources/resourceGroups@2024-03-01' = {
@@ -8,9 +16,19 @@ resource resourceGroup 'Microsoft.Resources/resourceGroups@2024-03-01' = {
 
 module storageAccount './storage.bicep' = {
   scope: resourceGroup
-  name: 'geode-storage-account'
+  name: 'geodestorageaccount'
   params: {
     location: location
+  }
+}
+
+module database './database.bicep' = {
+  scope: resourceGroup
+  name: 'geode-database'
+  params: {
+    location: location
+    adminName: dbAdminSettings.adminName
+    adminPassword: dbAdminSettings.adminPassword
   }
 }
 
@@ -19,6 +37,9 @@ module keyVault './key-vault.bicep' = {
   name: 'geode-key-vault'
   params: {
     location: location
+    connectionString: database.outputs.connectionString
+    jwtSettings: jwtSettings
+    objectId: objectId
   }
 }
 
@@ -32,18 +53,10 @@ module appServicePlan './app-service-plan.bicep' = {
 
 module appService './web-app.bicep' = {
   scope: resourceGroup
-  name: 'geode-api'
+  name: 'geode-web-app'
   params: {
     location: location
     appServicePlanId: appServicePlan.outputs.appServicePlanId
     keyVaultUrl: keyVault.outputs.keyVaultUrl
-  }
-}
-
-module database './database.bicep' = {
-  scope: resourceGroup
-  name: 'geode-database'
-  params: {
-    location: location
   }
 }
