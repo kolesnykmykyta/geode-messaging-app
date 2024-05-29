@@ -19,6 +19,13 @@ resource webApplication 'Microsoft.Web/sites@2023-12-01' = {
   properties: {
     serverFarmId: appServicePlanId
     siteConfig:{
+      ftpsState: 'AllAllowed'
+      cors:{
+        allowedOrigins: [
+          'https://0.0.0.0'
+        ]
+        supportCredentials: true
+      }
       appSettings: [
         {
           name: 'KeyVaultConfig__KeyVaultUrl'
