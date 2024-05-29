@@ -2,7 +2,9 @@ param location string
 param objectId string
 
 @secure()
-param connectionString string
+param dbConnectionString string
+@secure()
+param storageConnectionString string
 @secure()
 param jwtSettings object
 
@@ -37,7 +39,15 @@ resource dbConnectionSecret 'Microsoft.KeyVault/vaults/secrets@2019-09-01' = {
   parent: keyVault
   name: 'ConnectionStrings--Default'
   properties: {
-    value: connectionString
+    value: dbConnectionString
+  }
+}
+
+resource blobConnectionSecret 'Microsoft.KeyVault/vaults/secrets@2019-09-01' = {
+  parent: keyVault
+  name: 'ConnectionStrings--BlobStorage'
+  properties: {
+    value: storageConnectionString
   }
 }
 

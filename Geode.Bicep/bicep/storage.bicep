@@ -1,6 +1,6 @@
 ﻿param location string
 
-resource storageaccount 'Microsoft.Storage/storageAccounts@2023-04-01' = {
+resource storageAccount 'Microsoft.Storage/storageAccounts@2023-04-01' = {
   name: 'geodestorageaccount'
   location: location
   kind: 'StorageV2'
@@ -16,7 +16,7 @@ resource storageaccount 'Microsoft.Storage/storageAccounts@2023-04-01' = {
 
 resource blobservice 'Microsoft.Storage/storageAccounts/blobServices@2023-04-01' = {
   name: 'default'
-  parent: storageaccount
+  parent: storageAccount
 }
 
 resource container 'Microsoft.Storage/storageAccounts/blobServices/containers@2023-04-01' = {
@@ -26,3 +26,5 @@ resource container 'Microsoft.Storage/storageAccounts/blobServices/containers@20
     publicAccess: 'Blob'
   }
 }
+
+output connectionString string = 'DefaultEndpointsProtocol=https;AccountName=${storageAccount.name};AccountKey=${storageAccount.listKeys().keys[0].value};EndpointSuffix=core.windows.net'

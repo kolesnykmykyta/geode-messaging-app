@@ -37,7 +37,8 @@ module keyVault './key-vault.bicep' = {
   name: 'geode-key-vault'
   params: {
     location: location
-    connectionString: database.outputs.connectionString
+    dbConnectionString: database.outputs.connectionString
+    storageConnectionString: storageAccount.outputs.connectionString
     jwtSettings: jwtSettings
     objectId: objectId
   }
