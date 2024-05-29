@@ -7,6 +7,8 @@ param jwtSettings object
 @secure()
 param objectId string
 @secure()
+param clientId string
+@secure()
 param clientSecret string
 
 targetScope = 'subscription'
@@ -62,7 +64,7 @@ module appService 'web-app.bicep' = {
     appServicePlanId: appServicePlan.outputs.appServicePlanId
     keyVaultUrl: keyVault.outputs.keyVaultUrl
     tenantId: subscription().tenantId
-    clientId: objectId
+    clientId: clientId
     clientSecret: clientSecret
   }
 }
