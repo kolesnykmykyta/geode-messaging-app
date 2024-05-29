@@ -6,6 +6,8 @@ param dbAdminSettings object
 param jwtSettings object
 @secure()
 param objectId string
+@secure()
+param clientSecret string
 
 targetScope = 'subscription'
 
@@ -14,7 +16,7 @@ resource resourceGroup 'Microsoft.Resources/resourceGroups@2024-03-01' = {
   location: location
 }
 
-module storageAccount './storage.bicep' = {
+module storageAccount 'storage.bicep' = {
   scope: resourceGroup
   name: 'geodestorageaccount'
   params: {
@@ -22,7 +24,7 @@ module storageAccount './storage.bicep' = {
   }
 }
 
-module database './database.bicep' = {
+module database 'database.bicep' = {
   scope: resourceGroup
   name: 'geode-database'
   params: {
@@ -32,7 +34,7 @@ module database './database.bicep' = {
   }
 }
 
-module keyVault './key-vault.bicep' = {
+module keyVault 'key-vault.bicep' = {
   scope: resourceGroup
   name: 'geode-key-vault'
   params: {
@@ -44,7 +46,7 @@ module keyVault './key-vault.bicep' = {
   }
 }
 
-module appServicePlan './app-service-plan.bicep' = {
+module appServicePlan 'app-service-plan.bicep' = {
   scope: resourceGroup
   name: 'geode-app-plan'
   params: {
@@ -52,12 +54,15 @@ module appServicePlan './app-service-plan.bicep' = {
   }
 }
 
-module appService './web-app.bicep' = {
+module appService 'web-app.bicep' = {
   scope: resourceGroup
   name: 'geode-web-app'
   params: {
     location: location
     appServicePlanId: appServicePlan.outputs.appServicePlanId
     keyVaultUrl: keyVault.outputs.keyVaultUrl
+    tenantId: subscription().tenantId
+    clientId: objectId
+    clientSecret: clientSecret
   }
 }

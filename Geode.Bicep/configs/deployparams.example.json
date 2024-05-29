@@ -17,6 +17,9 @@
     },
     "objectId": {
       "value": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+    },
+    "clientSecret": {
+      "value": "client-secret"
     }
   }
 }
