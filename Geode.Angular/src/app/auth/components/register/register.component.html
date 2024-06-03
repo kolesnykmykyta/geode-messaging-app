@@ -1,0 +1,15 @@
+<div class="container">
+    <form action="" class="form" (ngSubmit)="registerSubmit()">
+        <input name="email" required [(ngModel)]="credentials.email" placeholder="Email" type="email" />
+        <input name="username" required [(ngModel)]="credentials.username" placeholder="Username" type="text" />
+        <input name="password" required [(ngModel)]="credentials.password" placeholder="Password" type="password">
+        <div class="buttons">
+            <button type="submit">
+              Sign In
+            </button>
+          </div>
+    </form>
+    <div *ngIf="registerResult.isSuccess === false">
+        <p>{{registerResult.errors}}</p>
+    </div>
+</div>
