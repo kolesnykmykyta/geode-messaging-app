@@ -11,6 +11,6 @@ export class AuthService {
   }
 
   register(dto: IRegisterDto){
-    return this.http.post<IRegisterResultDto>("https://geode-api.azurewebsites.net/api/user/register", dto)
+    return this.http.post<IRegisterResultDto>("https://geode-web-app.azurewebsites.net/api/user/register", dto)
   }
 }

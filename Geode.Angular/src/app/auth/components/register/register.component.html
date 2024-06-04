@@ -1,5 +1,5 @@
 <div class="container">
-    <form action="" class="form" (ngSubmit)="registerSubmit()">
+    <form #regForm="ngForm" ngNativeValidate class="form" (ngSubmit)="registerSubmit()">
         <input name="email" required [(ngModel)]="credentials.email" placeholder="Email" type="email" />
         <input name="username" required [(ngModel)]="credentials.username" placeholder="Username" type="text" />
         <input name="password" required [(ngModel)]="credentials.password" placeholder="Password" type="password">
@@ -11,5 +11,8 @@
     </form>
     <div *ngIf="registerResult.isSuccess === false">
         <p>{{registerResult.errors}}</p>
+    </div>
+    <div *ngIf="registerResult.isSuccess === true">
+      <p>Successfully registered!</p>
     </div>
 </div>

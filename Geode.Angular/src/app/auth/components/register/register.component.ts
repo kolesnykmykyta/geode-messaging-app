@@ -25,10 +25,12 @@ export class RegisterComponent {
 
   registerSubmit(){
     this.registerResult.isSuccess = undefined
-    this.authService.register(this.credentials).subscribe(
-      (result: IRegisterResultDto) => {
-        this.registerResult = result
-      }
-    )
+    this.authService.register(this.credentials).subscribe({
+      next: () => {
+        console.log("Successfully registered");
+        this.registerResult.isSuccess = true;
+      },
+      error: (err) => this.registerResult = err.error
+    })
   }
 }
