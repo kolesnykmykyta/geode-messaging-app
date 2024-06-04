@@ -27,7 +27,7 @@ export class RegisterComponent {
         this.registerResult.isSuccess = true;
       },
       error: (err) => {
-        if (err != null){
+        if (err?.error != null){
           this.registerResult = err.error
         }
         else{

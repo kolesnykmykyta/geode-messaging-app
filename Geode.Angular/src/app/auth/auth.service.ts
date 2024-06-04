@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, signal } from '@angular/core';
 import { IRegisterResultDto } from './models/register-result.dto';
 import { IRegisterDto } from './models/register.dto';
 import { ILoginDto } from './models/login.dto';
@@ -11,7 +11,19 @@ import { tap } from 'rxjs/operators';
   providedIn: 'root'
 })
 export class AuthService {
+  isUserAuthorizedSignal = signal<boolean>(false)
+
   constructor(private http: HttpClient) {
+  }
+
+  updateUserAuthorizationInfo(){
+    const sessionAuthInfo = sessionStorage.getItem("isAuthorized")
+    if (sessionAuthInfo != null){
+      this.isUserAuthorizedSignal.set(JSON.parse(sessionAuthInfo))
+    }
+    else{
+      this.isUserAuthorizedSignal.set(false)
+    }
   }
 
   register(dto: IRegisterDto){
@@ -23,9 +35,9 @@ export class AuthService {
       .pipe(
         tap(response => {
           if (response != null){
-            console.log(response);
             localStorage.setItem("accessToken", response.accessToken);
             localStorage.setItem("refreshToken", response.refreshToken);
+            this.updateAuthState(true)
           }
         })
       )
@@ -34,5 +46,11 @@ export class AuthService {
   logout(){
     localStorage.removeItem("accessToken");
     localStorage.removeItem("refreshToken");
+    this.updateAuthState(false)
+  }
+
+  private updateAuthState(newState: boolean){
+    this.isUserAuthorizedSignal.set(newState)
+    sessionStorage.setItem("isAuthorized", newState.toString())
   }
 }

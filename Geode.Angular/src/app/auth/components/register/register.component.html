@@ -16,12 +16,14 @@
         </button>
       </div>
     </form>
-    <div *ngIf="registerResult.isSuccess === false">
-      <div *ngFor="let error of registerResult.errors">
-        {{error}}
-      </div>
+</div>
+<div>
+  <div *ngIf="registerResult.isSuccess === false">
+    <div *ngFor="let error of registerResult.errors" class="text-center">
+      {{error}}
     </div>
-    <div *ngIf="registerResult.isSuccess === true">
-      <p>Successfully registered!</p>
-    </div>
+  </div>
+  <div *ngIf="registerResult.isSuccess === true" class="text-center">
+    <p>Successfully registered!</p>
+  </div>
 </div>

@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { AuthService } from '../../auth/auth.service';
 
 @Component({
   selector: 'gd-navbar',
@@ -6,5 +7,13 @@ import { Component } from '@angular/core';
   styleUrl: './navbar.component.css'
 })
 export class NavbarComponent {
+  authService: AuthService
 
+  constructor(authService: AuthService) {
+    this.authService = authService
+  }
+
+  logout(){
+    this.authService.logout()
+  }
 }
