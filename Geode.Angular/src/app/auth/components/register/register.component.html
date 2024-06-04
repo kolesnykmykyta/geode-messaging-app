@@ -1,16 +1,25 @@
-<div class="container">
-    <form #regForm="ngForm" ngNativeValidate class="form" (ngSubmit)="registerSubmit()">
-        <input name="email" required [(ngModel)]="credentials.email" placeholder="Email" type="email" />
-        <input name="username" required [(ngModel)]="credentials.username" placeholder="Username" type="text" />
-        <input name="password" required [(ngModel)]="credentials.password" placeholder="Password" type="password">
-        <div class="buttons">
-            <button type="submit">
-              Sign In
-            </button>
-          </div>
+<h1>Register</h1>
+<div class="d-flex container justify-content-center">
+    <form #regForm="ngForm" ngNativeValidate class="form w-50" (ngSubmit)="registerSubmit()">
+      <div class="mt-2">
+        <input name="email" required [(ngModel)]="credentials.email" class="form-control" placeholder="Email" type="email"/>
+      </div>
+      <div class="mt-2">
+        <input name="username" required [(ngModel)]="credentials.username" class="form-control" placeholder="Username" type="text" />
+      </div>
+      <div class="mt-2">
+        <input name="password" required [(ngModel)]="credentials.password" class="form-control" placeholder="Password" type="password">        
+      </div>
+      <div class="buttons mt-2">
+        <button type="submit" class="btn btn-primary">
+          Sign In
+        </button>
+      </div>
     </form>
     <div *ngIf="registerResult.isSuccess === false">
-        <p>{{registerResult.errors}}</p>
+      <div *ngFor="let error of registerResult.errors">
+        {{error}}
+      </div>
     </div>
     <div *ngIf="registerResult.isSuccess === true">
       <p>Successfully registered!</p>

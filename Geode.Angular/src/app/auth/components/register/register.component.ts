@@ -26,7 +26,15 @@ export class RegisterComponent {
         console.log("Successfully registered");
         this.registerResult.isSuccess = true;
       },
-      error: (err) => this.registerResult = err.error
+      error: (err) => {
+        if (err != null){
+          this.registerResult = err.error
+        }
+        else{
+          this.registerResult.isSuccess = false
+          this.registerResult.errors = ['Unknown error occured']
+        }
+      }
     })
   }
 }
