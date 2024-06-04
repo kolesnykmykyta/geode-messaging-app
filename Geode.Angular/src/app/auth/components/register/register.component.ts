@@ -1,6 +1,4 @@
 import { Component } from '@angular/core';
-import { FormsModule } from '@angular/forms';
-import { CommonModule } from '@angular/common';
 
 import { IRegisterDto } from '../../models/register.dto';
 import { IRegisterResultDto } from '../../models/register-result.dto';
@@ -8,8 +6,6 @@ import { AuthService } from '../../auth.service';
 
 @Component({
   selector: 'gd-register',
-  standalone: true,
-  imports: [FormsModule, CommonModule],
   templateUrl: './register.component.html',
   styleUrl: './register.component.css'
 })

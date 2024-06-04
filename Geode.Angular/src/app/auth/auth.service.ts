@@ -1,4 +1,4 @@
-import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { IRegisterResultDto } from './models/register-result.dto';
 import { IRegisterDto } from './models/register.dto';
