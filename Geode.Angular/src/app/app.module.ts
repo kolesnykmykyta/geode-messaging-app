@@ -10,12 +10,14 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { RegisterComponent } from './auth/components/register/register.component';
 import { NavbarComponent } from './shared/navbar/navbar.component';
+import { LoginComponent } from './auth/components/login/login.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     RegisterComponent,
     NavbarComponent,
+    LoginComponent,
   ],
   imports: [
     CommonModule,
@@ -23,7 +25,7 @@ import { NavbarComponent } from './shared/navbar/navbar.component';
     FormsModule,
     HttpClientModule,
     BrowserModule,
-    AppRoutingModule
+    AppRoutingModule,
   ],
   bootstrap: [AppComponent]
 })
