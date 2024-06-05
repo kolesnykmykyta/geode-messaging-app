@@ -56,7 +56,7 @@ module appServicePlan 'app-service-plan.bicep' = {
   }
 }
 
-module appService 'web-app.bicep' = {
+module appService 'web-api.bicep' = {
   scope: resourceGroup
   name: 'geode-web-app'
   params: {
