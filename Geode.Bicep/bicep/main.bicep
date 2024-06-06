@@ -56,12 +56,22 @@ module appServicePlan 'app-service-plan.bicep' = {
   }
 }
 
+module angularApp 'angular.bicep' = {
+  scope: resourceGroup
+  name: 'geode-ng'
+  params: {
+    location: location
+    appServicePlanId: appServicePlan.outputs.appServicePlanId
+  }
+}
+
 module appService 'web-api.bicep' = {
   scope: resourceGroup
   name: 'geode-web-app'
   params: {
     location: location
     appServicePlanId: appServicePlan.outputs.appServicePlanId
+    angularAppUrl: angularApp.outputs.url
     keyVaultUrl: keyVault.outputs.keyVaultUrl
     tenantId: subscription().tenantId
     clientId: clientId

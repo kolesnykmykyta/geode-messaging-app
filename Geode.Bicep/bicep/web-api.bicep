@@ -1,5 +1,6 @@
 param location string
 param appServicePlanId string
+param angularAppUrl string
 
 @secure()
 param keyVaultUrl string
@@ -23,6 +24,8 @@ resource webApplication 'Microsoft.Web/sites@2023-12-01' = {
       cors:{
         allowedOrigins: [
           'https://0.0.0.0'
+          'http://localhost:4200:'
+          angularAppUrl
         ]
         supportCredentials: true
       }

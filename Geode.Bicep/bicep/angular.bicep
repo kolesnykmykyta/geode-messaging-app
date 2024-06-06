@@ -14,3 +14,5 @@ resource webApplication 'Microsoft.Web/sites@2021-01-15' = {
     }
   }
 }
+
+output url string = webApplication.properties.defaultHostName
