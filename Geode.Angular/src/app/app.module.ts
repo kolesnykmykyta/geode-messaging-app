@@ -1,4 +1,5 @@
 import { NgModule } from '@angular/core';
+import { AgGridAngular } from 'ag-grid-angular'
 
 import { CommonModule } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
@@ -11,6 +12,7 @@ import { AppComponent } from './app.component';
 import { RegisterComponent } from './auth/components/register/register.component';
 import { NavbarComponent } from './shared/navbar/navbar.component';
 import { LoginComponent } from './auth/components/login/login.component';
+import { UsersComponent } from './users/users.component';
 
 @NgModule({
   declarations: [
@@ -18,6 +20,7 @@ import { LoginComponent } from './auth/components/login/login.component';
     RegisterComponent,
     NavbarComponent,
     LoginComponent,
+    UsersComponent,
   ],
   imports: [
     CommonModule,
@@ -26,6 +29,7 @@ import { LoginComponent } from './auth/components/login/login.component';
     HttpClientModule,
     BrowserModule,
     AppRoutingModule,
+    AgGridAngular,
   ],
   bootstrap: [AppComponent]
 })
