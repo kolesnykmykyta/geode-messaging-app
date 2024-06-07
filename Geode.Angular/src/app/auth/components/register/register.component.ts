@@ -13,11 +13,7 @@ export class RegisterComponent {
   credentials: IRegisterDto = {email: '', password: '', username: ''};
   registerResult: IRegisterResultDto = {isSuccess: undefined, errors: []};
 
-  private authService: AuthService;
-
-  constructor(authService: AuthService) {
-    this.authService = authService
-  }
+  constructor(private authService: AuthService) {}
 
   registerSubmit(): void{
     this.registerResult.isSuccess = undefined

@@ -14,8 +14,7 @@ import { Observable } from 'rxjs';
 export class AuthService {
   isUserAuthorizedSignal = signal<boolean>(false)
 
-  constructor(private http: HttpClient) {
-  }
+  constructor(private http: HttpClient) {}
 
   updateUserAuthorizationInfo(): void{
     const sessionAuthInfo = sessionStorage.getItem("isAuthorized")
