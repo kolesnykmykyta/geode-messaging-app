@@ -1,11 +1,15 @@
 <h1 class="text-center">Login</h1>
 <div class="d-flex container justify-content-center">
-    <form #regForm="ngForm" ngNativeValidate class="form w-50" (ngSubmit)="loginSubmit()">
+    <form #regForm="ngForm" [formGroup]="credentialsForm" class="form w-50" (ngSubmit)="loginSubmit()">
       <div class="mt-2">
-        <input name="email" required [(ngModel)]="credentials.email" class="form-control" placeholder="Email" type="email"/>
+        <input formControlName="email" class="form-control" placeholder="Email" type="text"/>
+        <span *ngIf="getFieldInvalidity('email', 'required')">Email is required</span>
+        <span *ngIf="getFieldInvalidity('email', 'email')">Email should be in the valid format</span>
       </div>
       <div class="mt-2">
-        <input name="password" required [(ngModel)]="credentials.password" class="form-control" placeholder="Password" type="password">        
+        <input formControlName="password" class="form-control" placeholder="Password" type="password">
+        <span *ngIf="getFieldInvalidity('password', 'required')">Password is required</span>
+        <span *ngIf="getFieldInvalidity('password', 'minlength')">Password should have at least 6 characters</span>     
       </div>
       <div class="buttons mt-2">
         <button type="submit" class="btn btn-primary">
