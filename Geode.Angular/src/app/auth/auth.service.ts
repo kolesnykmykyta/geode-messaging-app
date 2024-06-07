@@ -12,19 +12,9 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class AuthService {
-  isUserAuthorizedSignal = signal<boolean>(false)
+  isUserAuthorizedSignal = signal<boolean>(JSON.parse(sessionStorage.getItem("isAuthorized") ?? 'false'))
 
   constructor(private http: HttpClient) {}
-
-  updateUserAuthorizationInfo(): void{
-    const sessionAuthInfo = sessionStorage.getItem("isAuthorized")
-    if (sessionAuthInfo != null){
-      this.isUserAuthorizedSignal.set(JSON.parse(sessionAuthInfo))
-    }
-    else{
-      this.isUserAuthorizedSignal.set(false)
-    }
-  }
 
   register(dto: IRegisterDto): Observable<IRegisterResultDto>{
     return this.http.post<IRegisterResultDto>("https://geode-web-app.azurewebsites.net/api/user/register", dto)
