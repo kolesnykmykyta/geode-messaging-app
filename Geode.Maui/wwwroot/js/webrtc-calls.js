@@ -105,7 +105,7 @@ function setupLocalStream() {
 async function initializeHubConnection() {
     accessToken = localStorage.getItem("BearerToken")
     rtcHub = new signalR.HubConnectionBuilder()
-        .withUrl("https://geode-api.azurewebsites.net/webrtc", {
+        .withUrl("https://geode-web-app.azurewebsites.net/webrtc", {
             accessTokenFactory: () => accessToken
         })
         .build()
