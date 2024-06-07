@@ -19,7 +19,7 @@ export class RegisterComponent {
     this.authService = authService
   }
 
-  registerSubmit(){
+  registerSubmit(): void{
     this.registerResult.isSuccess = undefined
     this.authService.register(this.credentials).subscribe({
       next: () => {

@@ -12,13 +12,9 @@ export class LoginComponent {
   credentials: ILoginDto = {email:'', password: ''}
   message: string = ''
 
-  private authService: AuthService;
+  constructor(private authService: AuthService) { }
 
-  constructor(authService: AuthService) {
-    this.authService = authService
-  }
-
-  loginSubmit(){
+  loginSubmit(): void{
     this.message = "Logging in..."
     this.authService.login(this.credentials)
     .subscribe({

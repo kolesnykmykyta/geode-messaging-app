@@ -13,7 +13,7 @@ export class NavbarComponent {
     this.authService = authService
   }
 
-  logout(){
+  logout(): void{
     this.authService.logout()
   }
 }

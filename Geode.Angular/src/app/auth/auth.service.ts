@@ -6,6 +6,7 @@ import { ILoginDto } from './models/login.dto';
 import { ITokenDto } from './models/token.dto';
 
 import { tap } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -16,7 +17,7 @@ export class AuthService {
   constructor(private http: HttpClient) {
   }
 
-  updateUserAuthorizationInfo(){
+  updateUserAuthorizationInfo(): void{
     const sessionAuthInfo = sessionStorage.getItem("isAuthorized")
     if (sessionAuthInfo != null){
       this.isUserAuthorizedSignal.set(JSON.parse(sessionAuthInfo))
@@ -26,11 +27,11 @@ export class AuthService {
     }
   }
 
-  register(dto: IRegisterDto){
+  register(dto: IRegisterDto): Observable<IRegisterResultDto>{
     return this.http.post<IRegisterResultDto>("https://geode-web-app.azurewebsites.net/api/user/register", dto)
   }
 
-  login(dto: ILoginDto){
+  login(dto: ILoginDto): Observable<ITokenDto>{
     return this.http.post<ITokenDto>("https://geode-web-app.azurewebsites.net/api/user/login", dto)
       .pipe(
         tap(response => {
@@ -43,13 +44,13 @@ export class AuthService {
       )
   }
 
-  logout(){
+  logout(): void{
     localStorage.removeItem("accessToken");
     localStorage.removeItem("refreshToken");
     this.updateAuthState(false)
   }
 
-  private updateAuthState(newState: boolean){
+  private updateAuthState(newState: boolean): void{
     this.isUserAuthorizedSignal.set(newState)
     sessionStorage.setItem("isAuthorized", newState.toString())
   }
