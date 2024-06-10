@@ -7,7 +7,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 
 import { AppComponent } from './app.component';
-import { NavbarComponent } from './shared/navbar/navbar.component';
+import { NavbarComponent } from './layout/navbar/navbar.component';
 import { UsersComponent } from './users/users.component';
 import { AuthModule } from './auth/auth.module';
 
