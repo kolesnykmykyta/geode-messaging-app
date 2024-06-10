@@ -1,0 +1,25 @@
+<form #regForm="ngForm" [formGroup]="filterForm" class="form w-50" (ngSubmit)="applyButtonClicked()">
+    <mat-form-field class="example-full-width">
+        <mat-label>Search</mat-label>
+        <input formControlName="searchParam" matInput>
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Sort by</mat-label>
+        <mat-select formControlName="sortProp">
+            <mat-option *ngFor="let property of properties" [value]="property">
+                {{property}}
+            </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Select properties</mat-label>
+        <mat-select [(value)]="selectedProperties" multiple (selectionChange)="updateSelectProperties()">
+          <mat-option *ngFor="let property of properties" [value]="property">
+            {{property}}
+          </mat-option>
+        </mat-select>
+    </mat-form-field>
+    <div>
+        <button class="btn btn-primary" type="submit">Apply</button>
+    </div>
+</form>

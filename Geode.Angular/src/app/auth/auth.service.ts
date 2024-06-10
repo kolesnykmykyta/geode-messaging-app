@@ -7,12 +7,13 @@ import { ITokenDto } from './models/token.dto';
 
 import { tap } from 'rxjs/operators';
 import { Observable } from 'rxjs';
+import { ACCESS_TOKEN_NAME, IS_AUTHORIZED_INFO_NAME, REFRESH_TOKEN_NAME } from '../shared/constants/storages.constants';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  isUserAuthorizedSignal = signal<boolean>(JSON.parse(sessionStorage.getItem("isAuthorized") ?? 'false'))
+  isUserAuthorizedSignal = signal<boolean>(JSON.parse(sessionStorage.getItem(IS_AUTHORIZED_INFO_NAME) ?? 'false'))
 
   constructor(private http: HttpClient) {}
 
@@ -25,8 +26,8 @@ export class AuthService {
       .pipe(
         tap(response => {
           if (response != null){
-            localStorage.setItem("accessToken", response.accessToken);
-            localStorage.setItem("refreshToken", response.refreshToken);
+            localStorage.setItem(ACCESS_TOKEN_NAME, response.accessToken);
+            localStorage.setItem(REFRESH_TOKEN_NAME, response.refreshToken);
             this.updateAuthState(true)
           }
         })
@@ -34,13 +35,13 @@ export class AuthService {
   }
 
   logout(): void{
-    localStorage.removeItem("accessToken");
-    localStorage.removeItem("refreshToken");
+    localStorage.removeItem(ACCESS_TOKEN_NAME);
+    localStorage.removeItem(REFRESH_TOKEN_NAME);
     this.updateAuthState(false)
   }
 
   private updateAuthState(newState: boolean): void{
     this.isUserAuthorizedSignal.set(newState)
-    sessionStorage.setItem("isAuthorized", newState.toString())
+    sessionStorage.setItem(IS_AUTHORIZED_INFO_NAME, newState.toString())
   }
 }
