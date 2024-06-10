@@ -1,0 +1,6 @@
+{
+    "/api": {
+        "target": "https://geode-web-app.azurewebsites.net/",
+        "secure": true
+    }
+}

@@ -65,7 +65,7 @@
               "buildTarget": "Geode.Angular:build:production"
             },
             "development": {
-              "buildTarget": "Geode.Angular:build:development"
+              "buildTarget": "Geode.Angular:build:development",
             }
           },
           "defaultConfiguration": "development"

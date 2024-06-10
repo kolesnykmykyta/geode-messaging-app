@@ -10,7 +10,7 @@ import { AppComponent } from './app.component';
 import { NavbarComponent } from './layout/navbar/navbar.component';
 import { UsersComponent } from './users/users.component';
 import { AuthModule } from './auth/auth.module';
-import { authInterceptor } from './interceptors/auth.interceptor';
+import { AuthInterceptor } from './interceptors/auth.interceptor';
 
 @NgModule({
   declarations: [
@@ -30,7 +30,8 @@ import { authInterceptor } from './interceptors/auth.interceptor';
   providers: [
     {
       provide: HTTP_INTERCEPTORS,
-      useValue: authInterceptor,
+      useClass: AuthInterceptor,
+      multi: true,
     }
   ]
 })
