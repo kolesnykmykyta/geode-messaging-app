@@ -63,10 +63,12 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "Geode.Angular:build:production"
+              "buildTarget": "Geode.Angular:build:production",
+              "proxyConfig": "src/proxy.config.json"
             },
             "development": {
-              "buildTarget": "Geode.Angular:build:development"
+              "buildTarget": "Geode.Angular:build:development",
+              "proxyConfig": "src/proxy.config.json"
             }
           },
           "defaultConfiguration": "development"

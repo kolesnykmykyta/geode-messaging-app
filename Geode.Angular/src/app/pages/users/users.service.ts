@@ -11,7 +11,7 @@ export class UsersService {
   constructor(private http: HttpClient) { }
 
   getAllUsers(filter: IFilter | null = null): Observable<IUserInfo[]>{
-    let requestUrl = "https://geode-web-app.azurewebsites.net/api/user/all"
+    let requestUrl = "/api/user/all"
     if (filter != null){
       const queryString = (Object.keys(filter) as Array<keyof IFilter>)
       .filter(key => !!filter[key])

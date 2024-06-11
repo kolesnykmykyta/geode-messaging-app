@@ -1,6 +1,7 @@
 {
     "/api": {
-        "target": "https://geode-web-app.azurewebsites.net/",
-        "secure": true
+        "target": "https://geode-web-app.azurewebsites.net",
+        "secure": true,
+        "changeOrigin": true
     }
 }

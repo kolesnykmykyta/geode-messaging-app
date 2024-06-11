@@ -18,11 +18,11 @@ export class AuthService {
   constructor(private http: HttpClient) {}
 
   register(dto: IRegisterDto): Observable<IRegisterResultDto>{
-    return this.http.post<IRegisterResultDto>("https://geode-web-app.azurewebsites.net/api/user/register", dto)
+    return this.http.post<IRegisterResultDto>("/api/user/register", dto)
   }
 
   login(dto: ILoginDto): Observable<ITokenDto>{
-    return this.http.post<ITokenDto>("https://geode-web-app.azurewebsites.net/api/user/login", dto)
+    return this.http.post<ITokenDto>("/api/user/login", dto)
       .pipe(
         tap(response => {
           if (response != null){
