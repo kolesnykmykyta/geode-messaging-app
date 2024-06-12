@@ -12,7 +12,8 @@ export class FilterComponent {
     searchParam: null,
     sortProp: null,
     sortByDescending: null,
-    selectProps: null
+    selectProps: null,
+    pageNumber: 1
   })
   selectedProperties: string[] = [];
 

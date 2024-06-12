@@ -3,4 +3,5 @@ export interface IFilter{
     sortProp: string | null;
     sortByDescending: boolean | null;
     selectProps: string | null;
+    pageNumber: number | null;
 }
