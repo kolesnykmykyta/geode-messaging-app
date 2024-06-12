@@ -18,18 +18,27 @@ export class UsersComponent implements OnInit {
     { field: "email" },
     { field: "phoneNumber" },
   ];
+  isLoading: boolean = false;
   
   constructor(private usersService: UsersService, private formBuilder: FormBuilder) { }
 
   ngOnInit(): void {
+    this.isLoading = true
     this.usersService.getAllUsers().subscribe({
-      next: (result) => this.rowData = result
+      next: (result) => {
+        this.rowData = result
+        this.isLoading = false
+      }
     })
   }
 
   applyFilter(filter: IFilter): void{
+    this.isLoading = true
     this.usersService.getAllUsers(filter).subscribe({
-      next: (result) => this.rowData = result
+      next: (result) => {
+        this.rowData = result
+        this.isLoading = false
+      }
     })
   }
 }

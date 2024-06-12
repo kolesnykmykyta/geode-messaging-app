@@ -15,6 +15,7 @@ export class LoginComponent {
     password: ['', [Validators.required, Validators.minLength(6)]],
   });
   message: string = ''
+  isLoading: boolean = false
   private isFormSubmitted: boolean = false
 
   constructor(private authService: AuthService, private formBuilder: FormBuilder) { }
@@ -22,14 +23,17 @@ export class LoginComponent {
   loginSubmit(): void{
     this.isFormSubmitted = true
     if (this.credentialsForm.valid){
-      this.message = "Logging in..."
+      this.message = ''
+      this.isLoading = true
       this.authService.login(this.credentialsForm.value as ILoginDto)
       .subscribe({
         next: () => {
           this.message = "Successfully logged in!"
+          this.isLoading = false
         },
         error: () => {
           this.message = "Login has failed. Check your credentials"
+          this.isLoading = false
         }
       })
     }

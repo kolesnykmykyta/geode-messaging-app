@@ -17,6 +17,7 @@ export class RegisterComponent {
     password: ['', [Validators.required, Validators.minLength(6)]]
   })
   registerResult: IRegisterResultDto = {isSuccess: undefined, errors: []};
+  isLoading: boolean = false;
 
   private isFormSubmitted: boolean = false;
 
@@ -25,11 +26,13 @@ export class RegisterComponent {
   registerSubmit(): void{
     this.registerResult.isSuccess = undefined
     this.isFormSubmitted = true
+    this.isLoading = true
     if (this.credentialsForm.valid){
       this.authService.register(this.credentialsForm.value as IRegisterDto).subscribe({
         next: () => {
           console.log("Successfully registered");
           this.registerResult.isSuccess = true;
+          this.isLoading = false;
         },
         error: (err) => {
           if (err?.error != null){
@@ -39,6 +42,7 @@ export class RegisterComponent {
             this.registerResult.isSuccess = false
             this.registerResult.errors = ['Unknown error occured']
           }
+          this.isLoading = false;
         }
       })
     }
