@@ -7,8 +7,8 @@ import { ITokenDto } from './models/token.dto';
 
 import { tap } from 'rxjs/operators';
 import { Observable } from 'rxjs';
-import { ACCESS_TOKEN_NAME, IS_AUTHORIZED_INFO_NAME, REFRESH_TOKEN_NAME } from '../shared/constants/storages.constants';
-import { environment } from '../../environments/environment';
+import { ACCESS_TOKEN_NAME, IS_AUTHORIZED_INFO_NAME, REFRESH_TOKEN_NAME } from '../../shared/constants/storages.constants';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'

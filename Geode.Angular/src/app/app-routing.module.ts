@@ -5,7 +5,7 @@ import { UsersComponent } from './pages/users/users.component';
 import { authGuard } from './shared/services/auth.guard';
 
 const routes: Routes = [
-  { path: 'auth', loadChildren: () => import('./auth/auth.module').then(m => m.AuthModule)},
+  { path: 'auth', loadChildren: () => import('./pages/auth/auth.module').then(m => m.AuthModule)},
   { path: 'users', component: UsersComponent, canActivate: [authGuard] },
   { path: "**", redirectTo: "/users"}
 ];
