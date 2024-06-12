@@ -49,6 +49,12 @@
                   "maximumError": "4kB"
                 }
               ],
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environments.ts",
+                  "with": "src/environments/environments.prod.ts"
+                }
+              ],
               "outputHashing": "all"
             },
             "development": {
@@ -63,12 +69,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "Geode.Angular:build:production",
-              "proxyConfig": "src/proxy.config.json"
+              "buildTarget": "Geode.Angular:build:production"
             },
             "development": {
-              "buildTarget": "Geode.Angular:build:development",
-              "proxyConfig": "src/proxy.config.json"
+              "buildTarget": "Geode.Angular:build:development"
             }
           },
           "defaultConfiguration": "development"

@@ -8,6 +8,7 @@ import { ITokenDto } from './models/token.dto';
 import { tap } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { ACCESS_TOKEN_NAME, IS_AUTHORIZED_INFO_NAME, REFRESH_TOKEN_NAME } from '../shared/constants/storages.constants';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -18,11 +19,11 @@ export class AuthService {
   constructor(private http: HttpClient) {}
 
   register(dto: IRegisterDto): Observable<IRegisterResultDto>{
-    return this.http.post<IRegisterResultDto>("/api/user/register", dto)
+    return this.http.post<IRegisterResultDto>(`${environment.apiBase}/user/register`, dto)
   }
 
   login(dto: ILoginDto): Observable<ITokenDto>{
-    return this.http.post<ITokenDto>("/api/user/login", dto)
+    return this.http.post<ITokenDto>(`${environment.apiBase}/user/login`, dto)
       .pipe(
         tap(response => {
           if (response != null){
