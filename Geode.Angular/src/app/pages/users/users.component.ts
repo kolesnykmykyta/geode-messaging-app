@@ -23,16 +23,10 @@ export class UsersComponent implements OnInit {
   constructor(private usersService: UsersService, private formBuilder: FormBuilder) { }
 
   ngOnInit(): void {
-    this.isLoading = true
-    this.usersService.getAllUsers().subscribe({
-      next: (result) => {
-        this.rowData = result
-        this.isLoading = false
-      }
-    })
+    this.updateRowData(null)
   }
 
-  applyFilter(filter: IFilter): void{
+  updateRowData(filter: IFilter | null): void {
     this.isLoading = true
     this.usersService.getAllUsers(filter).subscribe({
       next: (result) => {
