@@ -26,15 +26,18 @@ export class UsersComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.updateRowData(null);
+    this.updateRowData();
   }
 
-  updateRowData(filter: IFilter | null): void {
+  updateRowData(filter: IFilter | null = null): void {
     this.isLoading = true;
     this.usersService.getAllUsers(filter).subscribe({
       next: (result) => {
         this.rowData = result;
         this.isLoading = false;
+      },
+      error: (error) => {
+        console.error('Error occured: ', error.error);
       },
     });
   }

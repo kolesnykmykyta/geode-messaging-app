@@ -18,15 +18,18 @@ export class MessagesComponent implements OnInit {
   constructor(private messagesService: MessagesService) {}
 
   ngOnInit(): void {
-    this.updateRowData(null);
+    this.updateRowData();
   }
 
-  updateRowData(filter: IFilter | null) {
+  updateRowData(filter: IFilter | null = null) {
     this.isLoading = true;
     this.messagesService.getAllMessages(filter).subscribe({
       next: (result) => {
         this.rowData = result;
         this.isLoading = false;
+      },
+      error: (error) => {
+        console.error('Error occured: ', error.error);
       },
     });
   }
