@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { ColDef } from 'ag-grid-community';
 import { UsersService } from './users.service';
 import { IUserInfo } from './user-info.dto';
-import { FormBuilder, FormGroup } from '@angular/forms';
 import { IFilter } from '../../shared/models/filter.model';
 
 @Component({
@@ -20,10 +19,7 @@ export class UsersComponent implements OnInit {
   ];
   isLoading: boolean = false;
 
-  constructor(
-    private usersService: UsersService,
-    private formBuilder: FormBuilder
-  ) {}
+  constructor(private usersService: UsersService) {}
 
   ngOnInit(): void {
     this.updateRowData();
@@ -31,14 +27,16 @@ export class UsersComponent implements OnInit {
 
   updateRowData(filter: IFilter | null = null): void {
     this.isLoading = true;
-    this.usersService.getAllUsers(filter).subscribe({
-      next: (result) => {
-        this.rowData = result;
-        this.isLoading = false;
-      },
-      error: (error) => {
-        console.error('Error occured: ', error.error);
-      },
-    });
+    this.usersService
+      .getAllUsers(filter)
+      .subscribe({
+        next: (result) => {
+          this.rowData = result;
+        },
+        error: (error) => {
+          console.error('Error occured: ', error.error);
+        },
+      })
+      .add(() => (this.isLoading = false));
   }
 }

@@ -23,14 +23,16 @@ export class MessagesComponent implements OnInit {
 
   updateRowData(filter: IFilter | null = null) {
     this.isLoading = true;
-    this.messagesService.getAllMessages(filter).subscribe({
-      next: (result) => {
-        this.rowData = result;
-        this.isLoading = false;
-      },
-      error: (error) => {
-        console.error('Error occured: ', error.error);
-      },
-    });
+    this.messagesService
+      .getAllMessages(filter)
+      .subscribe({
+        next: (result) => {
+          this.rowData = result;
+        },
+        error: (error) => {
+          console.error('Error occured: ', error.error);
+        },
+      })
+      .add(() => (this.isLoading = false));
   }
 }

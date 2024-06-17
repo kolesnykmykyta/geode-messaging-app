@@ -37,7 +37,6 @@ export class RegisterComponent {
           next: () => {
             console.log('Successfully registered');
             this.registerResult.isSuccess = true;
-            this.isLoading = false;
           },
           error: (err) => {
             if (err?.error != null) {
@@ -46,9 +45,9 @@ export class RegisterComponent {
               this.registerResult.isSuccess = false;
               this.registerResult.errors = ['Unknown error occured'];
             }
-            this.isLoading = false;
           },
-        });
+        })
+        .add(() => (this.isLoading = false));
     }
   }
 

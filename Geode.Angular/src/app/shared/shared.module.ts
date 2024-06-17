@@ -1,14 +1,16 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FilterComponent } from './components/filter/filter.component';
-import { SpinnerComponent } from './components/spinner/spinner.component';
 import { MatCheckbox } from '@angular/material/checkbox';
 import { MatOption } from '@angular/material/core';
 import { MatFormField, MatLabel } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 import { MatSelect } from '@angular/material/select';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import {
+  MatProgressSpinner,
+  MatSpinner,
+} from '@angular/material/progress-spinner';
 import {
   MatExpansionPanel,
   MatExpansionPanelHeader,
@@ -17,7 +19,7 @@ import {
 import { AgGridAngular } from 'ag-grid-angular';
 
 @NgModule({
-  declarations: [FilterComponent, SpinnerComponent],
+  declarations: [FilterComponent],
   imports: [
     CommonModule,
     FormsModule,
@@ -36,12 +38,12 @@ import { AgGridAngular } from 'ag-grid-angular';
   ],
   exports: [
     FilterComponent,
-    SpinnerComponent,
     FormsModule,
     ReactiveFormsModule,
     MatExpansionPanel,
     MatExpansionPanelHeader,
     MatExpansionPanelTitle,
+    MatProgressSpinner,
     AgGridAngular,
   ],
 })

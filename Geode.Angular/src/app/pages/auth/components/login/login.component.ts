@@ -33,13 +33,12 @@ export class LoginComponent {
         .subscribe({
           next: () => {
             this.message = 'Successfully logged in!';
-            this.isLoading = false;
           },
           error: () => {
             this.message = 'Login has failed. Check your credentials';
-            this.isLoading = false;
           },
-        });
+        })
+        .add(() => (this.isLoading = false));
     }
   }
 

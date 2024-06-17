@@ -7,7 +7,6 @@ import { notAuthorizedGuard } from './shared/services/not-authorized.guard';
 import { MessagesComponent } from './pages/messages/messages.component';
 
 const routes: Routes = [
-  { path: '**', redirectTo: '/users' },
   {
     path: 'auth',
     loadChildren: () =>
@@ -20,6 +19,7 @@ const routes: Routes = [
     component: MessagesComponent,
     canActivate: [authorizedGuard],
   },
+  { path: '**', redirectTo: '/users' },
 ];
 
 @NgModule({
