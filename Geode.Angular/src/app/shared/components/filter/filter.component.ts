@@ -9,10 +9,10 @@ import { IFilter } from '../../models/filter.model';
 })
 export class FilterComponent {
   filterForm: FormGroup = this.formBuilder.group({
-    searchParam: null,
-    sortProp: null,
-    sortByDescending: null,
-    selectProps: null,
+    searchParam: '',
+    sortProp: '',
+    sortByDescending: '',
+    selectProps: '',
     pageNumber: 1,
   });
   selectedProperties: string[] = [];
