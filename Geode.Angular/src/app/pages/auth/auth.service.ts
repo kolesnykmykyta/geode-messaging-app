@@ -8,9 +8,9 @@ import { ITokenDto } from './models/token.dto';
 import { tap } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import {
-  ACCESS_TOKEN_NAME,
-  IS_AUTHORIZED_INFO_NAME,
-  REFRESH_TOKEN_NAME,
+  ACCESS_TOKEN_KEY,
+  IS_AUTHORIZED_INFO_KEY,
+  REFRESH_TOKEN_KEY,
 } from '../../shared/constants/storages.constants';
 import { environment } from '../../../environments/environment';
 
@@ -19,7 +19,7 @@ import { environment } from '../../../environments/environment';
 })
 export class AuthService {
   isUserAuthorizedSignal = signal<boolean>(
-    JSON.parse(sessionStorage.getItem(IS_AUTHORIZED_INFO_NAME) ?? 'false')
+    JSON.parse(sessionStorage.getItem(IS_AUTHORIZED_INFO_KEY) ?? 'false')
   );
 
   constructor(private http: HttpClient) {}
@@ -37,8 +37,8 @@ export class AuthService {
       .pipe(
         tap((response) => {
           if (response != null) {
-            localStorage.setItem(ACCESS_TOKEN_NAME, response.accessToken);
-            localStorage.setItem(REFRESH_TOKEN_NAME, response.refreshToken);
+            localStorage.setItem(ACCESS_TOKEN_KEY, response.accessToken);
+            localStorage.setItem(REFRESH_TOKEN_KEY, response.refreshToken);
             this.updateAuthState(true);
           }
         })
@@ -46,13 +46,13 @@ export class AuthService {
   }
 
   logout(): void {
-    localStorage.removeItem(ACCESS_TOKEN_NAME);
-    localStorage.removeItem(REFRESH_TOKEN_NAME);
+    localStorage.removeItem(ACCESS_TOKEN_KEY);
+    localStorage.removeItem(REFRESH_TOKEN_KEY);
     this.updateAuthState(false);
   }
 
   private updateAuthState(newState: boolean): void {
     this.isUserAuthorizedSignal.set(newState);
-    sessionStorage.setItem(IS_AUTHORIZED_INFO_NAME, newState.toString());
+    sessionStorage.setItem(IS_AUTHORIZED_INFO_KEY, newState.toString());
   }
 }
