@@ -16,7 +16,6 @@ export class LoginComponent {
   });
   message: string = '';
   isLoading: boolean = false;
-  private isFormSubmitted: boolean = false;
 
   constructor(
     private authService: AuthService,
@@ -24,7 +23,6 @@ export class LoginComponent {
   ) {}
 
   loginSubmit(): void {
-    this.isFormSubmitted = true;
     if (this.credentialsForm.valid) {
       this.message = '';
       this.isLoading = true;
@@ -48,9 +46,9 @@ export class LoginComponent {
   ): boolean | undefined {
     let formProp = this.credentialsForm.get(fieldName);
     if (errorCode == null) {
-      return this.isFormSubmitted && formProp?.invalid;
+      return formProp?.touched && formProp?.invalid;
     } else {
-      return this.isFormSubmitted && formProp?.getError(errorCode!);
+      return formProp?.touched && formProp?.getError(errorCode!);
     }
   }
 }

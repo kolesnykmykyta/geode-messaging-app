@@ -21,7 +21,6 @@ export class AuthInterceptor implements HttpInterceptor {
     if (
       req.headers.get(AUTH_RULE_HEADER_NAME) === AUTH_RULE_HEADER_VALUES.APPLY
     ) {
-      console.log('Token is applying');
       let token = localStorage.getItem(ACCESS_TOKEN_KEY) ?? '';
       req = req.clone({
         setHeaders: {

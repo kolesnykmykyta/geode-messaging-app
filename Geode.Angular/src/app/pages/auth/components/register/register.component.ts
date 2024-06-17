@@ -35,7 +35,6 @@ export class RegisterComponent {
         .register(this.credentialsForm.value as RegisterCredentials)
         .subscribe({
           next: () => {
-            console.log('Successfully registered');
             this.registerResult.isSuccess = true;
           },
           error: (err) => {
@@ -57,9 +56,9 @@ export class RegisterComponent {
   ): boolean | undefined {
     let formProp = this.credentialsForm.get(fieldName);
     if (errorCode == null) {
-      return this.isFormSubmitted && formProp?.invalid;
+      return formProp?.touched && formProp?.invalid;
     } else {
-      return this.isFormSubmitted && formProp?.getError(errorCode!);
+      return formProp?.touched && formProp?.getError(errorCode!);
     }
   }
 }
