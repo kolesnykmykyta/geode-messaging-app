@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 
-import { IRegisterDto } from '../../models/register.dto';
-import { IRegisterResultDto } from '../../models/register-result.dto';
+import { RegisterCredentials } from '../../models/register.model';
+import { RegisterResult } from '../../models/register-result.model';
 import { AuthService } from '../../auth.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
@@ -16,7 +16,7 @@ export class RegisterComponent {
     username: ['', Validators.required],
     password: ['', [Validators.required, Validators.minLength(6)]],
   });
-  registerResult: IRegisterResultDto = { isSuccess: undefined, errors: [] };
+  registerResult: RegisterResult = { isSuccess: undefined, errors: [] };
   isLoading: boolean = false;
 
   private isFormSubmitted: boolean = false;
@@ -32,7 +32,7 @@ export class RegisterComponent {
     this.isLoading = true;
     if (this.credentialsForm.valid) {
       this.authService
-        .register(this.credentialsForm.value as IRegisterDto)
+        .register(this.credentialsForm.value as RegisterCredentials)
         .subscribe({
           next: () => {
             console.log('Successfully registered');

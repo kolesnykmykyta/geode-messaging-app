@@ -1,8 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { IFilter } from '../../shared/models/filter.model';
+import { Filter } from '../../shared/models/filter.model';
 import { Observable } from 'rxjs';
-import { IMessage } from './message.dto';
+import { Message } from './message.model';
 import { environment } from '../../../environments/environment';
 import { partialize } from '../../shared/constants/partialize.constant';
 
@@ -14,11 +14,11 @@ export class MessagesService {
 
   constructor(private http: HttpClient) {}
 
-  getAllMessages(filter: IFilter | null = null): Observable<IMessage[]> {
+  getAllMessages(filter: Filter | null = null): Observable<Message[]> {
     let requestUrl = `${this.messagesEndpoint}/all`;
-    let queryParams = filter ? partialize<IFilter>(filter) : {};
+    let queryParams = filter ? partialize<Filter>(filter) : {};
 
-    return this.http.get<IMessage[]>(requestUrl, {
+    return this.http.get<Message[]>(requestUrl, {
       params: queryParams,
     });
   }

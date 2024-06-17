@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 
-import { ILoginDto } from '../../models/login.dto';
+import { LoginCredentials } from '../../models/login.model';
 import { AuthService } from '../../auth.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
@@ -29,7 +29,7 @@ export class LoginComponent {
       this.message = '';
       this.isLoading = true;
       this.authService
-        .login(this.credentialsForm.value as ILoginDto)
+        .login(this.credentialsForm.value as LoginCredentials)
         .subscribe({
           next: () => {
             this.message = 'Successfully logged in!';

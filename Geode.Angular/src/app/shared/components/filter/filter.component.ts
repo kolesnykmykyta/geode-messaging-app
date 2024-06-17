@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { IFilter } from '../../models/filter.model';
+import { Filter } from '../../models/filter.model';
 
 @Component({
   selector: 'gd-filter',
@@ -29,6 +29,6 @@ export class FilterComponent {
   }
 
   applyButtonClicked(): void {
-    this.applyFilter.emit(this.filterForm.value as IFilter);
+    this.applyFilter.emit(this.filterForm.value as Filter);
   }
 }

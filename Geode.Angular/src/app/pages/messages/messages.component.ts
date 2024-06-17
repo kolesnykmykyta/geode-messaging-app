@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ColDef } from 'ag-grid-community';
-import { IMessage } from './message.dto';
+import { Message } from './message.model';
 import { MessagesService } from './messages.service';
-import { IFilter } from '../../shared/models/filter.model';
+import { Filter } from '../../shared/models/filter.model';
 
 @Component({
   selector: 'gd-messages',
@@ -11,7 +11,7 @@ import { IFilter } from '../../shared/models/filter.model';
 })
 export class MessagesComponent implements OnInit {
   properties: string[] = ['Content', 'SentAt'];
-  rowData: IMessage[] = [];
+  rowData: Message[] = [];
   colDefs: ColDef[] = [{ field: 'content' }, { field: 'sentAt' }];
   isLoading: boolean = false;
 
@@ -21,7 +21,7 @@ export class MessagesComponent implements OnInit {
     this.updateRowData();
   }
 
-  updateRowData(filter: IFilter | null = null) {
+  updateRowData(filter: Filter | null = null) {
     this.isLoading = true;
     this.messagesService
       .getAllMessages(filter)

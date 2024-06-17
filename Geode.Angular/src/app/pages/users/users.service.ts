@@ -1,8 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { IUserInfo } from './user-info.dto';
+import { UserInfo } from './user-info.model';
 import { Observable } from 'rxjs';
-import { IFilter } from '../../shared/models/filter.model';
+import { Filter } from '../../shared/models/filter.model';
 import { environment } from '../../../environments/environment';
 import { partialize } from '../../shared/constants/partialize.constant';
 
@@ -14,11 +14,11 @@ export class UsersService {
 
   constructor(private http: HttpClient) {}
 
-  getAllUsers(filter: IFilter | null = null): Observable<IUserInfo[]> {
+  getAllUsers(filter: Filter | null = null): Observable<UserInfo[]> {
     let requestUrl = `${this.usersEndpoint}/all`;
-    let queryParams = filter ? partialize<IFilter>(filter) : {};
+    let queryParams = filter ? partialize<Filter>(filter) : {};
 
-    return this.http.get<IUserInfo[]>(requestUrl, {
+    return this.http.get<UserInfo[]>(requestUrl, {
       params: queryParams,
     });
   }

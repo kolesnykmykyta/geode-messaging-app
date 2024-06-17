@@ -1,9 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, signal } from '@angular/core';
-import { IRegisterResultDto } from './models/register-result.dto';
-import { IRegisterDto } from './models/register.dto';
-import { ILoginDto } from './models/login.dto';
-import { ITokenDto } from './models/token.dto';
+import { RegisterResult } from './models/register-result.model';
+import { RegisterCredentials } from './models/register.model';
+import { LoginCredentials } from './models/login.model';
+import { TokenPair } from './models/token-pair.model';
 
 import { tap } from 'rxjs/operators';
 import { Observable } from 'rxjs';
@@ -26,15 +26,12 @@ export class AuthService {
 
   constructor(private http: HttpClient) {}
 
-  register(dto: IRegisterDto): Observable<IRegisterResultDto> {
-    return this.http.post<IRegisterResultDto>(
-      `${this.authEndpoint}/register`,
-      dto
-    );
+  register(dto: RegisterCredentials): Observable<RegisterResult> {
+    return this.http.post<RegisterResult>(`${this.authEndpoint}/register`, dto);
   }
 
-  login(dto: ILoginDto): Observable<ITokenDto> {
-    return this.http.post<ITokenDto>(`${this.authEndpoint}/login`, dto).pipe(
+  login(dto: LoginCredentials): Observable<TokenPair> {
+    return this.http.post<TokenPair>(`${this.authEndpoint}/login`, dto).pipe(
       tap((response) => {
         if (response != null) {
           localStorage.setItem(ACCESS_TOKEN_KEY, response.accessToken);

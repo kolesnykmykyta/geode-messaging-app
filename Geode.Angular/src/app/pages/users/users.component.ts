@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ColDef } from 'ag-grid-community';
 import { UsersService } from './users.service';
-import { IUserInfo } from './user-info.dto';
-import { IFilter } from '../../shared/models/filter.model';
+import { UserInfo } from './user-info.model';
+import { Filter } from '../../shared/models/filter.model';
 
 @Component({
   selector: 'gd-users',
@@ -11,7 +11,7 @@ import { IFilter } from '../../shared/models/filter.model';
 })
 export class UsersComponent implements OnInit {
   properties: string[] = ['UserName', 'Email', 'PhoneNumber'];
-  rowData: IUserInfo[] = [];
+  rowData: UserInfo[] = [];
   colDefs: ColDef[] = [
     { field: 'userName' },
     { field: 'email' },
@@ -25,7 +25,7 @@ export class UsersComponent implements OnInit {
     this.updateRowData();
   }
 
-  updateRowData(filter: IFilter | null = null): void {
+  updateRowData(filter: Filter | null = null): void {
     this.isLoading = true;
     this.usersService
       .getAllUsers(filter)

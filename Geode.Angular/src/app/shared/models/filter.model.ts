@@ -1,4 +1,4 @@
-export interface IFilter {
+export interface Filter {
   searchParam: string;
   sortProp: string;
   sortByDescending: boolean;
