@@ -4,7 +4,7 @@
             <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Geode</a>
         </div>
         <div class="d-flex">
-            <div *ngIf="!authService.isUserAuthorizedSignal()">
+            <div *ngIf="!authService.isUserAuthorized$()">
                 <span class="mr-2">
                     <a class="link-light" routerLinkActive="active" routerLink="/auth/login">Login</a>
                 </span>
@@ -12,7 +12,7 @@
                     <a class="link-light" routerLinkActive="active" routerLink="/auth/register">Register</a>
                 </span>
             </div>
-            <div *ngIf="authService.isUserAuthorizedSignal()">
+            <div *ngIf="authService.isUserAuthorized$()">
                 <span class="mr-2">
                     <a class="link-light" routerLinkActive="active" routerLink="/users">Users</a>
                 </span>

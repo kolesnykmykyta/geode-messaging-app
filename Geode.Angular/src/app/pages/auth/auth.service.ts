@@ -18,7 +18,7 @@ import { environment } from '../../../environments/environment';
   providedIn: 'root',
 })
 export class AuthService {
-  isUserAuthorizedSignal = signal<boolean>(
+  isUserAuthorized$ = signal<boolean>(
     JSON.parse(sessionStorage.getItem(IS_AUTHORIZED_INFO_KEY) ?? 'false')
   );
 
@@ -52,7 +52,7 @@ export class AuthService {
   }
 
   private updateAuthState(newState: boolean): void {
-    this.isUserAuthorizedSignal.set(newState);
+    this.isUserAuthorized$.set(newState);
     sessionStorage.setItem(IS_AUTHORIZED_INFO_KEY, newState.toString());
   }
 }

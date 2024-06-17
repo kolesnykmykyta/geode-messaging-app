@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { AuthService } from '../../pages/auth/auth.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'gd-navbar',
@@ -7,9 +8,10 @@ import { AuthService } from '../../pages/auth/auth.service';
   styleUrl: './navbar.component.css',
 })
 export class NavbarComponent {
-  constructor(public authService: AuthService) {}
+  constructor(public authService: AuthService, private router: Router) {}
 
   logout(): void {
     this.authService.logout();
+    this.router.navigateByUrl('/users');
   }
 }

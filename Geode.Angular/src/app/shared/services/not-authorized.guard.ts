@@ -6,7 +6,7 @@ export const notAuthorizedGuard: CanActivateFn = (route, state) => {
   let authService = inject(AuthService);
   let router = inject(Router);
 
-  if (authService.isUserAuthorizedSignal()) {
+  if (authService.isUserAuthorized$()) {
     router.navigateByUrl('/users');
     return false;
   } else {
