@@ -22,27 +22,27 @@ export class AuthService {
     JSON.parse(sessionStorage.getItem(IS_AUTHORIZED_INFO_KEY) ?? 'false')
   );
 
+  private authEndpoint: string = `${environment.apiBase}/user`;
+
   constructor(private http: HttpClient) {}
 
   register(dto: IRegisterDto): Observable<IRegisterResultDto> {
     return this.http.post<IRegisterResultDto>(
-      `${environment.apiBase}/user/register`,
+      `${this.authEndpoint}/register`,
       dto
     );
   }
 
   login(dto: ILoginDto): Observable<ITokenDto> {
-    return this.http
-      .post<ITokenDto>(`${environment.apiBase}/user/login`, dto)
-      .pipe(
-        tap((response) => {
-          if (response != null) {
-            localStorage.setItem(ACCESS_TOKEN_KEY, response.accessToken);
-            localStorage.setItem(REFRESH_TOKEN_KEY, response.refreshToken);
-            this.updateAuthState(true);
-          }
-        })
-      );
+    return this.http.post<ITokenDto>(`${this.authEndpoint}/login`, dto).pipe(
+      tap((response) => {
+        if (response != null) {
+          localStorage.setItem(ACCESS_TOKEN_KEY, response.accessToken);
+          localStorage.setItem(REFRESH_TOKEN_KEY, response.refreshToken);
+          this.updateAuthState(true);
+        }
+      })
+    );
   }
 
   logout(): void {

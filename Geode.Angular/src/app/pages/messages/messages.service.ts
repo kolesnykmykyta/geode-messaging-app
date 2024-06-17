@@ -10,10 +10,12 @@ import { partialize } from '../../shared/constants/partialize.constant';
   providedIn: 'root',
 })
 export class MessagesService {
+  private messagesEndpoint: string = `${environment.apiBase}/messages`;
+
   constructor(private http: HttpClient) {}
 
   getAllMessages(filter: IFilter | null = null): Observable<IMessage[]> {
-    let requestUrl = `${environment.apiBase}/messages/all`;
+    let requestUrl = `${this.messagesEndpoint}/all`;
     let queryParams = filter ? partialize<IFilter>(filter) : {};
 
     return this.http.get<IMessage[]>(requestUrl, {

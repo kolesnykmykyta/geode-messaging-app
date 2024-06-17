@@ -10,10 +10,12 @@ import { partialize } from '../../shared/constants/partialize.constant';
   providedIn: 'root',
 })
 export class UsersService {
+  private usersEndpoint: string = `${environment.apiBase}/user`;
+
   constructor(private http: HttpClient) {}
 
   getAllUsers(filter: IFilter | null = null): Observable<IUserInfo[]> {
-    let requestUrl = `${environment.apiBase}/user/all`;
+    let requestUrl = `${this.usersEndpoint}/all`;
     let queryParams = filter ? partialize<IFilter>(filter) : {};
 
     return this.http.get<IUserInfo[]>(requestUrl, {
