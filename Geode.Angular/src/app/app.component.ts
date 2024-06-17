@@ -4,10 +4,10 @@ import { AuthService } from './pages/auth/auth.service';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrl: './app.component.css'
+  styleUrl: './app.component.css',
 })
 export class AppComponent {
   title = 'Geode';
 
-  constructor(private authService: AuthService){}
+  constructor(private authService: AuthService) {}
 }

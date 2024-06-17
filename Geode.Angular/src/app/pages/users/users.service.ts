@@ -7,17 +7,21 @@ import { environment } from '../../../environments/environment';
 import { RequestsHelperService } from '../../shared/services/requests-helper.service';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class UsersService {
-  constructor(private http: HttpClient, private requestsHelper: RequestsHelperService) { }
+  constructor(
+    private http: HttpClient,
+    private requestsHelper: RequestsHelperService
+  ) {}
 
-  getAllUsers(filter: IFilter | null = null): Observable<IUserInfo[]>{
-    let requestUrl = `${environment.apiBase}/user/all`
-    if (filter != null){
-      requestUrl += '?' + this.requestsHelper.generateQueryParamsByFilter(filter)
+  getAllUsers(filter: IFilter | null = null): Observable<IUserInfo[]> {
+    let requestUrl = `${environment.apiBase}/user/all`;
+    if (filter != null) {
+      requestUrl +=
+        '?' + this.requestsHelper.generateQueryParamsByFilter(filter);
     }
 
-    return this.http.get<IUserInfo[]>(requestUrl)
+    return this.http.get<IUserInfo[]>(requestUrl);
   }
 }

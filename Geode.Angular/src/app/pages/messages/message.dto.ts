@@ -1,4 +1,4 @@
-export interface IMessage{
-    content: string | null;
-    sentAt: Date | null;
+export interface IMessage {
+  content: string | null;
+  sentAt: Date | null;
 }

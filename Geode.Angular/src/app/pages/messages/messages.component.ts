@@ -7,30 +7,27 @@ import { IFilter } from '../../shared/models/filter.model';
 @Component({
   selector: 'gd-messages',
   templateUrl: './messages.component.html',
-  styleUrl: './messages.component.css'
+  styleUrl: './messages.component.css',
 })
 export class MessagesComponent implements OnInit {
-  properties: string[] = ['Content', 'SentAt']
-  rowData: IMessage[] = []
-  colDefs: ColDef[] = [
-    { field: 'content' },
-    { field: 'sentAt' },
-  ]
-  isLoading: boolean = false
+  properties: string[] = ['Content', 'SentAt'];
+  rowData: IMessage[] = [];
+  colDefs: ColDef[] = [{ field: 'content' }, { field: 'sentAt' }];
+  isLoading: boolean = false;
 
-  constructor(private messagesService: MessagesService) { }
+  constructor(private messagesService: MessagesService) {}
 
   ngOnInit(): void {
-    this.updateRowData(null)
+    this.updateRowData(null);
   }
 
-  updateRowData(filter: IFilter | null){
-    this.isLoading = true
+  updateRowData(filter: IFilter | null) {
+    this.isLoading = true;
     this.messagesService.getAllMessages(filter).subscribe({
       next: (result) => {
-        this.rowData = result
-        this.isLoading = false
-      }
-    })
+        this.rowData = result;
+        this.isLoading = false;
+      },
+    });
   }
 }

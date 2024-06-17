@@ -8,31 +8,34 @@ import { IFilter } from '../../shared/models/filter.model';
 @Component({
   selector: 'gd-users',
   templateUrl: './users.component.html',
-  styleUrl: './users.component.css'
+  styleUrl: './users.component.css',
 })
 export class UsersComponent implements OnInit {
   properties: string[] = ['UserName', 'Email', 'PhoneNumber'];
-  rowData: IUserInfo[] = []
+  rowData: IUserInfo[] = [];
   colDefs: ColDef[] = [
-    { field: "userName" },
-    { field: "email" },
-    { field: "phoneNumber" },
+    { field: 'userName' },
+    { field: 'email' },
+    { field: 'phoneNumber' },
   ];
   isLoading: boolean = false;
-  
-  constructor(private usersService: UsersService, private formBuilder: FormBuilder) { }
+
+  constructor(
+    private usersService: UsersService,
+    private formBuilder: FormBuilder
+  ) {}
 
   ngOnInit(): void {
-    this.updateRowData(null)
+    this.updateRowData(null);
   }
 
   updateRowData(filter: IFilter | null): void {
-    this.isLoading = true
+    this.isLoading = true;
     this.usersService.getAllUsers(filter).subscribe({
       next: (result) => {
-        this.rowData = result
-        this.isLoading = false
-      }
-    })
+        this.rowData = result;
+        this.isLoading = false;
+      },
+    });
   }
 }

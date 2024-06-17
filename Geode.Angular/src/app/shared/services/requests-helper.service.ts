@@ -2,16 +2,20 @@ import { Injectable } from '@angular/core';
 import { IFilter } from '../models/filter.model';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class RequestsHelperService {
+  constructor() {}
 
-  constructor() { }
-
-  generateQueryParamsByFilter(filter: IFilter): string{
+  generateQueryParamsByFilter(filter: IFilter): string {
     return (Object.keys(filter) as Array<keyof IFilter>)
-    .filter(key => !!filter[key])
-    .map(key => `${encodeURIComponent(key)}=${encodeURIComponent(filter[key] as string)}`)
-    .join('&');
+      .filter((key) => !!filter[key])
+      .map(
+        (key) =>
+          `${encodeURIComponent(key)}=${encodeURIComponent(
+            filter[key] as string
+          )}`
+      )
+      .join('&');
   }
 }

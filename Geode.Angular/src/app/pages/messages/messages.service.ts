@@ -7,17 +7,21 @@ import { IMessage } from './message.dto';
 import { environment } from '../../../environments/environment';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class MessagesService {
-  constructor(private http: HttpClient, private requestsHelper: RequestsHelperService) { }
+  constructor(
+    private http: HttpClient,
+    private requestsHelper: RequestsHelperService
+  ) {}
 
-  getAllMessages(filter: IFilter | null = null): Observable<IMessage[]>{
-    let requestUrl = `${environment.apiBase}/messages/all`
-    if (filter != null){
-      requestUrl += '?' + this.requestsHelper.generateQueryParamsByFilter(filter)
+  getAllMessages(filter: IFilter | null = null): Observable<IMessage[]> {
+    let requestUrl = `${environment.apiBase}/messages/all`;
+    if (filter != null) {
+      requestUrl +=
+        '?' + this.requestsHelper.generateQueryParamsByFilter(filter);
     }
 
-    return this.http.get<IMessage[]>(requestUrl)
+    return this.http.get<IMessage[]>(requestUrl);
   }
 }

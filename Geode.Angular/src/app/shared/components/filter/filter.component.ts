@@ -5,7 +5,7 @@ import { IFilter } from '../../models/filter.model';
 @Component({
   selector: 'gd-filter',
   templateUrl: './filter.component.html',
-  styleUrl: './filter.component.css'
+  styleUrl: './filter.component.css',
 })
 export class FilterComponent {
   filterForm: FormGroup = this.formBuilder.group({
@@ -13,8 +13,8 @@ export class FilterComponent {
     sortProp: null,
     sortByDescending: null,
     selectProps: null,
-    pageNumber: 1
-  })
+    pageNumber: 1,
+  });
   selectedProperties: string[] = [];
 
   @Input() properties!: string[];
@@ -23,10 +23,12 @@ export class FilterComponent {
   constructor(private formBuilder: FormBuilder) {}
 
   updateSelectProperties(): void {
-    this.filterForm.get("selectProps")?.setValue(this.selectedProperties.join(','));
+    this.filterForm
+      .get('selectProps')
+      ?.setValue(this.selectedProperties.join(','));
   }
 
-  applyButtonClicked(): void{
+  applyButtonClicked(): void {
     this.applyFilter.emit(this.filterForm.value as IFilter);
   }
 }

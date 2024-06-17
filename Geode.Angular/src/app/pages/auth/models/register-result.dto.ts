@@ -1,4 +1,4 @@
-export interface IRegisterResultDto{
-    isSuccess: boolean | undefined;
-    errors: string[];
+export interface IRegisterResultDto {
+  isSuccess: boolean | undefined;
+  errors: string[];
 }

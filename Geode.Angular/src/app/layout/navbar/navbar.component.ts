@@ -4,12 +4,12 @@ import { AuthService } from '../../pages/auth/auth.service';
 @Component({
   selector: 'gd-navbar',
   templateUrl: './navbar.component.html',
-  styleUrl: './navbar.component.css'
+  styleUrl: './navbar.component.css',
 })
 export class NavbarComponent {
   constructor(public authService: AuthService) {}
 
-  logout(): void{
-    this.authService.logout()
+  logout(): void {
+    this.authService.logout();
   }
 }

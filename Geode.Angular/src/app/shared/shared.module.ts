@@ -10,13 +10,8 @@ import { MatSelect } from '@angular/material/select';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 
-
-
 @NgModule({
-  declarations: [
-    FilterComponent,
-    SpinnerComponent,
-  ],
+  declarations: [FilterComponent, SpinnerComponent],
   imports: [
     CommonModule,
     FormsModule,
@@ -29,9 +24,6 @@ import { MatProgressSpinner } from '@angular/material/progress-spinner';
     MatInput,
     MatProgressSpinner,
   ],
-  exports: [
-    FilterComponent,
-    SpinnerComponent,
-  ]
+  exports: [FilterComponent, SpinnerComponent],
 })
-export class SharedModule { }
+export class SharedModule {}
