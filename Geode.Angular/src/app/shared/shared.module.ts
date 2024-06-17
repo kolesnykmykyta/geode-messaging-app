@@ -9,6 +9,12 @@ import { MatInput } from '@angular/material/input';
 import { MatSelect } from '@angular/material/select';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import {
+  MatExpansionPanel,
+  MatExpansionPanelHeader,
+  MatExpansionPanelTitle,
+} from '@angular/material/expansion';
+import { AgGridAngular } from 'ag-grid-angular';
 
 @NgModule({
   declarations: [FilterComponent, SpinnerComponent],
@@ -23,7 +29,20 @@ import { MatProgressSpinner } from '@angular/material/progress-spinner';
     MatCheckbox,
     MatInput,
     MatProgressSpinner,
+    MatExpansionPanel,
+    MatExpansionPanelHeader,
+    MatExpansionPanelTitle,
+    AgGridAngular,
   ],
-  exports: [FilterComponent, SpinnerComponent],
+  exports: [
+    FilterComponent,
+    SpinnerComponent,
+    FormsModule,
+    ReactiveFormsModule,
+    MatExpansionPanel,
+    MatExpansionPanelHeader,
+    MatExpansionPanelTitle,
+    AgGridAngular,
+  ],
 })
 export class SharedModule {}
