@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FilterComponent } from './components/filter/filter.component';
 import { MatCheckbox } from '@angular/material/checkbox';
 import { MatOption } from '@angular/material/core';
-import { MatFormField, MatLabel } from '@angular/material/form-field';
+import { MatError, MatFormField, MatLabel } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 import { MatSelect } from '@angular/material/select';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -34,6 +34,7 @@ import { AgGridAngular } from 'ag-grid-angular';
     MatExpansionPanel,
     MatExpansionPanelHeader,
     MatExpansionPanelTitle,
+    MatError,
     AgGridAngular,
   ],
   exports: [
@@ -44,6 +45,7 @@ import { AgGridAngular } from 'ag-grid-angular';
     MatExpansionPanelHeader,
     MatExpansionPanelTitle,
     MatProgressSpinner,
+    MatError,
     AgGridAngular,
   ],
 })

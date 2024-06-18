@@ -39,16 +39,4 @@ export class LoginComponent {
         .add(() => (this.isLoading = false));
     }
   }
-
-  getFieldInvalidity(
-    fieldName: string,
-    errorCode: string | null = null
-  ): boolean | undefined {
-    let formProp = this.credentialsForm.get(fieldName);
-    if (errorCode == null) {
-      return formProp?.touched && formProp?.invalid;
-    } else {
-      return formProp?.touched && formProp?.getError(errorCode!);
-    }
-  }
 }

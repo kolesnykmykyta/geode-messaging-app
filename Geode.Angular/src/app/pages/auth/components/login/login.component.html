@@ -3,13 +3,15 @@
     <form #regForm="ngForm" [formGroup]="credentialsForm" class="form w-50" (ngSubmit)="loginSubmit()">
       <div class="mt-2">
         <input formControlName="email" class="form-control" placeholder="Email" type="text"/>
-        <span *ngIf="getFieldInvalidity('email', 'required')">Email is required</span>
-        <span *ngIf="getFieldInvalidity('email', 'email')">Email should be in the valid format</span>
+        <mat-error *ngIf="credentialsForm.get('email')?.invalid && credentialsForm.get('email')?.invalid">
+          {{ credentialsForm.get('email')!.errors! | errorHandler }}
+        </mat-error>
       </div>
       <div class="mt-2">
         <input formControlName="password" class="form-control" placeholder="Password" type="password">
-        <span *ngIf="getFieldInvalidity('password', 'required')">Password is required</span>
-        <span *ngIf="getFieldInvalidity('password', 'minlength')">Password should have at least 6 characters</span>     
+        <mat-error *ngIf="credentialsForm.get('password')?.invalid && credentialsForm.get('password')?.touched">
+          {{ credentialsForm.get('password')!.errors! | errorHandler }}
+        </mat-error>   
       </div>
       <div class="buttons mt-2">
         <button type="submit" class="btn btn-primary" [disabled]="isLoading || credentialsForm.invalid">
