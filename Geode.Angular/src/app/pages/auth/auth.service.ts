@@ -13,6 +13,7 @@ import {
   REFRESH_TOKEN_KEY,
 } from '../../shared/constants/storages.constants';
 import { environment } from '../../../environments/environment';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root',
@@ -24,7 +25,7 @@ export class AuthService {
 
   private authEndpoint: string = `${environment.apiBase}/user`;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private router: Router) {}
 
   register(dto: RegisterCredentials): Observable<RegisterResult> {
     return this.http.post<RegisterResult>(`${this.authEndpoint}/register`, dto);
@@ -46,6 +47,7 @@ export class AuthService {
     localStorage.removeItem(ACCESS_TOKEN_KEY);
     localStorage.removeItem(REFRESH_TOKEN_KEY);
     this.updateAuthState(false);
+    this.router.navigateByUrl('/login');
   }
 
   private updateAuthState(newState: boolean): void {
