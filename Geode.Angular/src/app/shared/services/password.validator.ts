@@ -29,6 +29,8 @@ export function passwordValidator(): ValidatorFn {
       }
     }
 
-    return errors.length === 0 ? null : { errors: errors };
+    return errors.length === 0
+      ? null
+      : { invalidPassword: true, passwordValidationErrors: errors };
   };
 }

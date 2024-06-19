@@ -1,4 +1,4 @@
-<h1 class="text-center">Register</h1>
+d<h1 class="text-center">Register</h1>
 <div class="d-flex container justify-content-center">
     <form #regForm="ngForm" [formGroup]="credentialsForm" class="form w-50" (ngSubmit)="registerSubmit()">
       <div class="mt-2">
@@ -17,7 +17,7 @@
         <input formControlName="password" class="form-control" placeholder="Password" type="password">
         <mat-error *ngIf="credentialsForm.get('password')?.invalid && credentialsForm.get('password')?.touched">
           {{ credentialsForm.get('password')!.errors! | errorHandler }}
-        </mat-error>         
+        </mat-error>
       </div>
       <div class="buttons mt-2">
         <button type="submit" class="btn btn-primary" [disabled]="isLoading || credentialsForm.invalid">

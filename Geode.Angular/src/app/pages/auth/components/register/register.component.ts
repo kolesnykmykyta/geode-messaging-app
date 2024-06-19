@@ -4,6 +4,7 @@ import { RegisterCredentials } from '../../models/register.model';
 import { RegisterResult } from '../../models/register-result.model';
 import { AuthService } from '../../auth.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { passwordValidator } from '../../../../shared/services/password.validator';
 
 @Component({
   selector: 'gd-register',
@@ -14,7 +15,10 @@ export class RegisterComponent {
   credentialsForm: FormGroup = this.formBuilder.group({
     email: ['', [Validators.required, Validators.email]],
     username: ['', Validators.required],
-    password: ['', [Validators.required, Validators.minLength(6)]],
+    password: [
+      '',
+      [Validators.required, Validators.minLength(6), passwordValidator()],
+    ],
   });
   registerResult: RegisterResult = { isSuccess: undefined, errors: [] };
   isLoading: boolean = false;
