@@ -5,6 +5,8 @@ import { RegisterResult } from '../../models/register-result.model';
 import { AuthService } from '../../auth.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { passwordValidator } from '../../../../shared/services/password.validator';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'gd-register',
@@ -27,7 +29,9 @@ export class RegisterComponent {
 
   constructor(
     private authService: AuthService,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
+    private snackBar: MatSnackBar,
+    private router: Router
   ) {}
 
   registerSubmit(): void {
@@ -39,7 +43,10 @@ export class RegisterComponent {
         .register(this.credentialsForm.value as RegisterCredentials)
         .subscribe({
           next: () => {
-            this.registerResult.isSuccess = true;
+            this.snackBar.open('Successfully registered!', 'Close', {
+              duration: 3000,
+            });
+            this.router.navigateByUrl('/login');
           },
           error: (err) => {
             if (err?.error != null) {

@@ -3,7 +3,7 @@
     <form #regForm="ngForm" [formGroup]="credentialsForm" class="form w-50" (ngSubmit)="loginSubmit()">
       <div class="mt-2">
         <input formControlName="email" class="form-control" placeholder="Email" type="text"/>
-        <mat-error *ngIf="credentialsForm.get('email')?.invalid && credentialsForm.get('email')?.invalid">
+        <mat-error *ngIf="credentialsForm.get('email')?.invalid && credentialsForm.get('email')?.touched">
           {{ credentialsForm.get('email')!.errors! | errorHandler }}
         </mat-error>
       </div>

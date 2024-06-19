@@ -10,8 +10,7 @@ export class ErrorHandlerPipe implements PipeTransform {
     required: () => 'This field is required',
     minlength: () => 'Value is too short',
     email: () => 'Email should be in the valid format',
-    invalidPassword: () =>
-      'Password must have at least one lowercase, uppercase, digit and non alphanumeric value',
+    passwordErrors: (errors: string[]) => errors.join(' '),
   };
 
   transform(errorKeys: ValidationErrors): string | null {

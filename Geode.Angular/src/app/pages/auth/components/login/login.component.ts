@@ -3,6 +3,8 @@ import { Component } from '@angular/core';
 import { LoginCredentials } from '../../models/login.model';
 import { AuthService } from '../../auth.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'gd-login',
@@ -19,7 +21,9 @@ export class LoginComponent {
 
   constructor(
     private authService: AuthService,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
+    private snackBar: MatSnackBar,
+    private router: Router
   ) {}
 
   loginSubmit(): void {
@@ -30,7 +34,10 @@ export class LoginComponent {
         .login(this.credentialsForm.value as LoginCredentials)
         .subscribe({
           next: () => {
-            this.message = 'Successfully logged in!';
+            this.snackBar.open('Successfully logged in!', 'Close', {
+              duration: 3000,
+            });
+            this.router.navigateByUrl('/');
           },
           error: () => {
             this.message = 'Login has failed. Check your credentials';
