@@ -20,7 +20,7 @@ export class UsersComponent implements OnInit {
       field: 'phoneNumber',
       cellRenderer: this.phoneCellRenderer.bind(this),
     },
-    { headerName: 'Call', cellRenderer: this.videoCallCellRenderer },
+    { headerName: '', cellRenderer: this.videoCallCellRenderer },
   ];
   isLoading: boolean = false;
 
@@ -46,13 +46,13 @@ export class UsersComponent implements OnInit {
   }
 
   private videoCallCellRenderer(params: any): string {
-    const link = `<a href="">Call ${params.data.userName}</a>`;
+    const link = `<a href="">Video Call</a>`;
     return link;
   }
 
   private phoneCellRenderer(params: any): string {
     const phoneNumber = params.value;
     return `<a style="color: blue; text-decoration: underline; cursor: pointer;" 
-            href="tel:${phoneNumber}">${phoneNumber}</a>`;
+            href="tel:${phoneNumber}">${phoneNumber ?? ''}</a>`;
   }
 }
