@@ -13,12 +13,6 @@
                 </span>
             </div>
             <div *ngIf="authService.isUserAuthorized$()">
-                <span class="mr-2">
-                    <a class="link-light" routerLinkActive="active" routerLink="/users">Users</a>
-                </span>
-                <span class="mr-2">
-                    <a class="link-light" routerLinkActive="active" routerLink="/messages">Messages</a>
-                </span>
                 <span class="ml-5">
                     <a class="link-light" (click)="logout()">Logout</a>
                 </span>

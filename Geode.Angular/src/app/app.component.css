@@ -15,6 +15,11 @@ mat-sidenav mat-list-item {
   padding: 10px;
 }
 
+mat-list-item a.active {
+  text-decoration: underline;
+  font-weight: bold;
+}
+
 mat-list-item a {
   font-size: 1.3rem;
   text-decoration: none;
