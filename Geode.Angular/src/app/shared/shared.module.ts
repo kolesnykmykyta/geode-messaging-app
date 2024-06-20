@@ -17,6 +17,13 @@ import {
   MatExpansionPanelTitle,
 } from '@angular/material/expansion';
 import { AgGridAngular } from 'ag-grid-angular';
+import {
+  MatSidenav,
+  MatSidenavContainer,
+  MatSidenavContent,
+} from '@angular/material/sidenav';
+import { MatListModule } from '@angular/material/list';
+import { MatIcon } from '@angular/material/icon';
 
 @NgModule({
   declarations: [FilterComponent],
@@ -35,6 +42,11 @@ import { AgGridAngular } from 'ag-grid-angular';
     MatExpansionPanelHeader,
     MatExpansionPanelTitle,
     MatError,
+    MatSidenav,
+    MatIcon,
+    MatSidenavContainer,
+    MatSidenavContent,
+    MatListModule,
     AgGridAngular,
   ],
   exports: [
@@ -46,6 +58,11 @@ import { AgGridAngular } from 'ag-grid-angular';
     MatExpansionPanelTitle,
     MatProgressSpinner,
     MatError,
+    MatSidenav,
+    MatIcon,
+    MatSidenavContainer,
+    MatSidenavContent,
+    MatListModule,
     AgGridAngular,
   ],
 })
