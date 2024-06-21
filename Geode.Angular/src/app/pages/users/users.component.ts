@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ColDef } from 'ag-grid-community';
-import { UsersService } from './users.service';
-import { UserInfo } from './user-info.model';
-import { Filter } from '../../shared/models/filter.model';
+import { UsersService } from '../../shared/services/users.service';
+import { UserInfo } from '../../shared/interfaces/user-info.interface';
+import { Filter } from '../../shared/interfaces/filter.interface';
 
 @Component({
   selector: 'gd-users',

@@ -1,10 +1,10 @@
 import { Component } from '@angular/core';
 
-import { RegisterCredentials } from '../../models/register.model';
-import { RegisterResult } from '../../models/register-result.model';
-import { AuthService } from '../../auth.service';
+import { RegisterCredentials } from '../../../shared/interfaces/auth/register.interface';
+import { RegisterResult } from '../../../shared/interfaces/auth/register-result.interface';
+import { AuthService } from '../../../shared/services/auth.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { passwordValidator } from '../../../../shared/services/password.validator';
+import { passwordValidator } from '../../../shared/constants/password-validator.constant';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 

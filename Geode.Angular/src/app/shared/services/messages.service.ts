@@ -1,10 +1,10 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Filter } from '../../shared/models/filter.model';
+import { Filter } from '../interfaces/filter.interface';
 import { Observable } from 'rxjs';
-import { Message } from './message.model';
+import { Message } from '../interfaces/message.interface';
 import { environment } from '../../../environments/environment';
-import { partialize } from '../../shared/constants/partialize.constant';
+import { partialize } from '../constants/partialize.constant';
 
 @Injectable({
   providedIn: 'root',

@@ -6,11 +6,11 @@ import {
   HttpRequest,
 } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { ACCESS_TOKEN_KEY } from '../shared/constants/storages.constants';
+import { ACCESS_TOKEN_KEY } from '../constants/storages.constants';
 import {
   AUTH_RULE_HEADER_NAME,
   AUTH_RULE_HEADER_VALUES,
-} from '../shared/constants/auth-rule-header.constants';
+} from '../constants/auth-rule-header.constants';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {

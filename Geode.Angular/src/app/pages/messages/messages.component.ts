@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ColDef } from 'ag-grid-community';
-import { Message } from './message.model';
-import { MessagesService } from './messages.service';
-import { Filter } from '../../shared/models/filter.model';
+import { Message } from '../../shared/interfaces/message.interface';
+import { MessagesService } from '../../shared/services/messages.service';
+import { Filter } from '../../shared/interfaces/filter.interface';
 
 @Component({
   selector: 'gd-messages',

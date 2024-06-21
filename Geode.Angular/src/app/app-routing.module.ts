@@ -2,8 +2,8 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
 import { UsersComponent } from './pages/users/users.component';
-import { authorizedGuard } from './shared/services/authorized.guard';
-import { notAuthorizedGuard } from './shared/services/not-authorized.guard';
+import { authorizedGuard } from './shared/guards/authorized.guard';
+import { notAuthorizedGuard } from './shared/guards/not-authorized.guard';
 import { MessagesComponent } from './pages/messages/messages.component';
 
 const routes: Routes = [

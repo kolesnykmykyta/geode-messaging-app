@@ -1,9 +1,9 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable, signal } from '@angular/core';
-import { RegisterResult } from './models/register-result.model';
-import { RegisterCredentials } from './models/register.model';
-import { LoginCredentials } from './models/login.model';
-import { TokenPair } from './models/token-pair.model';
+import { RegisterResult } from '../interfaces/auth/register-result.interface';
+import { RegisterCredentials } from '../interfaces/auth/register.interface';
+import { LoginCredentials } from '../interfaces/auth/login.interface';
+import { TokenPair } from '../interfaces/auth/token-pair.interface';
 
 import { tap } from 'rxjs/operators';
 import { Observable } from 'rxjs';
@@ -11,12 +11,12 @@ import {
   ACCESS_TOKEN_KEY,
   IS_AUTHORIZED_INFO_KEY,
   REFRESH_TOKEN_KEY,
-} from '../../shared/constants/storages.constants';
+} from '../constants/storages.constants';
 import { environment } from '../../../environments/environment';
 import {
   AUTH_RULE_HEADER_NAME,
   AUTH_RULE_HEADER_VALUES,
-} from '../../shared/constants/auth-rule-header.constants';
+} from '../constants/auth-rule-header.constants';
 
 @Injectable({
   providedIn: 'root',
