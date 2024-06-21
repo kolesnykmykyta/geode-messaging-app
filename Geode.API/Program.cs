@@ -30,6 +30,14 @@ namespace Geode.API
 
             builder.Services.AddSignalR();
 
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy("AllowSpecificOrigin",
+                    builder => builder.WithOrigins("http://localhost:4200")
+                                      .AllowAnyHeader()
+                                      .AllowAnyMethod());
+            });
+
             builder.Services.AddControllers();
 
             builder.Services.AddEndpointsApiExplorer();
@@ -86,6 +94,8 @@ namespace Geode.API
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
+
+            app.UseCors("AllowSpecificOrigin");
 
             app.UseHttpsRedirection();
 

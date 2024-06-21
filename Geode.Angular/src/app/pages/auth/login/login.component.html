@@ -1,0 +1,28 @@
+<h1 class="text-center">Login</h1>
+<div class="d-flex container justify-content-center">
+    <form [formGroup]="credentialsForm" class="form w-50" (ngSubmit)="loginSubmit()">
+      <div class="mt-2">
+        <input formControlName="email" class="form-control" placeholder="Email" type="text"/>
+        <mat-error *ngIf="credentialsForm.get('email')?.invalid && credentialsForm.get('email')?.touched">
+          {{ credentialsForm.get('email')!.errors! | errorHandler }}
+        </mat-error>
+      </div>
+      <div class="mt-2">
+        <input formControlName="password" class="form-control" placeholder="Password" type="password">
+        <mat-error *ngIf="credentialsForm.get('password')?.invalid && credentialsForm.get('password')?.touched">
+          {{ credentialsForm.get('password')!.errors! | errorHandler }}
+        </mat-error>   
+      </div>
+      <div class="buttons mt-2">
+        <button type="submit" class="btn btn-primary" [disabled]="isLoading || credentialsForm.invalid">
+          Login
+        </button>
+      </div>
+    </form>
+</div>
+<div class="text-center" *ngIf="isFailedLogin">
+  Login has failed. Check your credentials
+</div>
+<div class="spinner-div" *ngIf="isLoading">
+  <mat-spinner></mat-spinner>
+</div>

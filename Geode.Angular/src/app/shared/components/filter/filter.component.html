@@ -1,0 +1,33 @@
+<form #regForm="ngForm" [formGroup]="filterForm" class="form">
+    <mat-form-field class="w-100">
+      <mat-label>Search</mat-label>
+      <input formControlName="searchParam" matInput>
+    </mat-form-field>
+    <div class="d-flex">
+      <mat-form-field class="w-100">
+        <mat-label>Sort by</mat-label>
+        <mat-select formControlName="sortProp">
+            <mat-option *ngFor="let property of properties" [value]="property">
+                {{property}}
+            </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-checkbox formControlName="sortByDescending">Descending</mat-checkbox>
+    </div>
+    <div>
+      <mat-form-field class="w-100">
+        <mat-label>Select properties</mat-label>
+        <mat-select [(value)]="selectedProperties" multiple (selectionChange)="updateSelectProperties()">
+          <mat-option *ngFor="let property of properties" [value]="property">
+            {{property}}
+          </mat-option>
+        </mat-select>
+    </mat-form-field>
+    </div>
+    <div>
+      <mat-form-field class="w-100">
+        <mat-label>Page</mat-label>
+        <input formControlName="pageNumber" type="number" matInput>
+      </mat-form-field>
+    </div>
+</form>

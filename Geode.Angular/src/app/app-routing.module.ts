@@ -1,33 +1,30 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
-import { LoginComponent } from './auth/components/login/login.component';
-import { RegisterComponent } from './auth/components/register/register.component';
-import { UsersComponent } from './users/users.component';
+import { UsersComponent } from './pages/users/users.component';
+import { authorizedGuard } from './shared/guards/authorized.guard';
+import { notAuthorizedGuard } from './shared/guards/not-authorized.guard';
+import { MessagesComponent } from './pages/messages/messages.component';
 
 const routes: Routes = [
-    {
-        path: 'auth/login',
-        component: LoginComponent,
-        title: "Login"
-    },
-    {
-        path: 'auth/register',
-        component: RegisterComponent,
-        title: "Register"
-    },
-    {
-      path: 'users',
-      component: UsersComponent,
-      title: "Users"
-    }
+  {
+    path: 'auth',
+    loadChildren: () =>
+      import('./pages/auth/auth.module').then((m) => m.AuthModule),
+    canActivate: [notAuthorizedGuard],
+  },
+  { path: 'users', component: UsersComponent, canActivate: [authorizedGuard] },
+  {
+    path: 'messages',
+    component: MessagesComponent,
+    canActivate: [authorizedGuard],
+  },
+  { path: '**', redirectTo: '/users' },
 ];
 
 @NgModule({
-    declarations: [],
-    imports: [
-      RouterModule.forRoot(routes)
-    ],
-    exports: [RouterModule]
-  })
-export class AppRoutingModule { }
+  declarations: [],
+  imports: [RouterModule.forRoot(routes)],
+  exports: [RouterModule],
+})
+export class AppRoutingModule {}

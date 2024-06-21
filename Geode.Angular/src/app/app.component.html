@@ -1,3 +1,24 @@
 <gd-navbar></gd-navbar>
-<router-outlet></router-outlet>
-
+<mat-sidenav-container>
+    <mat-sidenav mode="side" [opened]="authService.isUserAuthorized$()">
+        <mat-list>
+            <mat-list-item>
+                <span>
+                    <a routerLink="/users" routerLinkActive="active">
+                        <mat-icon aria-hidden="false" aria-label="users" fontIcon="group"></mat-icon>
+                        Users
+                    </a>
+                </span>
+            </mat-list-item>
+            <mat-list-item>
+                <a routerLink="/messages" routerLinkActive="active">
+                    <mat-icon aria-hidden="false" aria-label="messages" fontIcon="mail"></mat-icon>
+                    Messages
+                </a>
+            </mat-list-item>
+        </mat-list>
+    </mat-sidenav>
+    <mat-sidenav-content>
+        <router-outlet></router-outlet>
+    </mat-sidenav-content>
+</mat-sidenav-container>

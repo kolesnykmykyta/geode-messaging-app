@@ -1,0 +1,27 @@
+<div>
+    <div class="col-8 mx-auto">
+        <mat-expansion-panel>
+            <mat-expansion-panel-header>
+                <mat-panel-title>
+                  Filters
+                </mat-panel-title>
+              </mat-expansion-panel-header>
+              <gd-filter [properties]="properties" (applyFilter)="updateRowData($event)"></gd-filter>
+        </mat-expansion-panel>
+    </div>
+</div>
+<div>
+    <div class="col-8 mx-auto">
+        <ag-grid-angular
+            class="ag-theme-quartz"
+            [rowData]="rowData"
+            [columnDefs]="colDefs"
+            [defaultColDef]="{flex: 1}"
+            [domLayout]="'autoHeight'"
+        >
+        </ag-grid-angular>
+    </div>
+</div>
+<div class="spinner-div" *ngIf="isLoading">
+    <mat-spinner></mat-spinner>
+</div>
