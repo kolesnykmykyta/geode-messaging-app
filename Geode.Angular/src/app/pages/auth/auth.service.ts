@@ -13,7 +13,6 @@ import {
   REFRESH_TOKEN_KEY,
 } from '../../shared/constants/storages.constants';
 import { environment } from '../../../environments/environment';
-import { Router } from '@angular/router';
 import {
   AUTH_RULE_HEADER_NAME,
   AUTH_RULE_HEADER_VALUES,
@@ -32,7 +31,7 @@ export class AuthService {
     [AUTH_RULE_HEADER_NAME]: AUTH_RULE_HEADER_VALUES.SKIP,
   });
 
-  constructor(private http: HttpClient, private router: Router) {}
+  constructor(private http: HttpClient) {}
 
   register(dto: RegisterCredentials): Observable<RegisterResult> {
     return this.http.post<RegisterResult>(
@@ -62,7 +61,6 @@ export class AuthService {
     localStorage.removeItem(ACCESS_TOKEN_KEY);
     localStorage.removeItem(REFRESH_TOKEN_KEY);
     this.updateAuthState(false);
-    this.router.navigateByUrl('/login');
   }
 
   private updateAuthState(newState: boolean): void {
