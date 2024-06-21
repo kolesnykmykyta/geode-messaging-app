@@ -25,8 +25,6 @@ export class RegisterComponent {
   registerResult: RegisterResult = { isSuccess: undefined, errors: [] };
   isLoading: boolean = false;
 
-  private isFormSubmitted: boolean = false;
-
   constructor(
     private authService: AuthService,
     private formBuilder: FormBuilder,
@@ -36,7 +34,6 @@ export class RegisterComponent {
 
   registerSubmit(): void {
     this.registerResult.isSuccess = undefined;
-    this.isFormSubmitted = true;
     this.isLoading = true;
     if (this.credentialsForm.valid) {
       this.authService
@@ -58,18 +55,6 @@ export class RegisterComponent {
           },
         })
         .add(() => (this.isLoading = false));
-    }
-  }
-
-  getFieldInvalidity(
-    fieldName: string,
-    errorCode: string | null = null
-  ): boolean | undefined {
-    let formProp = this.credentialsForm.get(fieldName);
-    if (errorCode == null) {
-      return formProp?.touched && formProp?.invalid;
-    } else {
-      return formProp?.touched && formProp?.getError(errorCode!);
     }
   }
 }
