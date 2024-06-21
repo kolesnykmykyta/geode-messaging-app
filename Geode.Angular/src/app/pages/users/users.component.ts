@@ -34,14 +34,7 @@ export class UsersComponent implements OnInit {
     this.isLoading = true;
     this.usersService
       .getAllUsers(filter)
-      .subscribe({
-        next: (result) => {
-          this.rowData = result;
-        },
-        error: (error) => {
-          console.error('Error occured: ', error.error);
-        },
-      })
+      .subscribe((result) => (this.rowData = result))
       .add(() => (this.isLoading = false));
   }
 
