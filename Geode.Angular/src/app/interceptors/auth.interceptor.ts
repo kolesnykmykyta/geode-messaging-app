@@ -19,7 +19,7 @@ export class AuthInterceptor implements HttpInterceptor {
     next: HttpHandler
   ): Observable<HttpEvent<any>> {
     if (
-      req.headers.get(AUTH_RULE_HEADER_NAME) === AUTH_RULE_HEADER_VALUES.APPLY
+      req.headers.get(AUTH_RULE_HEADER_NAME) !== AUTH_RULE_HEADER_VALUES.SKIP
     ) {
       let token = localStorage.getItem(ACCESS_TOKEN_KEY) ?? '';
       req = req.clone({

@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable, signal } from '@angular/core';
 import { RegisterResult } from './models/register-result.model';
 import { RegisterCredentials } from './models/register.model';
@@ -14,6 +14,10 @@ import {
 } from '../../shared/constants/storages.constants';
 import { environment } from '../../../environments/environment';
 import { Router } from '@angular/router';
+import {
+  AUTH_RULE_HEADER_NAME,
+  AUTH_RULE_HEADER_VALUES,
+} from '../../shared/constants/auth-rule-header.constants';
 
 @Injectable({
   providedIn: 'root',
@@ -24,23 +28,34 @@ export class AuthService {
   );
 
   private authEndpoint: string = `${environment.apiBase}/user`;
+  private skipAuthHeaders: HttpHeaders = new HttpHeaders({
+    [AUTH_RULE_HEADER_NAME]: AUTH_RULE_HEADER_VALUES.SKIP,
+  });
 
   constructor(private http: HttpClient, private router: Router) {}
 
   register(dto: RegisterCredentials): Observable<RegisterResult> {
-    return this.http.post<RegisterResult>(`${this.authEndpoint}/register`, dto);
+    return this.http.post<RegisterResult>(
+      `${this.authEndpoint}/register`,
+      dto,
+      { headers: this.skipAuthHeaders }
+    );
   }
 
   login(dto: LoginCredentials): Observable<TokenPair> {
-    return this.http.post<TokenPair>(`${this.authEndpoint}/login`, dto).pipe(
-      tap((response) => {
-        if (response != null) {
-          localStorage.setItem(ACCESS_TOKEN_KEY, response.accessToken);
-          localStorage.setItem(REFRESH_TOKEN_KEY, response.refreshToken);
-          this.updateAuthState(true);
-        }
+    return this.http
+      .post<TokenPair>(`${this.authEndpoint}/login`, dto, {
+        headers: this.skipAuthHeaders,
       })
-    );
+      .pipe(
+        tap((response) => {
+          if (response != null) {
+            localStorage.setItem(ACCESS_TOKEN_KEY, response.accessToken);
+            localStorage.setItem(REFRESH_TOKEN_KEY, response.refreshToken);
+            this.updateAuthState(true);
+          }
+        })
+      );
   }
 
   logout(): void {
