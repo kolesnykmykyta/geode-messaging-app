@@ -16,7 +16,7 @@ export class LoginComponent {
     email: ['', [Validators.required, Validators.email]],
     password: ['', [Validators.required, Validators.minLength(6)]],
   });
-  message: string = '';
+  isFailedLogin: boolean = false;
   isLoading: boolean = false;
 
   constructor(
@@ -28,7 +28,7 @@ export class LoginComponent {
 
   loginSubmit(): void {
     if (this.credentialsForm.valid) {
-      this.message = '';
+      this.isFailedLogin = false;
       this.isLoading = true;
       this.authService
         .login(this.credentialsForm.value as LoginCredentials)
@@ -40,7 +40,7 @@ export class LoginComponent {
             this.router.navigateByUrl('/');
           },
           error: () => {
-            this.message = 'Login has failed. Check your credentials';
+            this.isFailedLogin = true;
           },
         })
         .add(() => (this.isLoading = false));

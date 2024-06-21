@@ -20,8 +20,8 @@
       </div>
     </form>
 </div>
-<div class="text-center">
-    {{message}}
+<div class="text-center" *ngIf="isFailedLogin">
+  Login has failed. Check your credentials
 </div>
 <div class="spinner-div" *ngIf="isLoading">
   <mat-spinner></mat-spinner>
