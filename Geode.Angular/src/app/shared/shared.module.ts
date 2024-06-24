@@ -24,9 +24,10 @@ import {
 } from '@angular/material/sidenav';
 import { MatListModule } from '@angular/material/list';
 import { MatIcon } from '@angular/material/icon';
+import { ScalingDirective } from './directives/scaling.directive';
 
 @NgModule({
-  declarations: [FilterComponent],
+  declarations: [FilterComponent, ScalingDirective],
   imports: [
     CommonModule,
     FormsModule,
@@ -51,6 +52,7 @@ import { MatIcon } from '@angular/material/icon';
   ],
   exports: [
     FilterComponent,
+    ScalingDirective,
     FormsModule,
     ReactiveFormsModule,
     MatExpansionPanel,
