@@ -35,8 +35,8 @@ export class CountryNumberPipe implements PipeTransform {
     tripletsDivider: string,
     partsDivider: string
   ) {
-    return `${intTriplets.join(tripletsDivider)}${
-      decimalPart ? `${partsDivider}${decimalPart}` : ''
-    }`;
+    let integerPart = intTriplets.join(tripletsDivider);
+    decimalPart = decimalPart ? partsDivider + decimalPart : '';
+    return integerPart + decimalPart;
   }
 }
