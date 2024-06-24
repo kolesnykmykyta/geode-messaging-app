@@ -5,9 +5,16 @@ import { LoginComponent } from './login/login.component';
 import { AuthRoutingModule } from './auth-routing.module';
 import { SharedModule } from '../../shared/shared.module';
 import { ErrorHandlerPipe } from '../../shared/pipes/error-handler.pipe';
+import { CountryNumberPipe } from '../../shared/pipes/country-number.pipe';
 
 @NgModule({
   declarations: [RegisterComponent, LoginComponent],
-  imports: [CommonModule, AuthRoutingModule, SharedModule, ErrorHandlerPipe],
+  imports: [
+    CommonModule,
+    AuthRoutingModule,
+    SharedModule,
+    ErrorHandlerPipe,
+    CountryNumberPipe,
+  ],
 })
 export class AuthModule {}
