@@ -27,34 +27,24 @@ export class UsersService {
       );
   }
 
-  private populateUserWithTestData(userInfo: UserInfo) {
-    return this.populateUserWithBalance(
-      this.populateUserWithBirthDate(userInfo)
-    );
-  }
-
-  private populateUserWithBalance(
-    userInfo: UserInfo,
-    balance: number | null = null
-  ) {
-    balance = balance ?? Number((Math.random() * 100000).toFixed(2)); // Either take provided or generate a random one
+  private populateUserWithTestData(userInfo: UserInfo): UserInfo {
     return {
       ...userInfo,
-      balance: userInfo.balance ?? balance,
+      balance: userInfo.balance ?? this.generateRandomBalance(),
+      birthDate: userInfo.birthDate ?? this.generateRandomDate(),
     };
   }
 
-  private populateUserWithBirthDate(
-    userInfo: UserInfo,
-    birthDate: Date | null = null
-  ) {
-    let startDate = new Date(1970, 1, 1).getTime();
-    let endDate = new Date(2005, 31, 12).getTime();
-    let randomDate = startDate + Math.random() * (endDate - startDate);
+  private generateRandomBalance(): number {
+    return Number((Math.random() * 100000).toFixed(2));
+  }
 
-    return {
-      ...userInfo,
-      birthDate: userInfo.birthDate ?? new Date(randomDate),
-    };
+  private generateRandomDate(): Date {
+    let startTimestamp = new Date(1970, 1, 1).getTime();
+    let endTimestamp = new Date(2005, 31, 12).getTime();
+    let randomTimestamp =
+      startTimestamp + Math.random() * (endTimestamp - startTimestamp);
+
+    return new Date(randomTimestamp);
   }
 }
