@@ -3,6 +3,8 @@ import { ColDef } from 'ag-grid-community';
 import { UsersService } from '../../shared/services/users.service';
 import { UserInfo } from '../../shared/interfaces/user-info.interface';
 import { Filter } from '../../shared/interfaces/filter.interface';
+import { CountryNumberPipe } from '../../shared/pipes/country-number.pipe';
+import { DateFormatterPipe } from '../../shared/pipes/date-formatter.pipe';
 
 @Component({
   selector: 'gd-users',
@@ -15,6 +17,18 @@ export class UsersComponent implements OnInit {
   colDefs: ColDef[] = [
     { headerName: 'Username', field: 'userName' },
     { headerName: 'Email', field: 'email' },
+    {
+      headerName: 'Balance',
+      field: 'balance',
+      valueFormatter: (params) =>
+        new CountryNumberPipe().transform(params.value, 'de-DE'),
+    },
+    {
+      headerName: 'Birth Date',
+      field: 'birthDate',
+      valueFormatter: (params) =>
+        new DateFormatterPipe().transform(new Date(params.value), 'es-ES'),
+    },
     {
       headerName: 'Phone',
       field: 'phoneNumber',
