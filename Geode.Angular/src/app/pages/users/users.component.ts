@@ -5,6 +5,10 @@ import { UserInfo } from '../../shared/interfaces/user-info.interface';
 import { Filter } from '../../shared/interfaces/filter.interface';
 import { CountryNumberPipe } from '../../shared/pipes/country-number.pipe';
 import { DateFormatterPipe } from '../../shared/pipes/date-formatter.pipe';
+import {
+  USERS_FILTER_PERMISSION,
+  USERS_READ_PERMISSION,
+} from '../../shared/constants/permissions.constants';
 
 @Component({
   selector: 'gd-users',
@@ -12,6 +16,9 @@ import { DateFormatterPipe } from '../../shared/pipes/date-formatter.pipe';
   styleUrl: './users.component.css',
 })
 export class UsersComponent implements OnInit {
+  readonly USERS_READ_PERMISSION = USERS_READ_PERMISSION;
+  readonly USERS_FILTER_PERMISSION = USERS_FILTER_PERMISSION;
+
   properties: string[] = ['UserName', 'Email', 'PhoneNumber'];
   rowData: UserInfo[] = [];
   colDefs: ColDef[] = [

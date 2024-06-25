@@ -22,9 +22,14 @@ import {
 import { MatListModule } from '@angular/material/list';
 import { MatIcon } from '@angular/material/icon';
 import { ScalingDirective } from './directives/scaling.directive';
+import { RequiredPermissionsDirective } from './directives/required-permissions.directive';
 
 @NgModule({
-  declarations: [FilterComponent, ScalingDirective],
+  declarations: [
+    FilterComponent,
+    ScalingDirective,
+    RequiredPermissionsDirective,
+  ],
   imports: [
     CommonModule,
     FormsModule,
@@ -50,6 +55,7 @@ import { ScalingDirective } from './directives/scaling.directive';
   exports: [
     FilterComponent,
     ScalingDirective,
+    RequiredPermissionsDirective,
     FormsModule,
     ReactiveFormsModule,
     MatExpansionPanel,

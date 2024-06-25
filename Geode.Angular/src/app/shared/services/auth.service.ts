@@ -17,6 +17,12 @@ import {
   AUTH_RULE_HEADER_NAME,
   AUTH_RULE_HEADER_VALUES,
 } from '../constants/auth-rule-header.constants';
+import {
+  MESSAGES_FILTER_PERMISSION,
+  MESSAGES_READ_PERMISSION,
+  USERS_FILTER_PERMISSION,
+  USERS_READ_PERMISSION,
+} from '../constants/permissions.constants';
 
 @Injectable({
   providedIn: 'root',
@@ -25,6 +31,8 @@ export class AuthService {
   isUserAuthorized$ = signal<boolean>(
     JSON.parse(sessionStorage.getItem(IS_AUTHORIZED_INFO_KEY) ?? 'false')
   );
+
+  permissions: string[] = [];
 
   private authEndpoint: string = `${environment.apiBase}/user`;
   private skipAuthHeaders: HttpHeaders = new HttpHeaders({
@@ -49,6 +57,11 @@ export class AuthService {
       .pipe(
         tap((response) => {
           if (response != null) {
+            this.permissions = [
+              MESSAGES_READ_PERMISSION,
+              MESSAGES_FILTER_PERMISSION,
+              USERS_READ_PERMISSION,
+            ];
             localStorage.setItem(ACCESS_TOKEN_KEY, response.accessToken);
             localStorage.setItem(REFRESH_TOKEN_KEY, response.refreshToken);
             this.updateAuthState(true);
@@ -60,6 +73,7 @@ export class AuthService {
   logout(): void {
     localStorage.removeItem(ACCESS_TOKEN_KEY);
     localStorage.removeItem(REFRESH_TOKEN_KEY);
+    this.permissions = [];
     this.updateAuthState(false);
   }
 

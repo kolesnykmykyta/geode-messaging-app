@@ -1,4 +1,4 @@
-<div>
+<div *requiredPermissions="[USERS_READ_PERMISSION, USERS_FILTER_PERMISSION]">
     <div class="col-8 mx-auto">
         <mat-expansion-panel>
             <mat-expansion-panel-header>
@@ -10,7 +10,7 @@
         </mat-expansion-panel>
     </div>
 </div>
-<div>
+<div *requiredPermissions="[USERS_READ_PERMISSION]">
     <div class="col-8 mx-auto">
         <ag-grid-angular
             class="ag-theme-quartz"
