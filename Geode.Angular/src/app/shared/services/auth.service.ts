@@ -65,7 +65,7 @@ export class AuthService {
         tap(() => {
           this.permissions = [
             MESSAGES_READ_PERMISSION,
-            MESSAGES_FILTER_PERMISSION,
+            USERS_FILTER_PERMISSION,
             USERS_READ_PERMISSION,
           ];
         })

@@ -9,6 +9,8 @@ import {
   USERS_FILTER_PERMISSION,
   USERS_READ_PERMISSION,
 } from '../../shared/constants/permissions.constants';
+import { COUNTRY_CODES } from '../../shared/constants/country-codes.constant';
+import { FormControl } from '@angular/forms';
 
 @Component({
   selector: 'gd-users',
@@ -19,31 +21,13 @@ import {
 export class UsersComponent implements OnInit {
   readonly USERS_READ_PERMISSION = USERS_READ_PERMISSION;
   readonly USERS_FILTER_PERMISSION = USERS_FILTER_PERMISSION;
+  readonly CountryCodes = COUNTRY_CODES;
+
+  selectedLocale: FormControl = new FormControl(this.CountryCodes[0].code);
 
   properties: string[] = ['UserName', 'Email', 'PhoneNumber'];
   rowData: UserInfo[] = [];
-  colDefs: ColDef[] = [
-    { headerName: 'Username', field: 'userName' },
-    { headerName: 'Email', field: 'email' },
-    {
-      headerName: 'Balance',
-      field: 'balance',
-      valueFormatter: (params) =>
-        this.countryNumber.transform(params.value, 'de-DE'),
-    },
-    {
-      headerName: 'Birth Date',
-      field: 'birthDate',
-      valueFormatter: (params) =>
-        this.dateFormatter.transform(new Date(params.value), 'es-ES'),
-    },
-    {
-      headerName: 'Phone',
-      field: 'phoneNumber',
-      cellRenderer: this.phoneCellRenderer.bind(this),
-    },
-    { headerName: '', cellRenderer: this.videoCallCellRenderer },
-  ];
+  colDefs: ColDef[] = [];
   isLoading: boolean = false;
 
   constructor(
@@ -54,6 +38,7 @@ export class UsersComponent implements OnInit {
 
   ngOnInit(): void {
     this.updateRowData();
+    this.updateColDef();
   }
 
   updateRowData(filter: Filter | null = null): void {
@@ -62,6 +47,34 @@ export class UsersComponent implements OnInit {
       .getAllUsers(filter)
       .subscribe((result) => (this.rowData = result))
       .add(() => (this.isLoading = false));
+  }
+
+  updateColDef(): void {
+    this.colDefs = [
+      { headerName: 'Username', field: 'userName' },
+      { headerName: 'Email', field: 'email' },
+      {
+        headerName: 'Balance',
+        field: 'balance',
+        valueFormatter: (params) =>
+          this.countryNumber.transform(params.value, this.selectedLocale.value),
+      },
+      {
+        headerName: 'Birth Date',
+        field: 'birthDate',
+        valueFormatter: (params) =>
+          this.dateFormatter.transform(
+            new Date(params.value),
+            this.selectedLocale.value
+          ),
+      },
+      {
+        headerName: 'Phone',
+        field: 'phoneNumber',
+        cellRenderer: this.phoneCellRenderer.bind(this),
+      },
+      { headerName: '', cellRenderer: this.videoCallCellRenderer },
+    ];
   }
 
   private videoCallCellRenderer(params: any): string {

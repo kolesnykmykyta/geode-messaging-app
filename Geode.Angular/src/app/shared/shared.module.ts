@@ -5,7 +5,7 @@ import { MatCheckbox } from '@angular/material/checkbox';
 import { MatOption } from '@angular/material/core';
 import { MatError, MatFormField, MatLabel } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
-import { MatSelect } from '@angular/material/select';
+import { MatSelect, MatSelectModule } from '@angular/material/select';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import {
@@ -63,6 +63,10 @@ import { RequiredPermissionsDirective } from './directives/required-permissions.
     MatExpansionPanelTitle,
     MatProgressSpinner,
     MatError,
+    MatFormField,
+    MatLabel,
+    MatOption,
+    MatSelectModule,
     MatSidenav,
     MatIcon,
     MatSidenavContainer,

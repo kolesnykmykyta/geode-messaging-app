@@ -7,6 +7,14 @@
                 </mat-panel-title>
               </mat-expansion-panel-header>
               <gd-filter [properties]="properties" (applyFilter)="updateRowData($event)"></gd-filter>
+              <mat-form-field class="w-100">
+                <mat-label>Locale</mat-label>
+                <mat-select [formControl]="selectedLocale">
+                    <mat-option *ngFor="let country of CountryCodes" [value]="country.code" (onSelectionChange)="updateColDef()">
+                        {{country.name}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
         </mat-expansion-panel>
     </div>
 </div>
