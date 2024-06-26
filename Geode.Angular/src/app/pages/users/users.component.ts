@@ -14,6 +14,7 @@ import {
   selector: 'gd-users',
   templateUrl: './users.component.html',
   styleUrl: './users.component.css',
+  providers: [CountryNumberPipe, DateFormatterPipe],
 })
 export class UsersComponent implements OnInit {
   readonly USERS_READ_PERMISSION = USERS_READ_PERMISSION;
@@ -28,13 +29,13 @@ export class UsersComponent implements OnInit {
       headerName: 'Balance',
       field: 'balance',
       valueFormatter: (params) =>
-        new CountryNumberPipe().transform(params.value, 'de-DE'),
+        this.countryNumber.transform(params.value, 'de-DE'),
     },
     {
       headerName: 'Birth Date',
       field: 'birthDate',
       valueFormatter: (params) =>
-        new DateFormatterPipe().transform(new Date(params.value), 'es-ES'),
+        this.dateFormatter.transform(new Date(params.value), 'es-ES'),
     },
     {
       headerName: 'Phone',
@@ -45,7 +46,11 @@ export class UsersComponent implements OnInit {
   ];
   isLoading: boolean = false;
 
-  constructor(private usersService: UsersService) {}
+  constructor(
+    private usersService: UsersService,
+    private countryNumber: CountryNumberPipe,
+    private dateFormatter: DateFormatterPipe
+  ) {}
 
   ngOnInit(): void {
     this.updateRowData();
