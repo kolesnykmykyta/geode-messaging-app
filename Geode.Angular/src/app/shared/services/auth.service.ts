@@ -57,15 +57,17 @@ export class AuthService {
       .pipe(
         tap((response) => {
           if (response != null) {
-            this.permissions = [
-              MESSAGES_READ_PERMISSION,
-              MESSAGES_FILTER_PERMISSION,
-              USERS_READ_PERMISSION,
-            ];
             localStorage.setItem(ACCESS_TOKEN_KEY, response.accessToken);
             localStorage.setItem(REFRESH_TOKEN_KEY, response.refreshToken);
             this.updateAuthState(true);
           }
+        }),
+        tap(() => {
+          this.permissions = [
+            MESSAGES_READ_PERMISSION,
+            MESSAGES_FILTER_PERMISSION,
+            USERS_READ_PERMISSION,
+          ];
         })
       );
   }
