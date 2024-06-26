@@ -11,6 +11,7 @@ import {
 } from '../../shared/constants/permissions.constants';
 import { COUNTRY_CODES } from '../../shared/constants/country-codes.constant';
 import { FormControl } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'gd-users',
@@ -33,7 +34,8 @@ export class UsersComponent implements OnInit {
   constructor(
     private usersService: UsersService,
     private countryNumber: CountryNumberPipe,
-    private dateFormatter: DateFormatterPipe
+    private dateFormatter: DateFormatterPipe,
+    private activatedRoute: ActivatedRoute
   ) {}
 
   ngOnInit(): void {
@@ -42,11 +44,9 @@ export class UsersComponent implements OnInit {
   }
 
   updateRowData(filter: Filter | null = null): void {
-    this.isLoading = true;
-    this.usersService
-      .getAllUsers(filter)
-      .subscribe((result) => (this.rowData = result))
-      .add(() => (this.isLoading = false));
+    this.activatedRoute.data.subscribe(({ initData }) => {
+      this.rowData = initData;
+    });
   }
 
   updateColDef(): void {
