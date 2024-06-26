@@ -10,6 +10,7 @@ import { Observable } from 'rxjs';
 import {
   ACCESS_TOKEN_KEY,
   IS_AUTHORIZED_INFO_KEY,
+  PERMISSIONS_KEY,
   REFRESH_TOKEN_KEY,
 } from '../constants/storages.constants';
 import { environment } from '../../../environments/environment';
@@ -32,7 +33,9 @@ export class AuthService {
     JSON.parse(sessionStorage.getItem(IS_AUTHORIZED_INFO_KEY) ?? 'false')
   );
 
-  permissions: string[] = [];
+  permissions: string[] = JSON.parse(
+    sessionStorage.getItem(PERMISSIONS_KEY) ?? '[]'
+  );
 
   private authEndpoint: string = `${environment.apiBase}/user`;
   private skipAuthHeaders: HttpHeaders = new HttpHeaders({
@@ -68,6 +71,10 @@ export class AuthService {
             USERS_FILTER_PERMISSION,
             USERS_READ_PERMISSION,
           ];
+          sessionStorage.setItem(
+            PERMISSIONS_KEY,
+            JSON.stringify(this.permissions)
+          );
         })
       );
   }

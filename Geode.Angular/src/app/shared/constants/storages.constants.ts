@@ -1,3 +1,4 @@
 export const ACCESS_TOKEN_KEY = 'accessToken';
 export const REFRESH_TOKEN_KEY = 'refreshToken';
 export const IS_AUTHORIZED_INFO_KEY = 'isAuthorized';
+export const PERMISSIONS_KEY = 'permissions';
