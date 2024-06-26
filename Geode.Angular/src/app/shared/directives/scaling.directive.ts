@@ -1,14 +1,24 @@
-import { AfterViewInit, Directive, ElementRef, Input } from '@angular/core';
+import {
+  AfterViewInit,
+  Directive,
+  ElementRef,
+  HostListener,
+  Input,
+} from '@angular/core';
 
 @Directive({
   selector: '[scaling]',
 })
-export class ScalingDirective implements AfterViewInit {
+export class ScalingDirective {
   @Input()
   scale: number = 1.2;
   constructor(private elementRef: ElementRef) {}
 
-  ngAfterViewInit(): void {
+  @HostListener('mouseenter') scaleElement() {
     this.elementRef.nativeElement.style.transform = `scale(${this.scale})`;
+  }
+
+  @HostListener('mouseleave') shrinkElement() {
+    this.elementRef.nativeElement.style.transform = 'scale(1)';
   }
 }

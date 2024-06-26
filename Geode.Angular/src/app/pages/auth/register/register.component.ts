@@ -23,6 +23,8 @@ export class RegisterComponent {
     ],
   });
   registerResult: RegisterResult = { isSuccess: undefined, errors: [] };
+
+  scaleSubmitButtom: boolean = false;
   isLoading: boolean = false;
 
   constructor(
@@ -56,5 +58,13 @@ export class RegisterComponent {
         })
         .add(() => (this.isLoading = false));
     }
+  }
+
+  onButtonEnter() {
+    this.scaleSubmitButtom = true;
+  }
+
+  onButtonLeave() {
+    this.scaleSubmitButtom = false;
   }
 }
