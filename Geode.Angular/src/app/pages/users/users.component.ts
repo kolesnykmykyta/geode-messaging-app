@@ -19,7 +19,7 @@ import { ActivatedRoute } from '@angular/router';
   styleUrl: './users.component.css',
   providers: [CountryNumberPipe, DateFormatterPipe],
 })
-export class UsersComponent implements OnInit {
+export class UsersComponent {
   readonly USERS_READ_PERMISSION = USERS_READ_PERMISSION;
   readonly USERS_FILTER_PERMISSION = USERS_FILTER_PERMISSION;
   readonly CountryCodes = COUNTRY_CODES;
@@ -27,7 +27,7 @@ export class UsersComponent implements OnInit {
   selectedLocale: FormControl = new FormControl(this.CountryCodes[0].code);
 
   properties: string[] = ['UserName', 'Email', 'PhoneNumber'];
-  rowData: UserInfo[] = [];
+  rowData: UserInfo[] = this.activatedRoute.snapshot.data['initData'];
   colDefs: ColDef[] = [];
   isLoading: boolean = false;
 
@@ -38,15 +38,12 @@ export class UsersComponent implements OnInit {
     private activatedRoute: ActivatedRoute
   ) {}
 
-  ngOnInit(): void {
-    this.updateRowData();
-    this.updateColDef();
-  }
-
   updateRowData(filter: Filter | null = null): void {
-    this.activatedRoute.data.subscribe(({ initData }) => {
-      this.rowData = initData;
-    });
+    this.isLoading = true;
+    this.usersService
+      .getAllUsers(filter)
+      .subscribe((result) => (this.rowData = result))
+      .add(() => (this.isLoading = false));
   }
 
   updateColDef(): void {
