@@ -5,12 +5,9 @@ import { MatCheckbox } from '@angular/material/checkbox';
 import { MatOption } from '@angular/material/core';
 import { MatError, MatFormField, MatLabel } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
-import { MatSelect } from '@angular/material/select';
+import { MatSelect, MatSelectModule } from '@angular/material/select';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import {
-  MatProgressSpinner,
-  MatSpinner,
-} from '@angular/material/progress-spinner';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import {
   MatExpansionPanel,
   MatExpansionPanelHeader,
@@ -24,9 +21,15 @@ import {
 } from '@angular/material/sidenav';
 import { MatListModule } from '@angular/material/list';
 import { MatIcon } from '@angular/material/icon';
+import { ScalingDirective } from './directives/scaling.directive';
+import { RequiredPermissionsDirective } from './directives/required-permissions.directive';
 
 @NgModule({
-  declarations: [FilterComponent],
+  declarations: [
+    FilterComponent,
+    ScalingDirective,
+    RequiredPermissionsDirective,
+  ],
   imports: [
     CommonModule,
     FormsModule,
@@ -51,6 +54,8 @@ import { MatIcon } from '@angular/material/icon';
   ],
   exports: [
     FilterComponent,
+    ScalingDirective,
+    RequiredPermissionsDirective,
     FormsModule,
     ReactiveFormsModule,
     MatExpansionPanel,
@@ -58,6 +63,10 @@ import { MatIcon } from '@angular/material/icon';
     MatExpansionPanelTitle,
     MatProgressSpinner,
     MatError,
+    MatFormField,
+    MatLabel,
+    MatOption,
+    MatSelectModule,
     MatSidenav,
     MatIcon,
     MatSidenavContainer,

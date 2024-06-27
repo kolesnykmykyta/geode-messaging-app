@@ -23,6 +23,7 @@ export class RegisterComponent {
     ],
   });
   registerResult: RegisterResult = { isSuccess: undefined, errors: [] };
+
   isLoading: boolean = false;
 
   constructor(

@@ -5,6 +5,7 @@ import { UsersComponent } from './pages/users/users.component';
 import { authorizedGuard } from './shared/guards/authorized.guard';
 import { notAuthorizedGuard } from './shared/guards/not-authorized.guard';
 import { MessagesComponent } from './pages/messages/messages.component';
+import { usersInitResolver } from './shared/resolvers/users-init.resolver';
 
 const routes: Routes = [
   {
@@ -13,7 +14,12 @@ const routes: Routes = [
       import('./pages/auth/auth.module').then((m) => m.AuthModule),
     canActivate: [notAuthorizedGuard],
   },
-  { path: 'users', component: UsersComponent, canActivate: [authorizedGuard] },
+  {
+    path: 'users',
+    component: UsersComponent,
+    resolve: { initData: usersInitResolver },
+    canActivate: [authorizedGuard],
+  },
   {
     path: 'messages',
     component: MessagesComponent,

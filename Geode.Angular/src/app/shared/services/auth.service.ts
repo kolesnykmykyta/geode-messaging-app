@@ -10,6 +10,7 @@ import { Observable } from 'rxjs';
 import {
   ACCESS_TOKEN_KEY,
   IS_AUTHORIZED_INFO_KEY,
+  PERMISSIONS_KEY,
   REFRESH_TOKEN_KEY,
 } from '../constants/storages.constants';
 import { environment } from '../../../environments/environment';
@@ -17,6 +18,12 @@ import {
   AUTH_RULE_HEADER_NAME,
   AUTH_RULE_HEADER_VALUES,
 } from '../constants/auth-rule-header.constants';
+import {
+  MESSAGES_FILTER_PERMISSION,
+  MESSAGES_READ_PERMISSION,
+  USERS_FILTER_PERMISSION,
+  USERS_READ_PERMISSION,
+} from '../constants/permissions.constants';
 
 @Injectable({
   providedIn: 'root',
@@ -24,6 +31,10 @@ import {
 export class AuthService {
   isUserAuthorized$ = signal<boolean>(
     JSON.parse(sessionStorage.getItem(IS_AUTHORIZED_INFO_KEY) ?? 'false')
+  );
+
+  permissions: string[] = JSON.parse(
+    sessionStorage.getItem(PERMISSIONS_KEY) ?? '[]'
   );
 
   private authEndpoint: string = `${environment.apiBase}/user`;
@@ -53,6 +64,17 @@ export class AuthService {
             localStorage.setItem(REFRESH_TOKEN_KEY, response.refreshToken);
             this.updateAuthState(true);
           }
+        }),
+        tap(() => {
+          this.permissions = [
+            MESSAGES_READ_PERMISSION,
+            USERS_FILTER_PERMISSION,
+            USERS_READ_PERMISSION,
+          ];
+          sessionStorage.setItem(
+            PERMISSIONS_KEY,
+            JSON.stringify(this.permissions)
+          );
         })
       );
   }
@@ -60,6 +82,7 @@ export class AuthService {
   logout(): void {
     localStorage.removeItem(ACCESS_TOKEN_KEY);
     localStorage.removeItem(REFRESH_TOKEN_KEY);
+    this.permissions = [];
     this.updateAuthState(false);
   }
 
